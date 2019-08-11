@@ -3,4 +3,4 @@ project(eventkit)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(eventkitexample main.cpp)
+add_executable(eventkitexample main.cpp Semaphore.h)
