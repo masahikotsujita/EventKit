@@ -3,8 +3,8 @@
 //
 
 #include <algorithm>
-#include "RunLoop.h"
-#include "DispatchQueue.h"
+#include "../include/RunLoop.h"
+#include "../include/DispatchQueue.h"
 
 namespace ek {
 
