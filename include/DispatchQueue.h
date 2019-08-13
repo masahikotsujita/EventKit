@@ -25,15 +25,11 @@ class DispatchFunctionItem : public DispatchItem {
 public:
 
     template <typename F>
-    explicit DispatchFunctionItem(F&& function)
-        : m_function(std::forward<F>(function)) {
-    }
+    explicit DispatchFunctionItem(F&& function);
 
     ~DispatchFunctionItem() override = default;
 
-    void run() override {
-        m_function();
-    }
+    void run() override;
 
 private:
     Function m_function;
@@ -46,40 +42,15 @@ public:
     friend class RunLoop;
 
     template <typename F>
-    void dispatchAsync(F&& function) {
-        dispatchItemAsync(std::make_shared<DispatchFunctionItem<std::decay_t<F>>>(std::forward<F>(function)));
-    }
+    void dispatchAsync(F&& function);
 
 private:
 
-    void dispatchItemAsync(const std::shared_ptr<DispatchItem>& pTask) {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        m_queue.push(pTask);
-        m_pRunLoop->signal();
-    }
+    void dispatchItemAsync(const std::shared_ptr<DispatchItem>& pTask);
 
-    void fire() {
-        bool isEmpty = false;
-        do {
-            std::shared_ptr<DispatchItem> item = nullptr;
-            {
-                std::lock_guard<std::mutex> lock(m_mutex);
+    void fire();
 
-                if (!m_queue.empty()) {
-                    item = m_queue.front();
-                    m_queue.pop();
-                }
-                isEmpty = m_queue.empty();
-            }
-            if (item != nullptr) {
-                item->run();
-            }
-        } while (!isEmpty);
-    }
-
-    void setRunLoop(RunLoop* pRunLoop) {
-        m_pRunLoop = pRunLoop;
-    }
+    void setRunLoop(RunLoop* pRunLoop);
 
 private:
     std::mutex m_mutex;
@@ -89,5 +60,7 @@ private:
 };
 
 }
+
+#include "detail/DispatchQueue-inl.h"
 
 #endif //EVENTKIT_DISPATCHQUEUE_H
