@@ -18,3 +18,15 @@ add_library(eventkit ${LIBRARY_SOURCE_FILES})
 
 add_executable(eventkitexample example/main.cpp)
 target_link_libraries(eventkitexample eventkit)
+
+if(BUILD_TEST)
+    include_directories(/usr/local/include)
+    link_directories(/usr/local/lib)
+    set(TEST_SOURCE_FILES
+        test/testMain.cpp
+        test/TestUtils.h
+        test/RunLoopTest.cpp
+    )
+    add_executable(eventkittest ${TEST_SOURCE_FILES})
+    target_link_libraries(eventkittest eventkit)
+endif()
