@@ -6,7 +6,7 @@
 #define EVENTKIT_RUNLOOP_H
 
 #include <list>
-#include "detail/Semaphore.h"
+#include <detail/Semaphore.h>
 
 namespace ek {
 

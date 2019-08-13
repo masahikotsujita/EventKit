@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <thread>
-#include "../include/RunLoop.h"
-#include "../include/DispatchQueue.h"
+#include <RunLoop.h>
+#include <DispatchQueue.h>
 
 int main(int argc, const char* argv[]) {
     ek::RunLoop mainLoop;

@@ -8,7 +8,7 @@
 #include <mutex>
 #include <list>
 #include <queue>
-#include "RunLoop.h"
+#include <RunLoop.h>
 
 namespace ek {
 
@@ -61,6 +61,6 @@ private:
 
 }
 
-#include "detail/DispatchQueue-inl.h"
+#include <detail/DispatchQueue-inl.h>
 
 #endif //EVENTKIT_DISPATCHQUEUE_H

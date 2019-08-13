@@ -2,7 +2,7 @@
 // Created by Masahiko Tsujita on 2019-08-13.
 //
 
-#include "../include/DispatchQueue.h"
+#include <DispatchQueue.h>
 
 namespace ek {
 
