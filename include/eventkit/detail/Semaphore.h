@@ -8,7 +8,8 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace ek::detail {
+namespace ek {
+namespace detail {
 
 class Semaphore final {
 public:
@@ -29,7 +30,7 @@ public:
     Semaphore& operator = (const Semaphore&) = delete;
 
 private:
-    inline static constexpr int COUNT_MAX_DEFAULT = 1;
+    static constexpr int COUNT_MAX_DEFAULT = 1;
     const int m_maxCount;
     int m_count;
     std::mutex m_mutex;
@@ -69,6 +70,7 @@ inline void Semaphore::notify() {
     }
 }
 
+}
 }
 
 #endif //EVENTKIT_SEMAPHORE_H
