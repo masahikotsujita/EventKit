@@ -6,6 +6,9 @@
 #define EVENTKIT_TESTUTILS_H
 
 #include <thread>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
 #include <catch2/catch.hpp>
 
 template <typename Clock, typename Duration, typename Func>
