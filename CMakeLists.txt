@@ -13,6 +13,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/RunLoop.h
     source/DispatchQueue.cpp
     source/RunLoop.cpp
+    include/eventkit/Result.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
