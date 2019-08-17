@@ -6,6 +6,7 @@
 #include <thread>
 #include <atomic>
 #include <eventkit/Promise.h>
+#include <sstream>
 
 std::atomic_bool g_isDone { false };
 struct Unit {};
@@ -30,6 +31,14 @@ int main(int argc, const char* argv[]) {
             }
         });
         thread.detach();
+    }).then([](const std::string& text){
+        std::cout << "quoting..." << std::endl;
+        std::stringstream ss;
+        ss << "\"" << text << "\"";
+        std::string quoted = ss.str();
+        return ek::Promise<std::string, int>([quoted](const ek::Resolver<std::string, int>& resolver){
+            resolver.fulfill(quoted);
+        });
     }).then([](const std::string& text){
         std::cout << "succeeded: " << text << std::endl;
         return ek::Promise<Unit, int>([](const ek::Resolver<Unit, int>& resolver){
