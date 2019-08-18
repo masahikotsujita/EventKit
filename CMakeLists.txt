@@ -13,12 +13,22 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/RunLoop.h
     source/DispatchQueue.cpp
     source/RunLoop.cpp
+    include/eventkit/Result.h
+    include/eventkit/Promise.h
+    include/eventkit/Resolver.h
+    include/eventkit/detail/ResultHandler.h
+    include/eventkit/detail/PromiseCore.h
+    include/eventkit/detail/ThenTransformation.h
+    include/eventkit/detail/RecoverTransformation.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
 
 add_executable(eventkitexample example/main.cpp)
 target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(promiseexample example/promise_example_main.cpp)
+target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
 if(BUILD_TEST)
     include_directories(/usr/local/include)
