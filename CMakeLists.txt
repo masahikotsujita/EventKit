@@ -19,7 +19,8 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/detail/ResultHandler.h
     include/eventkit/detail/PromiseCore.h
     include/eventkit/detail/ThenTransformation.h
-    include/eventkit/detail/RecoverTransformation.h)
+    include/eventkit/detail/RecoverTransformation.h
+)
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
 
