@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019-08-17.
 //
 
-#ifndef EVENTKIT_RECOVERCORE_H
-#define EVENTKIT_RECOVERCORE_H
+#ifndef EVENTKIT_RECOVERTRANSFORMATION_H
+#define EVENTKIT_RECOVERTRANSFORMATION_H
 
 #include <eventkit/Result.h>
 #include <eventkit/Promise.h>
@@ -12,16 +12,16 @@ namespace ek {
 namespace detail {
 
 template <typename T, typename E, typename F, typename Handler>
-class RecoverCore : public ResultHandler<T, E> {
+class RecoverTransformation : public ResultHandler<T, E> {
 public:
     template <typename Tr>
-    explicit RecoverCore(const std::shared_ptr<PromiseCore<T, F>>& pCore, Tr&& transformation)
+    explicit RecoverTransformation(const std::shared_ptr<PromiseCore < T, F>>& pCore, Tr&& transformation)
         : m_pCore(pCore)
         , m_transformation(std::forward<Tr>(transformation))
     {
     }
 
-    ~RecoverCore() override = default;
+    ~RecoverTransformation() override = default;
 
     void handleResult (const Result<T, E>& result) override {
         if (result.getType() == ResultType::failed) {
@@ -40,4 +40,4 @@ private:
 }
 }
 
-#endif //EVENTKIT_RECOVERCORE_H
+#endif //EVENTKIT_RECOVERTRANSFORMATION_H

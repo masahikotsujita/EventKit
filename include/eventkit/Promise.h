@@ -8,8 +8,8 @@
 #include <memory>
 #include <eventkit/Resolver.h>
 #include <eventkit/detail/PromiseCore.h>
-#include <eventkit/detail/ThenCore.h>
-#include <eventkit/detail/RecoverCore.h>
+#include <eventkit/detail/ThenTransformation.h>
+#include <eventkit/detail/RecoverTransformation.h>
 
 namespace ek {
 
@@ -22,10 +22,10 @@ private:
     friend class ::ek::Promise;
 
     template <typename U, typename V, typename W, typename Handler>
-    friend class ::ek::detail::ThenCore;
+    friend class ::ek::detail::ThenTransformation;
 
     template <typename U, typename V, typename W, typename Handler>
-    friend class ::ek::detail::RecoverCore;
+    friend class ::ek::detail::RecoverTransformation;
 
 public:
     using Value = T;
@@ -43,7 +43,7 @@ public:
     auto then(ThenHandler&& handler) const -> Promise<typename std::result_of_t<ThenHandler(T)>::Value, E> {
         using U = typename std::result_of_t<ThenHandler(T)>::Value;
         auto pTransformedCore = std::make_shared<detail::PromiseCore<U, E>>();
-        auto pTransformation = std::make_shared<detail::ThenCore<T, E, U, std::decay_t<ThenHandler>>>(pTransformedCore, std::forward<ThenHandler>(handler));
+        auto pTransformation = std::make_shared<detail::ThenTransformation<T, E, U, std::decay_t<ThenHandler>>>(pTransformedCore, std::forward<ThenHandler>(handler));
         m_pCore->addHandler(pTransformation);
         return Promise<U, E>(pTransformedCore);
     }
@@ -52,7 +52,7 @@ public:
     auto recover(RecoverHandler&& handler) const -> Promise<T, typename std::result_of_t<RecoverHandler(E)>::Error> {
         using F = typename std::result_of_t<RecoverHandler(E)>::Error;
         auto pTransformedCore = std::make_shared<detail::PromiseCore<T, F>>();
-        auto pTransformation = std::make_shared<detail::RecoverCore<T, E, F, std::decay_t<RecoverHandler>>>(pTransformedCore, std::forward<RecoverHandler>(handler));
+        auto pTransformation = std::make_shared<detail::RecoverTransformation<T, E, F, std::decay_t<RecoverHandler>>>(pTransformedCore, std::forward<RecoverHandler>(handler));
         m_pCore->addHandler(pTransformation);
         return Promise<T, F>(pTransformedCore);
     }
