@@ -6,9 +6,10 @@
 #define EVENTKIT_RUNLOOP_H
 
 #include <list>
-#include <eventkit/detail/Semaphore.h>
+#include <eventkit/dispatch/detail/Semaphore.h>
 
 namespace ek {
+namespace dispatch {
 
 class DispatchQueue;
 
@@ -40,6 +41,7 @@ private:
 
 };
 
+}
 }
 
 #endif //EVENTKIT_RUNLOOP_H

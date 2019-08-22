@@ -8,9 +8,10 @@
 #include <mutex>
 #include <list>
 #include <queue>
-#include <eventkit/RunLoop.h>
+#include <eventkit/dispatch/RunLoop.h>
 
 namespace ek {
+namespace dispatch {
 
 class DispatchItem {
 public:
@@ -60,7 +61,8 @@ private:
 };
 
 }
+}
 
-#include <eventkit/detail/DispatchQueue-inl.h>
+#include <eventkit/dispatch/detail/DispatchQueue-inl.h>
 
 #endif //EVENTKIT_DISPATCHQUEUE_H

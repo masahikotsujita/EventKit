@@ -4,16 +4,16 @@
 
 #include <iostream>
 #include <thread>
-#include <eventkit/RunLoop.h>
-#include <eventkit/DispatchQueue.h>
+#include <eventkit/dispatch/RunLoop.h>
+#include <eventkit/dispatch/DispatchQueue.h>
 
 int main(int argc, const char* argv[]) {
-    ek::RunLoop mainLoop;
-    auto pMainQueue = std::make_shared<ek::DispatchQueue>();
+    ek::dispatch::RunLoop mainLoop;
+    auto pMainQueue = std::make_shared<ek::dispatch::DispatchQueue>();
     mainLoop.addDispatchQueue(pMainQueue);
 
-    ek::RunLoop bgLoop;
-    auto pBgQueue = std::make_shared<ek::DispatchQueue>();
+    ek::dispatch::RunLoop bgLoop;
+    auto pBgQueue = std::make_shared<ek::dispatch::DispatchQueue>();
     bgLoop.addDispatchQueue(pBgQueue);
 
     pMainQueue->dispatchAsync([] {

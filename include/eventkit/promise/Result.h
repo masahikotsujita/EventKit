@@ -9,6 +9,7 @@
 #include <cassert>
 
 namespace ek {
+namespace promise {
 
 enum class ResultType {
     succeeded = 1,
@@ -210,6 +211,7 @@ private:
 
 };
 
+}
 }
 
 #endif //EVENTKIT_RESULT_H

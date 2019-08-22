@@ -5,10 +5,11 @@
 #ifndef EVENTKIT_THENTRANSFORMATION_H
 #define EVENTKIT_THENTRANSFORMATION_H
 
-#include <eventkit/Result.h>
-#include <eventkit/Promise.h>
+#include <eventkit/promise/Result.h>
+#include <eventkit/promise/Promise.h>
 
 namespace ek {
+namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename U, typename Handler>
@@ -37,6 +38,7 @@ private:
 
 };
 
+}
 }
 }
 

@@ -9,6 +9,7 @@
 #include <condition_variable>
 
 namespace ek {
+namespace dispatch {
 namespace detail {
 
 class Semaphore final {
@@ -70,6 +71,7 @@ inline void Semaphore::notify() {
     }
 }
 
+}
 }
 }
 

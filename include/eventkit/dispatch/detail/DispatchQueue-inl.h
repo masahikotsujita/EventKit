@@ -6,6 +6,7 @@
 #define EVENTKIT_DISPATCHQUEUE_INL_H
 
 namespace ek {
+namespace dispatch {
 
 template <typename Function>
 template <typename F>
@@ -23,6 +24,7 @@ void DispatchQueue::dispatchAsync(F&& function) {
     dispatchItemAsync(std::make_shared<DispatchFunctionItem<std::decay_t<F>>>(std::forward<F>(function)));
 }
 
+}
 }
 
 #endif //EVENTKIT_DISPATCHQUEUE_INL_H

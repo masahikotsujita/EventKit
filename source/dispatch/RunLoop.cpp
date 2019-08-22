@@ -3,10 +3,11 @@
 //
 
 #include <algorithm>
-#include <eventkit/RunLoop.h>
-#include <eventkit/DispatchQueue.h>
+#include <eventkit/dispatch/RunLoop.h>
+#include <eventkit/dispatch/DispatchQueue.h>
 
 namespace ek {
+namespace dispatch {
 
 void RunLoop::run() {
     bool isFinished = false;
@@ -47,4 +48,5 @@ void RunLoop::signal() {
     m_semaphore.notify();
 }
 
+}
 }

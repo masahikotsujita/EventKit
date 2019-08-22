@@ -7,27 +7,27 @@ find_package(Threads)
 include_directories(include)
 
 set(LIBRARY_SOURCE_FILES
-    include/eventkit/detail/Semaphore.h
-    include/eventkit/DispatchQueue.h
-    include/eventkit/detail/DispatchQueue-inl.h
-    include/eventkit/RunLoop.h
-    source/DispatchQueue.cpp
-    source/RunLoop.cpp
-    include/eventkit/Result.h
-    include/eventkit/Promise.h
-    include/eventkit/Resolver.h
-    include/eventkit/detail/ResultHandler.h
-    include/eventkit/detail/PromiseCore.h
-    include/eventkit/detail/ThenTransformation.h
-    include/eventkit/detail/RecoverTransformation.h
+    include/eventkit/dispatch/detail/Semaphore.h
+    include/eventkit/dispatch/DispatchQueue.h
+    include/eventkit/dispatch/detail/DispatchQueue-inl.h
+    include/eventkit/dispatch/RunLoop.h
+    source/dispatch/DispatchQueue.cpp
+    source/dispatch/RunLoop.cpp
+    include/eventkit/promise/Result.h
+    include/eventkit/promise/Promise.h
+    include/eventkit/promise/Resolver.h
+    include/eventkit/promise/detail/ResultHandler.h
+    include/eventkit/promise/detail/PromiseCore.h
+    include/eventkit/promise/detail/ThenTransformation.h
+    include/eventkit/promise/detail/RecoverTransformation.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
 
-add_executable(eventkitexample example/main.cpp)
+add_executable(eventkitexample sample/dispatch_sample/main.cpp)
 target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(promiseexample example/promise_example_main.cpp)
+add_executable(promiseexample sample/promise_sample/main.cpp)
 target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
 if(BUILD_TEST)
