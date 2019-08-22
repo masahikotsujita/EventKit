@@ -7,19 +7,19 @@ find_package(Threads)
 include_directories(include)
 
 set(LIBRARY_SOURCE_FILES
-    include/eventkit/detail/Semaphore.h
-    include/eventkit/DispatchQueue.h
-    include/eventkit/detail/DispatchQueue-inl.h
-    include/eventkit/RunLoop.h
+    include/eventkit/dispatch/detail/Semaphore.h
+    include/eventkit/dispatch/DispatchQueue.h
+    include/eventkit/dispatch/detail/DispatchQueue-inl.h
+    include/eventkit/dispatch/RunLoop.h
     source/DispatchQueue.cpp
     source/RunLoop.cpp
-    include/eventkit/Result.h
-    include/eventkit/Promise.h
-    include/eventkit/Resolver.h
-    include/eventkit/detail/ResultHandler.h
-    include/eventkit/detail/PromiseCore.h
-    include/eventkit/detail/ThenTransformation.h
-    include/eventkit/detail/RecoverTransformation.h
+    include/eventkit/promise/Result.h
+    include/eventkit/promise/Promise.h
+    include/eventkit/promise/Resolver.h
+    include/eventkit/promise/detail/ResultHandler.h
+    include/eventkit/promise/detail/PromiseCore.h
+    include/eventkit/promise/detail/ThenTransformation.h
+    include/eventkit/promise/detail/RecoverTransformation.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})

@@ -2,9 +2,10 @@
 // Created by Masahiko Tsujita on 2019-08-13.
 //
 
-#include <eventkit/DispatchQueue.h>
+#include <eventkit/dispatch/DispatchQueue.h>
 
 namespace ek {
+namespace dispatch {
 
 void DispatchQueue::dispatchItemAsync(const std::shared_ptr<DispatchItem>& pTask) {
     std::lock_guard<std::mutex> lock(m_mutex);
@@ -35,4 +36,5 @@ void DispatchQueue::setRunLoop(RunLoop* pRunLoop) {
     m_pRunLoop = pRunLoop;
 }
 
+}
 }

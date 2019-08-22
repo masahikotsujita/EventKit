@@ -5,15 +5,15 @@
 #include <thread>
 #include <catch2/catch.hpp>
 #include "TestUtils.h"
-#include <eventkit/RunLoop.h>
-#include <eventkit/DispatchQueue.h>
+#include <eventkit/dispatch/RunLoop.h>
+#include <eventkit/dispatch/DispatchQueue.h>
 
 using namespace std::chrono_literals;
 
 SCENARIO("a run loop", "[run_loop]") {
 
     GIVEN("a run loop without any event sources") {
-        auto pRunLoop = std::make_shared<ek::RunLoop>();
+        auto pRunLoop = std::make_shared<ek::dispatch::RunLoop>();
 
         WHEN("the run loop starts running on a thread") {
             auto pThread = std::make_shared<std::thread>([&]{
@@ -26,7 +26,7 @@ SCENARIO("a run loop", "[run_loop]") {
         }
 
         WHEN("a event source added to the run loop") {
-            auto pDispatchQueue = std::make_shared<ek::DispatchQueue>();
+            auto pDispatchQueue = std::make_shared<ek::dispatch::DispatchQueue>();
             pRunLoop->addDispatchQueue(pDispatchQueue);
 
             WHEN("the run loop starts running on a thread") {

@@ -5,10 +5,11 @@
 #ifndef EVENTKIT_RESULTHANDLER_H
 #define EVENTKIT_RESULTHANDLER_H
 
-#include <eventkit/Result.h>
-#include <eventkit/Promise.h>
+#include <eventkit/promise/Result.h>
+#include <eventkit/promise/Promise.h>
 
 namespace ek {
+namespace promise {
 namespace detail {
 
 template <typename T, typename E>
@@ -44,6 +45,7 @@ auto make_function_handler(Function&& function) -> std::shared_ptr<ResultHandler
     return std::make_shared<FunctionResultHandler<T, E, std::decay_t<Function>>>(std::forward<Function>(function));
 }
 
+}
 }
 }
 

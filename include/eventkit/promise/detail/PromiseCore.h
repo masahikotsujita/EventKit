@@ -8,10 +8,11 @@
 #include <memory>
 #include <mutex>
 #include <list>
-#include <eventkit/Result.h>
-#include <eventkit/detail/ResultHandler.h>
+#include <eventkit/promise/Result.h>
+#include <eventkit/promise/detail/ResultHandler.h>
 
 namespace ek {
+namespace promise {
 namespace detail {
 
 template <typename T, typename E>
@@ -51,6 +52,7 @@ private:
     std::list<std::shared_ptr<Handler>> m_handlers;
 };
 
+}
 }
 }
 

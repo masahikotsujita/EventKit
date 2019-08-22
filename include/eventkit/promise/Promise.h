@@ -6,12 +6,13 @@
 #define EVENTKIT_PROMISE_H
 
 #include <memory>
-#include <eventkit/Resolver.h>
-#include <eventkit/detail/PromiseCore.h>
-#include <eventkit/detail/ThenTransformation.h>
-#include <eventkit/detail/RecoverTransformation.h>
+#include <eventkit/promise/Resolver.h>
+#include <eventkit/promise/detail/PromiseCore.h>
+#include <eventkit/promise/detail/ThenTransformation.h>
+#include <eventkit/promise/detail/RecoverTransformation.h>
 
 namespace ek {
+namespace promise {
 
 template <typename T, typename E>
 class Promise {
@@ -19,13 +20,13 @@ private:
     using Core = detail::PromiseCore<T, E>;
 
     template <typename U, typename F>
-    friend class ::ek::Promise;
+    friend class ::ek::promise::Promise;
 
     template <typename U, typename V, typename W, typename Handler>
-    friend class ::ek::detail::ThenTransformation;
+    friend class ::ek::promise::detail::ThenTransformation;
 
     template <typename U, typename V, typename W, typename Handler>
-    friend class ::ek::detail::RecoverTransformation;
+    friend class ::ek::promise::detail::RecoverTransformation;
 
 public:
     using Value = T;
@@ -80,6 +81,7 @@ private:
 
 };
 
+}
 }
 
 #endif //EVENTKIT_PROMISE_H

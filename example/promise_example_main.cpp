@@ -5,7 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
-#include <eventkit/Promise.h>
+#include <eventkit/promise/Promise.h>
 #include <sstream>
 
 std::atomic_bool g_isDone { false };
@@ -13,10 +13,10 @@ struct Unit {};
 struct NoError {};
 
 int main(int argc, const char* argv[]) {
-    using Promise = ek::Promise<std::string, int>;
+    using Promise = ek::promise::Promise<std::string, int>;
     using namespace std::chrono_literals;
 
-    Promise([argc, argv](const ek::Resolver<std::string, int>& resolver){
+    Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
         std::thread thread([resolver, argc, argv]{
             std::cout << "processing..." << std::endl;
             std::this_thread::sleep_for(5s);
@@ -36,20 +36,20 @@ int main(int argc, const char* argv[]) {
         std::stringstream ss;
         ss << "\"" << text << "\"";
         std::string quoted = ss.str();
-        return ek::Promise<std::string, int>([quoted](const ek::Resolver<std::string, int>& resolver){
+        return ek::promise::Promise<std::string, int>([quoted](const ek::promise::Resolver<std::string, int>& resolver){
             resolver.fulfill(quoted);
         });
     }).then([](const std::string& text){
         std::cout << "succeeded: " << text << std::endl;
-        return ek::Promise<Unit, int>([](const ek::Resolver<Unit, int>& resolver){
+        return ek::promise::Promise<Unit, int>([](const ek::promise::Resolver<Unit, int>& resolver){
             resolver.fulfill(Unit());
         });
     }).recover([](int error){
         std::cout << "failed: " << error << std::endl;
-        return ek::Promise<Unit, NoError>([](const ek::Resolver<Unit, NoError>& resolver){
+        return ek::promise::Promise<Unit, NoError>([](const ek::promise::Resolver<Unit, NoError>& resolver){
             resolver.fulfill(Unit());
         });
-    }).finally([](const ek::Result<Unit, NoError>& result){
+    }).finally([](const ek::promise::Result<Unit, NoError>& result){
         std::cout << "done. " << std::endl;
         g_isDone = true;
     });
