@@ -24,10 +24,10 @@ set(LIBRARY_SOURCE_FILES
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
 
-add_executable(eventkitexample example/main.cpp)
+add_executable(eventkitexample example/dispatch_sample/main.cpp)
 target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(promiseexample example/promise_example_main.cpp)
+add_executable(promiseexample example/promise_sample/main.cpp)
 target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
 if(BUILD_TEST)
