@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019-08-17.
 //
 
-#ifndef EVENTKIT_RECOVERTRANSFORMATION_H
-#define EVENTKIT_RECOVERTRANSFORMATION_H
+#ifndef EVENTKIT_RECOVERTRANSFORMATIONCORE_H
+#define EVENTKIT_RECOVERTRANSFORMATIONCORE_H
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
@@ -14,18 +14,18 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename F, typename Handler>
-class RecoverTransformation :
-    public std::enable_shared_from_this<RecoverTransformation<T, E, F, Handler>>,
+class RecoverTransformationCore :
+    public std::enable_shared_from_this<RecoverTransformationCore<T, E, F, Handler>>,
     public PromiseCore<T, F>,
     public ResultHandlerWrapper<T, E> {
 public:
     template <typename Tr>
-    explicit RecoverTransformation(Tr&& transformation)
+    explicit RecoverTransformationCore(Tr&& transformation)
         : m_transformation(std::forward<Tr>(transformation))
     {
     }
 
-    ~RecoverTransformation() override = default;
+    ~RecoverTransformationCore() override = default;
 
     virtual void onResult (const Result<T, E>& result) override {
         if (result.getType() == ResultType::failed) {
@@ -52,4 +52,4 @@ private:
 }
 }
 
-#endif //EVENTKIT_RECOVERTRANSFORMATION_H
+#endif //EVENTKIT_RECOVERTRANSFORMATIONCORE_H

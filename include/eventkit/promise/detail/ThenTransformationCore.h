@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019-08-16.
 //
 
-#ifndef EVENTKIT_THENTRANSFORMATION_H
-#define EVENTKIT_THENTRANSFORMATION_H
+#ifndef EVENTKIT_THENTRANSFORMATIONCORE_H
+#define EVENTKIT_THENTRANSFORMATIONCORE_H
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
@@ -14,18 +14,18 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename U, typename Handler>
-class ThenTransformation :
-    public std::enable_shared_from_this<ThenTransformation<T, E, U, Handler>>,
+class ThenTransformationCore :
+    public std::enable_shared_from_this<ThenTransformationCore<T, E, U, Handler>>,
     public PromiseCore<U, E>,
     public ResultHandlerWrapper<T, E> {
 public:
     template <typename Tr>
-    explicit ThenTransformation(Tr&& transformation)
+    explicit ThenTransformationCore(Tr&& transformation)
         : m_transformation(std::forward<Tr>(transformation))
     {
     }
 
-    ~ThenTransformation() override = default;
+    ~ThenTransformationCore() override = default;
 
     virtual void onResult(const Result<T, E>& result) override {
         if (result.getType() == ResultType::succeeded) {
@@ -52,4 +52,4 @@ private:
 }
 }
 
-#endif //EVENTKIT_THENTRANSFORMATION_H
+#endif //EVENTKIT_THENTRANSFORMATIONCORE_H
