@@ -18,6 +18,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/Resolver.h
     include/eventkit/promise/detail/ResultHandler.h
     include/eventkit/promise/detail/PromiseCore.h
+    include/eventkit/promise/detail/ResultHandlerWrapper.h
     include/eventkit/promise/detail/ThenTransformation.h
     include/eventkit/promise/detail/RecoverTransformation.h
 )

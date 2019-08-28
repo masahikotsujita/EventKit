@@ -43,19 +43,17 @@ public:
     template <typename ThenHandler>
     auto then(ThenHandler&& handler) const -> Promise<typename std::result_of_t<ThenHandler(T)>::Value, E> {
         using U = typename std::result_of_t<ThenHandler(T)>::Value;
-        auto pTransformedCore = std::make_shared<detail::PromiseCore<U, E>>();
-        auto pTransformation = std::make_shared<detail::ThenTransformation<T, E, U, std::decay_t<ThenHandler>>>(pTransformedCore, std::forward<ThenHandler>(handler));
-        m_pCore->addHandler(pTransformation);
-        return Promise<U, E>(pTransformedCore);
+        auto pCore = std::make_shared<detail::ThenTransformation<T, E, U, std::decay_t<ThenHandler>>>(std::forward<ThenHandler>(handler));
+        m_pCore->addHandler(pCore->asHandler());
+        return Promise<U, E>(pCore->asCore());
     }
 
     template <typename RecoverHandler>
     auto recover(RecoverHandler&& handler) const -> Promise<T, typename std::result_of_t<RecoverHandler(E)>::Error> {
         using F = typename std::result_of_t<RecoverHandler(E)>::Error;
-        auto pTransformedCore = std::make_shared<detail::PromiseCore<T, F>>();
-        auto pTransformation = std::make_shared<detail::RecoverTransformation<T, E, F, std::decay_t<RecoverHandler>>>(pTransformedCore, std::forward<RecoverHandler>(handler));
-        m_pCore->addHandler(pTransformation);
-        return Promise<T, F>(pTransformedCore);
+        auto pCore = std::make_shared<detail::RecoverTransformation<T, E, F, std::decay_t<RecoverHandler>>>(std::forward<RecoverHandler>(handler));
+        m_pCore->addHandler(pCore->asHandler());
+        return Promise<T, F>(pCore->asCore());
     }
 
     template <typename DoneHandler>
