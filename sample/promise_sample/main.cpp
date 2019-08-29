@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]) {
         return ek::promise::Promise<Unit, NoError>([](const ek::promise::Resolver<Unit, NoError>& resolver){
             resolver.fulfill(Unit());
         });
-    }).finally([](const ek::promise::Result<Unit, NoError>& result){
+    }).done([](const ek::promise::Result<Unit, NoError>& result){
         std::cout << "done. " << std::endl;
         g_isDone = true;
     });
