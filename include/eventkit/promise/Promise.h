@@ -58,9 +58,9 @@ public:
         return Promise<T, F>(pTransformedCore);
     }
 
-    template <typename FinallyHandler>
-    auto finally(FinallyHandler&& handler) const -> Promise<T, E> {
-        addHandler(detail::make_function_handler<T, E>(std::forward<FinallyHandler>(handler)));
+    template <typename DoneHandler>
+    auto done(DoneHandler&& handler) const -> Promise<T, E> {
+        addHandler(detail::make_function_handler<T, E>(std::forward<DoneHandler>(handler)));
         return Promise<T, E>(m_pCore);
     }
 
