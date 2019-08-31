@@ -29,7 +29,7 @@ public:
 
     virtual void onResult(const Result<T, E>& result) override {
         if (result.getType() == ResultType::succeeded) {
-            m_transformation(result.getValue()).addHandler(asCore());
+            m_transformation(result.getValue()).pipe(asCore());
         } else {
             PromiseCore<U, E>::handleResult(Result<U, E>::failed(result.getError()));
         }
