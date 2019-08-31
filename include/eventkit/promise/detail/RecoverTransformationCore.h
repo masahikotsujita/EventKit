@@ -7,7 +7,7 @@
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
-#include <eventkit/promise/detail/ResultHandlerWrapper.h>
+#include <eventkit/promise/detail/ResultObserverMultipleInheritanceHelper.h>
 
 namespace ek {
 namespace promise {
@@ -17,7 +17,7 @@ template <typename T, typename E, typename F, typename Handler>
 class RecoverTransformationCore :
     public std::enable_shared_from_this<RecoverTransformationCore<T, E, F, Handler>>,
     public PromiseCore<T, F>,
-    public ResultHandlerWrapper<T, E> {
+    public ResultObserverMultipleInheritanceHelper<T, E> {
 public:
     template <typename Tr>
     explicit RecoverTransformationCore(Tr&& transformation)
@@ -40,7 +40,7 @@ public:
     }
     
     std::shared_ptr<ResultObserver<T, E>> asHandler() {
-        return std::static_pointer_cast<ResultHandlerWrapper<T, E>>(this->shared_from_this());
+        return std::static_pointer_cast<ResultObserverMultipleInheritanceHelper<T, E>>(this->shared_from_this());
     }
 
 private:
