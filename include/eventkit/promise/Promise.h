@@ -58,11 +58,11 @@ public:
 
     template <typename DoneHandler>
     auto done(DoneHandler&& handler) const -> Promise<T, E> {
-        pipe(detail::make_function_handler<T, E>(std::forward<DoneHandler>(handler)));
+        pipe(detail::make_function_observer<T, E>(std::forward<DoneHandler>(handler)));
         return Promise<T, E>(m_pCore);
     }
 
-    void pipe(const std::shared_ptr<ResultHandler<T, E>>& handler) const {
+    void pipe(const std::shared_ptr<ResultObserver<T, E>>& handler) const {
         m_pCore->addHandler(handler);
     }
 

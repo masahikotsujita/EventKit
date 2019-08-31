@@ -39,7 +39,7 @@ public:
         return std::static_pointer_cast<PromiseCore<U, E>>(this->shared_from_this());
     }
     
-    std::shared_ptr<ResultHandler<T, E>> asHandler() {
+    std::shared_ptr<ResultObserver<T, E>> asHandler() {
         return std::static_pointer_cast<ResultHandlerWrapper<T, E>>(this->shared_from_this());
     }
 

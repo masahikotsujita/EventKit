@@ -9,16 +9,16 @@
 #include <mutex>
 #include <list>
 #include <eventkit/promise/Result.h>
-#include <eventkit/promise/ResultHandler.h>
+#include <eventkit/promise/ResultObserver.h>
 
 namespace ek {
 namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ResultHandler<T, E> {
+class PromiseCore : public ResultObserver<T, E> {
 public:
-    using Handler = ResultHandler<T, E>;
+    using Handler = ResultObserver<T, E>;
 
     PromiseCore() : m_isResolved(false) {}
 

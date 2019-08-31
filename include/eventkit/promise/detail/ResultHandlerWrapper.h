@@ -5,7 +5,7 @@
 #ifndef EVENTKIT_RESULTHANDLERWRAPPER_H
 #define EVENTKIT_RESULTHANDLERWRAPPER_H
 
-#include <eventkit/promise/ResultHandler.h>
+#include <eventkit/promise/ResultObserver.h>
 
 namespace ek {
 namespace promise {
@@ -16,7 +16,7 @@ namespace detail {
  * @brief       An wrapper class of ResultHandler to avoid multiple inheritance conflict.
  */
 template <typename T, typename E>
-class ResultHandlerWrapper : public ResultHandler<T, E> {
+class ResultHandlerWrapper : public ResultObserver<T, E> {
 public:
     virtual ~ResultHandlerWrapper() override = default;
     
