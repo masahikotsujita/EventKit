@@ -40,11 +40,11 @@ public:
     }
 
     void fulfill(const T& value) const {
-        m_pCore->handleResult(Result<T, E>::succeeded(value));
+        m_pCore->onResult(Result<T, E>::succeeded(value));
     }
 
     void reject(const E& error) const {
-        m_pCore->handleResult(Result<T, E>::failed(error));
+        m_pCore->onResult(Result<T, E>::failed(error));
     }
 
     Fulfiller<T, E> fulfiller() const {
@@ -72,7 +72,7 @@ public:
     }
 
     void operator () (const T& value) const {
-        m_pCore->handleResult(Result<T, E>::succeeded(value));
+        m_pCore->onResult(Result<T, E>::succeeded(value));
     }
 
 private:
@@ -92,7 +92,7 @@ public:
     }
 
     void operator () (const E& error) const {
-        m_pCore->handleResult(Result<T, E>::failed(error));
+        m_pCore->onResult(Result<T, E>::failed(error));
     }
 
 private:
