@@ -62,8 +62,6 @@ public:
         return Promise<T, E>(m_pCore);
     }
 
-private:
-
     void addHandler(const std::shared_ptr<ResultHandler<T, E>>& handler) const {
         m_pCore->addHandler(handler);
     }
