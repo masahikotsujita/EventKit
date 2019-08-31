@@ -23,36 +23,6 @@ public:
 }
 }
 
-namespace ek {
-namespace promise {
-namespace detail {
-
-template <typename T, typename E, typename Function>
-class FunctionResultHandler : public ResultHandler<T, E> {
-public:
-    template <typename F>
-    explicit FunctionResultHandler(F&& function)
-        : m_function(std::forward<F>(function)) {
-    }
-
-    virtual ~FunctionResultHandler() override = default;
-
-    virtual void handleResult(const Result <T, E>& result) override {
-        m_function(result);
-    }
-
-private:
-    Function m_function;
-
-};
-
-template <typename T, typename E, typename Function>
-auto make_function_handler(Function&& function) -> std::shared_ptr<ResultHandler<T, E>> {
-    return std::make_shared<FunctionResultHandler<T, E, std::decay_t<Function>>>(std::forward<Function>(function));
-}
-
-}
-}
-}
+#include <eventkit/promise/detail/ResultHandler-inl.h>
 
 #endif //EVENTKIT_RESULTHANDLER_H
