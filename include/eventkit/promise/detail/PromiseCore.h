@@ -9,7 +9,7 @@
 #include <mutex>
 #include <list>
 #include <eventkit/promise/Result.h>
-#include <eventkit/promise/detail/ResultHandler.h>
+#include <eventkit/promise/ResultHandler.h>
 
 namespace ek {
 namespace promise {

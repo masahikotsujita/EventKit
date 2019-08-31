@@ -64,7 +64,7 @@ public:
 
 private:
 
-    void addHandler(const std::shared_ptr<detail::ResultHandler<T, E>>& handler) const {
+    void addHandler(const std::shared_ptr<ResultHandler<T, E>>& handler) const {
         m_pCore->addHandler(handler);
     }
 

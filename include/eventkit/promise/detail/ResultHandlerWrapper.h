@@ -5,7 +5,7 @@
 #ifndef EVENTKIT_RESULTHANDLERWRAPPER_H
 #define EVENTKIT_RESULTHANDLERWRAPPER_H
 
-#include <eventkit/promise/detail/ResultHandler.h>
+#include <eventkit/promise/ResultHandler.h>
 
 namespace ek {
 namespace promise {

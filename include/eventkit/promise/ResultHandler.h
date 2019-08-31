@@ -10,7 +10,6 @@
 
 namespace ek {
 namespace promise {
-namespace detail {
 
 template <typename T, typename E>
 class ResultHandler {
@@ -20,6 +19,13 @@ public:
     virtual void handleResult(const Result <T, E>& result) = 0;
 
 };
+
+}
+}
+
+namespace ek {
+namespace promise {
+namespace detail {
 
 template <typename T, typename E, typename Function>
 class FunctionResultHandler : public ResultHandler<T, E> {
