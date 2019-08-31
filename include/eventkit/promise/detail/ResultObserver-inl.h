@@ -19,7 +19,7 @@ public:
     
     virtual ~FunctionResultObserver() override = default;
     
-    virtual void handleResult(const Result <T, E>& result) override {
+    virtual void onResult(const Result <T, E>& result) override {
         m_function(result);
     }
 

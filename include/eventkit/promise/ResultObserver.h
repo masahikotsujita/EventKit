@@ -16,7 +16,7 @@ class ResultObserver {
 public:
     virtual ~ResultObserver() = default;
 
-    virtual void handleResult(const Result <T, E>& result) = 0;
+    virtual void onResult(const Result <T, E>& result) = 0;
 
 };
 

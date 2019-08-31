@@ -27,11 +27,11 @@ public:
 
     ~ThenTransformationCore() override = default;
 
-    virtual void onResult(const Result<T, E>& result) override {
+    virtual void onResult(result_observer_multiple_inheritance_helper_tag_t, const Result<T, E>& result) override {
         if (result.getType() == ResultType::succeeded) {
             m_transformation(result.getValue()).pipe(asCore());
         } else {
-            PromiseCore<U, E>::handleResult(Result<U, E>::failed(result.getError()));
+            PromiseCore<U, E>::onResult(Result<U, E>::failed(result.getError()));
         }
     }
     

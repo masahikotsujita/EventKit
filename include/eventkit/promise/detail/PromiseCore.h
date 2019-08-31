@@ -22,7 +22,7 @@ public:
 
     PromiseCore() : m_isResolved(false) {}
 
-    virtual void handleResult(const Result<T, E>& result) override {
+    virtual void onResult(const Result<T, E>& result) override {
         std::unique_lock<std::mutex> lock(m_mutex);
         if (m_isResolved) {
             return;
@@ -32,7 +32,7 @@ public:
         std::list<std::shared_ptr<Handler>> handlers = std::move(m_handlers);
         lock.unlock();
         for (const auto& pHandler : handlers) {
-            pHandler->handleResult(m_result);
+            pHandler->onResult(m_result);
         }
     }
 
@@ -41,7 +41,7 @@ public:
         if (!m_isResolved) {
             m_handlers.push_back(handler);
         } else {
-            handler->handleResult(m_result);
+            handler->onResult(m_result);
         }
     }
 

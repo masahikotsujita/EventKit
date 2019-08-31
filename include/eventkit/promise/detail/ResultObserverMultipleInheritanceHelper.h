@@ -11,6 +11,11 @@ namespace ek {
 namespace promise {
 namespace detail {
 
+struct result_observer_multiple_inheritance_helper_tag_t { explicit result_observer_multiple_inheritance_helper_tag_t() = default; };
+
+constexpr result_observer_multiple_inheritance_helper_tag_t
+    result_observer_multiple_inheritance_helper_tag = result_observer_multiple_inheritance_helper_tag_t();
+
 /**
  * @class       ResultObserverMultipleInheritanceHelper
  * @brief       A helper class to inherit multiple `ResultObserver`s without conflict.
@@ -20,11 +25,11 @@ class ResultObserverMultipleInheritanceHelper : public ResultObserver<T, E> {
 public:
     virtual ~ResultObserverMultipleInheritanceHelper() override = default;
     
-    virtual void handleResult (const Result<T, E>& result) override final {
-        onResult(result);
+    virtual void onResult(const Result<T, E>& result) override final {
+        onResult(result_observer_multiple_inheritance_helper_tag, result);
     }
     
-    virtual void onResult(const Result<T, E>& result) = 0;
+    virtual void onResult(result_observer_multiple_inheritance_helper_tag_t, const Result<T, E>& result) = 0;
     
 };
 
