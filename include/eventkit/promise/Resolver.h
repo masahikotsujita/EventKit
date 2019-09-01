@@ -46,6 +46,10 @@ public:
     void reject(const E& error) const {
         m_pCore->onResult(Result<T, E>::failed(error));
     }
+    
+    void operator () (const Result<T, E>& result) const {
+        m_pCore->onResult(result);
+    }
 
     Fulfiller<T, E> fulfiller() const {
         return Fulfiller<T, E>(m_pCore);
