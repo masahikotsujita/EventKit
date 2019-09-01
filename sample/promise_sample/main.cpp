@@ -7,6 +7,7 @@
 #include <atomic>
 #include <eventkit/promise/Promise.h>
 #include <sstream>
+#include <eventkit/promise/StaticPromise.h>
 
 std::atomic_bool g_isDone { false };
 struct Unit {};
@@ -36,19 +37,13 @@ int main(int argc, const char* argv[]) {
         std::stringstream ss;
         ss << "\"" << text << "\"";
         std::string quoted = ss.str();
-        return ek::promise::Promise<std::string, int>([quoted](const ek::promise::Resolver<std::string, int>& resolver){
-            resolver.fulfill(quoted);
-        });
+        return ek::promise::StaticPromise<std::string, int>::value(quoted);
     }).then([](const std::string& text){
         std::cout << "succeeded: " << text << std::endl;
-        return ek::promise::Promise<Unit, int>([](const ek::promise::Resolver<Unit, int>& resolver){
-            resolver.fulfill(Unit());
-        });
+        return ek::promise::StaticPromise<Unit, int>::value();
     }).recover([](int error){
         std::cout << "failed: " << error << std::endl;
-        return ek::promise::Promise<Unit, NoError>([](const ek::promise::Resolver<Unit, NoError>& resolver){
-            resolver.fulfill(Unit());
-        });
+        return ek::promise::StaticPromise<Unit, NoError>::value();
     }).done([](const ek::promise::Result<Unit, NoError>& result){
         std::cout << "done. " << std::endl;
         g_isDone = true;
