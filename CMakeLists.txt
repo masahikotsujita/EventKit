@@ -23,6 +23,10 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/ResultObserverMultipleInheritanceHelper.h
     include/eventkit/promise/detail/ThenTransformationCore.h
     include/eventkit/promise/detail/RecoverTransformationCore.h
+    include/eventkit/promise/Operator.h
+    include/eventkit/promise/operators/then.h
+    include/eventkit/promise/operators/recover.h
+    include/eventkit/promise/operators/done.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})

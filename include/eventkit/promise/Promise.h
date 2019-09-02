@@ -13,6 +13,15 @@
 
 namespace ek {
 namespace promise {
+namespace operators {
+namespace detail {
+template <typename Handler>
+class ThenOperator;
+
+template <typename Handler>
+class RecoverOperator;
+}
+}
 
 template <typename T, typename E>
 class Promise {
@@ -27,6 +36,12 @@ private:
 
     template <typename U, typename V, typename W, typename Handler>
     friend class ::ek::promise::detail::RecoverTransformationCore;
+    
+    template <typename Handler>
+    friend class ::ek::promise::operators::detail::ThenOperator;
+    
+    template <typename Handler>
+    friend class ::ek::promise::operators::detail::RecoverOperator;
 
 public:
     using Value = T;
@@ -38,28 +53,6 @@ public:
         Resolver<T, E> resolver(pCore);
         startHandler(resolver);
         m_pCore = pCore;
-    }
-
-    template <typename ThenHandler>
-    auto then(ThenHandler&& handler) const -> Promise<typename std::result_of_t<ThenHandler(T)>::Value, E> {
-        using U = typename std::result_of_t<ThenHandler(T)>::Value;
-        auto pCore = std::make_shared<detail::ThenTransformationCore<T, E, U, std::decay_t<ThenHandler>>>(std::forward<ThenHandler>(handler));
-        m_pCore->addHandler(pCore->asHandler());
-        return Promise<U, E>(pCore->asCore());
-    }
-
-    template <typename RecoverHandler>
-    auto recover(RecoverHandler&& handler) const -> Promise<T, typename std::result_of_t<RecoverHandler(E)>::Error> {
-        using F = typename std::result_of_t<RecoverHandler(E)>::Error;
-        auto pCore = std::make_shared<detail::RecoverTransformationCore<T, E, F, std::decay_t<RecoverHandler>>>(std::forward<RecoverHandler>(handler));
-        m_pCore->addHandler(pCore->asHandler());
-        return Promise<T, F>(pCore->asCore());
-    }
-
-    template <typename DoneHandler>
-    auto done(DoneHandler&& handler) const -> Promise<T, E> {
-        pipe(detail::make_function_observer<T, E>(std::forward<DoneHandler>(handler)));
-        return Promise<T, E>(m_pCore);
     }
 
     void pipe(const std::shared_ptr<ResultObserver<T, E>>& handler) const {
