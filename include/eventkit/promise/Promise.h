@@ -8,40 +8,25 @@
 #include <memory>
 #include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/detail/PromiseCore.h>
-#include <eventkit/promise/detail/ThenTransformationCore.h>
-#include <eventkit/promise/detail/RecoverTransformationCore.h>
 
 namespace ek {
 namespace promise {
-namespace operators {
-namespace detail {
-template <typename Handler>
-class ThenOperator;
 
-template <typename Handler>
-class RecoverOperator;
-}
+template <typename T, typename E>
+class Promise;
+
+namespace detail {
+template <typename T, typename E>
+ek::promise::Promise<T, E> make_promise(const std::shared_ptr<ek::promise::detail::PromiseCore<T, E>>& pCore);
 }
 
 template <typename T, typename E>
 class Promise {
 private:
     using Core = detail::PromiseCore<T, E>;
-
+    
     template <typename U, typename F>
-    friend class ::ek::promise::Promise;
-
-    template <typename U, typename V, typename W, typename Handler>
-    friend class ::ek::promise::detail::ThenTransformationCore;
-
-    template <typename U, typename V, typename W, typename Handler>
-    friend class ::ek::promise::detail::RecoverTransformationCore;
-    
-    template <typename Handler>
-    friend class ::ek::promise::operators::detail::ThenOperator;
-    
-    template <typename Handler>
-    friend class ::ek::promise::operators::detail::RecoverOperator;
+    friend ek::promise::Promise<U, F> detail::make_promise(const std::shared_ptr<ek::promise::detail::PromiseCore<U, F>>& pCore);
 
 public:
     using Value = T;
@@ -72,5 +57,7 @@ private:
 
 }
 }
+
+#include <eventkit/promise/detail/Promise-inl.h>
 
 #endif //EVENTKIT_PROMISE_H
