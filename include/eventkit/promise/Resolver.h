@@ -51,11 +51,11 @@ public:
         m_pCore->onResult(result);
     }
 
-    Fulfiller<T, E> fulfiller() const {
+    explicit operator Fulfiller<T, E> () const {
         return Fulfiller<T, E>(m_pCore);
     }
 
-    Rejecter<T, E> rejecter() const {
+    explicit operator Rejecter<T, E> () const {
         return Rejecter<T, E>(m_pCore);
     }
 
