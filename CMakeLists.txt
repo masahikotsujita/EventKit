@@ -24,6 +24,8 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/ResultObserverMultipleInheritanceHelper.h
     include/eventkit/promise/detail/ThenTransformationCore.h
     include/eventkit/promise/detail/RecoverTransformationCore.h
+    include/eventkit/promise/detail/type_traits.h
+    include/eventkit/promise/detail/AllTransformationCore.h
     include/eventkit/promise/Operator.h
     include/eventkit/promise/operators/detail/then-inl.h
     include/eventkit/promise/operators/detail/recover-inl.h
@@ -31,6 +33,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/operators/then.h
     include/eventkit/promise/operators/recover.h
     include/eventkit/promise/operators/done.h
+    include/eventkit/promise/operators/all.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
