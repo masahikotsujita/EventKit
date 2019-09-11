@@ -7,6 +7,7 @@ find_package(Threads)
 include_directories(include)
 
 set(LIBRARY_SOURCE_FILES
+    include/eventkit/common/intrusive_ptr.h
     include/eventkit/dispatch/detail/Semaphore.h
     include/eventkit/dispatch/DispatchQueue.h
     include/eventkit/dispatch/detail/DispatchQueue-inl.h
