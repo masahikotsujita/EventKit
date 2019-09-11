@@ -7,7 +7,7 @@
 namespace ek {
 namespace dispatch {
 
-void DispatchQueue::dispatchItemAsync(const std::shared_ptr<DispatchItem>& pTask) {
+void DispatchQueue::dispatchItemAsync(const ek::common::intrusive_ptr<DispatchItem>& pTask) {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_queue.push(pTask);
     m_pRunLoop->signal();
@@ -16,7 +16,7 @@ void DispatchQueue::dispatchItemAsync(const std::shared_ptr<DispatchItem>& pTask
 void DispatchQueue::fire() {
     bool isEmpty = false;
     do {
-        std::shared_ptr<DispatchItem> item = nullptr;
+        ek::common::intrusive_ptr<DispatchItem> item = nullptr;
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 

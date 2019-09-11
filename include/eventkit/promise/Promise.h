@@ -17,7 +17,7 @@ class Promise;
 
 namespace detail {
 template <typename T, typename E>
-ek::promise::Promise<T, E> make_promise(const std::shared_ptr<ek::promise::detail::PromiseCore<T, E>>& pCore);
+ek::promise::Promise<T, E> make_promise(const ek::common::intrusive_ptr<ek::promise::detail::PromiseCore<T, E>>& pCore);
 }
 
 template <typename T, typename E>
@@ -26,7 +26,7 @@ private:
     using Core = detail::PromiseCore<T, E>;
     
     template <typename U, typename F>
-    friend ek::promise::Promise<U, F> detail::make_promise(const std::shared_ptr<ek::promise::detail::PromiseCore<U, F>>& pCore);
+    friend ek::promise::Promise<U, F> detail::make_promise(const ek::common::intrusive_ptr<ek::promise::detail::PromiseCore<U, F>>& pCore);
 
 public:
     using Value = T;
@@ -34,24 +34,24 @@ public:
 
     template <typename StartHandler>
     explicit Promise(const StartHandler& startHandler) {
-        auto pCore = std::make_shared<Core>();
+        auto pCore = ek::common::make_intrusive<Core>();
         Resolver<T, E> resolver(pCore);
         startHandler(resolver);
         m_pCore = pCore;
     }
 
-    void pipe(const std::shared_ptr<ResultObserver<T, E>>& handler) const {
+    void pipe(const ek::common::intrusive_ptr<ResultObserver<T, E>>& handler) const {
         m_pCore->addHandler(handler);
     }
 
 private:
 
-    explicit Promise(const std::shared_ptr<Core>& pCore)
+    explicit Promise(const ek::common::intrusive_ptr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
 private:
-    std::shared_ptr<Core> m_pCore;
+    ek::common::intrusive_ptr<Core> m_pCore;
 
 };
 

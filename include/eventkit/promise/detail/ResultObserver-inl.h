@@ -29,8 +29,8 @@ private:
 };
 
 template <typename T, typename E, typename Function>
-auto make_function_observer(Function&& function) -> std::shared_ptr<ResultObserver<T, E>> {
-    return std::make_shared<FunctionResultObserver<T, E, std::decay_t<Function>>>(std::forward<Function>(function));
+auto make_function_observer(Function&& function) -> ek::common::intrusive_ptr<ResultObserver<T, E>> {
+    return ek::common::make_intrusive<FunctionResultObserver<T, E, std::decay_t<Function>>>(std::forward<Function>(function));
 }
 
 }

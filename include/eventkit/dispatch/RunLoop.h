@@ -7,6 +7,7 @@
 
 #include <list>
 #include <eventkit/dispatch/detail/Semaphore.h>
+#include <eventkit/common/intrusive_ptr.h>
 
 namespace ek {
 namespace dispatch {
@@ -24,7 +25,7 @@ public:
 
     void run();
 
-    void addDispatchQueue(const std::shared_ptr<DispatchQueue>& pQueue);
+    void addDispatchQueue(const ek::common::intrusive_ptr<DispatchQueue>& pQueue);
 
     void removeDispatchQueue(DispatchQueue* pQueue);
 
@@ -37,7 +38,7 @@ private:
 
 private:
     detail::Semaphore m_semaphore;
-    std::list<std::shared_ptr<DispatchQueue>> m_dispatchQueues;
+    std::list<ek::common::intrusive_ptr<DispatchQueue>> m_dispatchQueues;
 
 };
 

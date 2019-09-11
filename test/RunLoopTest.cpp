@@ -26,7 +26,7 @@ SCENARIO("a run loop", "[run_loop]") {
         }
 
         WHEN("a event source added to the run loop") {
-            auto pDispatchQueue = std::make_shared<ek::dispatch::DispatchQueue>();
+            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
             pRunLoop->addDispatchQueue(pDispatchQueue);
 
             WHEN("the run loop starts running on a thread") {

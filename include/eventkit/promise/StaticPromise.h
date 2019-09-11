@@ -35,7 +35,7 @@ public:
         return StaticPromise<T, E>(Result<T, E>::failed(std::forward<Args>(args)...));
     }
     
-    void pipe(const std::shared_ptr<ResultObserver<T, E>>& handler) const {
+    void pipe(const ek::common::intrusive_ptr<ResultObserver<T, E>>& handler) const {
         handler->onResult(m_result);
     }
 

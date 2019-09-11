@@ -26,7 +26,7 @@ public:
         using T = typename PromiseType::Value;
         using E = typename PromiseType::Error;
         using F = typename std::result_of_t<Handler(E)>::Error;
-        auto pCore = std::make_shared<ek::promise::detail::RecoverTransformationCore<T, E, F, std::decay_t<Handler>>>(std::forward<std::decay_t<Handler>>(m_handler));
+        auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationCore<T, E, F, std::decay_t<Handler>>>(std::forward<std::decay_t<Handler>>(m_handler));
         promise.pipe(pCore->asHandler());
         return ek::promise::detail::make_promise(pCore->asCore());
     }

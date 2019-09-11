@@ -15,7 +15,6 @@ namespace detail {
 
 template <typename T, typename E, typename F, typename Handler>
 class RecoverTransformationCore :
-    public std::enable_shared_from_this<RecoverTransformationCore<T, E, F, Handler>>,
     public PromiseCore<T, F>,
     public ResultObserverMultipleInheritanceHelper<T, E> {
 public:
@@ -35,12 +34,12 @@ public:
         }
     }
     
-    std::shared_ptr<PromiseCore<T, F>> asCore() {
-        return std::static_pointer_cast<PromiseCore<T, F>>(this->shared_from_this());
+    ek::common::intrusive_ptr<PromiseCore<T, F>> asCore() {
+        return ek::common::intrusive_ptr<PromiseCore<T, F>>(static_cast<PromiseCore<T, F>*>(this));
     }
     
-    std::shared_ptr<ResultObserver<T, E>> asHandler() {
-        return std::static_pointer_cast<ResultObserverMultipleInheritanceHelper<T, E>>(this->shared_from_this());
+    ek::common::intrusive_ptr<ResultObserver<T, E>> asHandler() {
+        return ek::common::intrusive_ptr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
     }
 
 private:

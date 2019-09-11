@@ -7,12 +7,13 @@
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
+#include <eventkit/common/RefCountObject.h>
 
 namespace ek {
 namespace promise {
 
 template <typename T, typename E>
-class ResultObserver {
+class ResultObserver : public virtual ek::common::RefCountObject {
 public:
     virtual ~ResultObserver() = default;
 

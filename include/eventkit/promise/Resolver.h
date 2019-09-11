@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <eventkit/promise/Result.h>
+#include <eventkit/common/intrusive_ptr.h>
 
 namespace ek {
 namespace promise {
@@ -35,7 +36,7 @@ private:
 
 public:
 
-    explicit Resolver(const std::shared_ptr<Core>& pCore)
+    explicit Resolver(const ek::common::intrusive_ptr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
@@ -60,7 +61,7 @@ public:
     }
 
 private:
-    std::shared_ptr<Core> m_pCore;
+    ek::common::intrusive_ptr<Core> m_pCore;
 
 };
 
@@ -71,7 +72,7 @@ private:
 
 public:
 
-    explicit Fulfiller(const std::shared_ptr<Core>& pCore)
+    explicit Fulfiller(const ek::common::intrusive_ptr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
@@ -80,7 +81,7 @@ public:
     }
 
 private:
-    std::shared_ptr<Core> m_pCore;
+    ek::common::intrusive_ptr<Core> m_pCore;
 
 };
 
@@ -91,7 +92,7 @@ private:
 
 public:
 
-    explicit Rejecter(const std::shared_ptr<Core>& pCore)
+    explicit Rejecter(const ek::common::intrusive_ptr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
@@ -100,7 +101,7 @@ public:
     }
 
 private:
-    std::shared_ptr<Core> m_pCore;
+    ek::common::intrusive_ptr<Core> m_pCore;
 
 };
 

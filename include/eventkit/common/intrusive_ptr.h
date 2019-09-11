@@ -20,31 +20,64 @@ public:
         : m_p(nullptr) {
     }
     
-    explicit intrusive_ptr(element_type* p, bool add_ref = true)
+    template <typename U>
+    explicit intrusive_ptr(U* p, bool add_ref = true)
         : m_p(p) {
         if (p != nullptr && add_ref) {
             intrusive_ptr_ref(p);
         }
     }
     
-    intrusive_ptr(const intrusive_ptr& another)
-        : m_p(another.m_p) {
-        intrusive_ptr_ref(m_p);
+    intrusive_ptr(std::nullptr_t)
+        : m_p(nullptr) {
     }
     
-    intrusive_ptr(intrusive_ptr&& another) noexcept
-        : m_p(another.m_p) {
-        another.m_p = nullptr;
-    }
-    
-    intrusive_ptr& operator = (const intrusive_ptr& another) {
-        if (this == &another) {
-            return *this;
+    intrusive_ptr(const intrusive_ptr& rhs)
+        : m_p(rhs.m_p) {
+        if (m_p != nullptr) {
+            intrusive_ptr_ref(m_p);
         }
+    }
+    
+    template<class U>
+    intrusive_ptr(const intrusive_ptr<U>& rhs)
+        : m_p(rhs.m_p) {
+        if (m_p != nullptr) {
+            intrusive_ptr_ref(m_p);
+        }
+    }
+    
+    intrusive_ptr(intrusive_ptr&& rhs)
+        : m_p(rhs.m_p) {
+        rhs.m_p = nullptr;
+    }
+    
+    template<class U>
+    friend class intrusive_ptr;
+    
+    template<class U>
+    intrusive_ptr(intrusive_ptr<U>&& rhs)
+        : m_p(rhs.m_p) {
+        rhs.m_p = nullptr;
+    }
+    
+    intrusive_ptr& operator = (const intrusive_ptr& rhs) {
         if (m_p != nullptr) {
             intrusive_ptr_unref(m_p);
         }
-        m_p = another.m_p;
+        m_p = rhs.m_p;
+        if (m_p != nullptr) {
+            intrusive_ptr_ref(m_p);
+        }
+        return *this;
+    }
+    
+    template <typename U>
+    intrusive_ptr& operator = (const intrusive_ptr<U>& rhs) {
+        if (m_p != nullptr) {
+            intrusive_ptr_unref(m_p);
+        }
+        m_p = rhs.m_p;
         if (m_p != nullptr) {
             intrusive_ptr_ref(m_p);
         }
@@ -52,9 +85,16 @@ public:
     }
     
     intrusive_ptr& operator = (intrusive_ptr&& another) noexcept {
-        if (this == &another) {
-            return *this;
+        if (m_p != nullptr) {
+            intrusive_ptr_unref(m_p);
         }
+        m_p = another.m_p;
+        another.m_p = nullptr;
+        return *this;
+    }
+    
+    template <typename U>
+    intrusive_ptr& operator = (intrusive_ptr<U>&& another) noexcept {
         if (m_p != nullptr) {
             intrusive_ptr_unref(m_p);
         }
@@ -82,7 +122,7 @@ public:
     }
 
 private:
-    T *const m_p;
+    T* m_p;
 
 };
 
@@ -157,6 +197,11 @@ intrusive_ptr<T> dynamic_pointer_cast(const intrusive_ptr<U>& p) {
     return dynamic_cast<T*>(p.get());
 }
 #endif
+
+template <typename T, typename ...Args>
+intrusive_ptr<T> make_intrusive(Args&& ...args) {
+    return intrusive_ptr<T>(new T (std::forward<Args>(args)...));
+}
 
 }
 }
