@@ -12,6 +12,10 @@ namespace common {
 
 class RefCountObject {
 public:
+    RefCountObject()
+        : m_refCount(1) {
+    }
+    
     virtual ~RefCountObject() = default;
     
     virtual void ref() const {

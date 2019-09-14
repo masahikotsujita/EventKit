@@ -200,7 +200,7 @@ intrusive_ptr<T> dynamic_pointer_cast(const intrusive_ptr<U>& p) {
 
 template <typename T, typename ...Args>
 intrusive_ptr<T> make_intrusive(Args&& ...args) {
-    return intrusive_ptr<T>(new T (std::forward<Args>(args)...));
+    return intrusive_ptr<T>(new T (std::forward<Args>(args)...), false);
 }
 
 }
