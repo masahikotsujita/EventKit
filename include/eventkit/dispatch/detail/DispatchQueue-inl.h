@@ -21,7 +21,7 @@ void DispatchFunctionItem<Function>::run() {
 
 template <typename F>
 void DispatchQueue::dispatchAsync(F&& function) {
-    dispatchItemAsync(std::make_shared<DispatchFunctionItem<std::decay_t<F>>>(std::forward<F>(function)));
+    dispatchItemAsync(ek::common::make_intrusive<DispatchFunctionItem<std::decay_t<F>>>(std::forward<F>(function)));
 }
 
 }

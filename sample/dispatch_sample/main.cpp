@@ -9,11 +9,11 @@
 
 int main(int argc, const char* argv[]) {
     ek::dispatch::RunLoop mainLoop;
-    auto pMainQueue = std::make_shared<ek::dispatch::DispatchQueue>();
+    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
     mainLoop.addDispatchQueue(pMainQueue);
 
     ek::dispatch::RunLoop bgLoop;
-    auto pBgQueue = std::make_shared<ek::dispatch::DispatchQueue>();
+    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
     bgLoop.addDispatchQueue(pBgQueue);
 
     pMainQueue->dispatchAsync([] {
