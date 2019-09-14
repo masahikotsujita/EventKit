@@ -18,11 +18,11 @@ public:
     
     virtual ~RefCountObject() = default;
     
-    virtual void ref() const {
+    void ref() const {
         std::atomic_fetch_add_explicit(&m_refCount, 1u, std::memory_order_relaxed);
     }
     
-    virtual void unref() const {
+    void unref() const {
         if (std::atomic_fetch_sub_explicit(&m_refCount, 1u, std::memory_order_release) == 1) {
             std::atomic_thread_fence(std::memory_order_acquire);
             delete this;
