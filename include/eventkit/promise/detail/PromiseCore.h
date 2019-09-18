@@ -16,7 +16,7 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ResultObserver<T, E> {
+class PromiseCore : public ResultObserver<T, E>, public ek::common::RefCountObject {
 public:
     using Handler = ResultObserver<T, E>;
 
@@ -43,6 +43,14 @@ public:
         } else {
             handler->onResult(m_result);
         }
+    }
+    
+    virtual void ref() const override {
+        ek::common::RefCountObject::ref();
+    }
+    
+    virtual void unref() const override {
+        ek::common::RefCountObject::unref();
     }
 
 private:

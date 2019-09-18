@@ -29,7 +29,19 @@ public:
         onResult(result_observer_multiple_inheritance_helper_tag, result);
     }
     
+    virtual void ref() const override {
+        ref(result_observer_multiple_inheritance_helper_tag);
+    }
+    
+    virtual void unref() const override {
+        unref(result_observer_multiple_inheritance_helper_tag);
+    }
+    
     virtual void onResult(result_observer_multiple_inheritance_helper_tag_t, const Result<T, E>& result) = 0;
+    
+    virtual void ref(result_observer_multiple_inheritance_helper_tag_t) const = 0;
+    
+    virtual void unref(result_observer_multiple_inheritance_helper_tag_t) const = 0;
     
 };
 
