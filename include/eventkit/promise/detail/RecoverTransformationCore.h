@@ -41,6 +41,14 @@ public:
     ek::common::intrusive_ptr<ResultObserver<T, E>> asHandler() {
         return ek::common::intrusive_ptr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
     }
+    
+    virtual void ref(result_observer_multiple_inheritance_helper_tag_t) const override {
+        PromiseCore<T, F>::ref();
+    }
+    
+    virtual void unref(result_observer_multiple_inheritance_helper_tag_t) const override {
+        PromiseCore<T, F>::unref();
+    }
 
 private:
     Handler m_transformation;

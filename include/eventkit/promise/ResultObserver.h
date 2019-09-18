@@ -13,13 +13,27 @@ namespace ek {
 namespace promise {
 
 template <typename T, typename E>
-class ResultObserver : public virtual ek::common::RefCountObject {
+class ResultObserver {
 public:
     virtual ~ResultObserver() = default;
 
     virtual void onResult(const Result <T, E>& result) = 0;
+    
+    virtual void ref() const = 0;
+    
+    virtual void unref() const = 0;
 
 };
+
+template <typename T, typename E>
+void intrusive_ptr_ref(ResultObserver<T, E>* p) {
+    p->ref();
+}
+
+template <typename T, typename E>
+void intrusive_ptr_unref(ResultObserver<T, E>* p) {
+    p->unref();
+}
 
 }
 }
