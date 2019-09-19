@@ -13,6 +13,7 @@
 #include <eventkit/promise/operators/recover.h>
 #include <eventkit/promise/operators/done.h>
 #include <eventkit/promise/operators/all.h>
+#include "../sample_utils/logging.h"
 
 std::atomic_bool g_isDone { false };
 struct Unit {};
@@ -26,15 +27,15 @@ int main(int argc, const char* argv[]) {
     all(
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
-                std::cout << "processing..." << std::endl;
+                LOG("processing...");
                 std::this_thread::sleep_for(5s);
                 if (argc >= 2) {
                     std::string text = argv[1];
-                    std::cout << "fulfill with: " << text << std::endl;
+                    LOG("fulfill with: ", text);
                     resolver.fulfill(text);
                 } else {
                     int error = -1;
-                    std::cout << "reject with: " << error << std::endl;
+                    LOG("reject with: ", error);
                     resolver.reject(error);
                 }
             });
@@ -43,15 +44,15 @@ int main(int argc, const char* argv[]) {
         ek::promise::StaticPromise<std::string, int>::value(", "),
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
-                std::cout << "processing..." << std::endl;
+                LOG("processing...");
                 std::this_thread::sleep_for(3s);
                 if (argc >= 3) {
                     std::string text = argv[2];
-                    std::cout << "fulfill with: " << text << std::endl;
+                    LOG("fulfill with: ", text);
                     resolver.fulfill(text);
                 } else {
                     int error = -1;
-                    std::cout << "reject with: " << error << std::endl;
+                    LOG("reject with: ", error);
                     resolver.reject(error);
                 }
             });
@@ -59,23 +60,23 @@ int main(int argc, const char* argv[]) {
         }),
         ek::promise::StaticPromise<std::string, int>::value("!")
     ) | then([](const std::tuple<std::string, std::string, std::string, std::string>& texts){
-        std::cout << "concatenating..." << std::endl;
+        LOG("concatenating...");
         std::string concatenated = std::get<0>(texts) + std::get<1>(texts) + std::get<2>(texts) + std::get<3>(texts);
         return ek::promise::StaticPromise<std::string, int>::value(concatenated);
     }) | then([](const std::string& text){
-        std::cout << "quoting..." << std::endl;
+        LOG("quoting...");
         std::stringstream ss;
         ss << "\"" << text << "\"";
         std::string quoted = ss.str();
         return ek::promise::StaticPromise<std::string, int>::value(quoted);
     }) | then([](const std::string& text){
-        std::cout << "succeeded: " << text << std::endl;
+        LOG("succeeded: ", text);
         return ek::promise::StaticPromise<Unit, int>::value();
     }) | recover([](int error){
-        std::cout << "failed: " << error << std::endl;
+        LOG("failed: ", error);
         return ek::promise::StaticPromise<Unit, NoError>::value();
     }) | done([](const ek::promise::Result<Unit, NoError>& result){
-        std::cout << "done. " << std::endl;
+        LOG("done. ");
         g_isDone = true;
     });
 

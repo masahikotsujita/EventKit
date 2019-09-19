@@ -43,7 +43,7 @@ add_library(eventkit ${LIBRARY_SOURCE_FILES})
 add_executable(eventkitexample sample/dispatch_sample/main.cpp)
 target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(promiseexample sample/promise_sample/main.cpp)
+add_executable(promiseexample sample/promise_sample/main.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp)
 target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
 if(BUILD_TEST)
