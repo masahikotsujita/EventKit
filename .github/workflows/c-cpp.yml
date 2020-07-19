@@ -10,18 +10,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: mkdir
-      run: mkdir cmake-build-debug
-    - name: cd
-      run: cd cmake-build-debug
-    - name: ls
-      run: ls
-    - name: ls ..
-      run: ls ..
-    - name: cmake
-      run: cmake .. -DBUILD_TEST=true
-    - name: make
-      run: make
-    - name: run test
-      run: ./eventkittest -s
-      
+    - name: build
+      run: |
+        mkdir cmake-build-debug
+        cd cmake-build-debug
+        cmake .. -DBUILD_TEST=true
+        make
+    - name: test
+      run: |
+        cd cmake-build-debug
+        ./eventkittest -s
+        
