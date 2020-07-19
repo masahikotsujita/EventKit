@@ -1,23 +1,23 @@
 name: C/C++ CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
+    container: masahikotsujita/build-containers:clang-catch-2.5.0
 
     steps:
     - uses: actions/checkout@v2
-    - name: configure
-      run: ./configure
+    - name: mkdir
+      run: mkdir cmake-build-debug
+    - name: cd
+      run: cd cmake-build-debug
+    - name: cmake
+      run: cmake .. -DBUILD_TEST=true
     - name: make
       run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    - name: run test
+      run: ./eventkittest -s
+      
