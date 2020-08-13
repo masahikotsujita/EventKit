@@ -38,7 +38,7 @@ void addCoreAsHandlerToPromises(const ek::common::intrusive_ptr<Cr>& pCore, Prs&
 }
 
 template <typename ...Prs>
-auto all(Prs&& ...promises) {
+auto whenAll(Prs&& ...promises) {
     using Values = ek::promise::detail::values_of_prmises_t<std::decay_t<Prs>...>;
     using Error = ek::promise::detail::error_of_prmises_t<Prs...>;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::AllTransformationCore<std::decay_t<Prs>...>>();

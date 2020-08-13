@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
     using namespace std::chrono_literals;
     using namespace ek::promise::operators;
     
-    all(
+    whenAll(
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
                 LOG("processing...");
