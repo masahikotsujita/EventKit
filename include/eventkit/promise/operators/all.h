@@ -9,6 +9,7 @@
 #include <eventkit/promise/detail/AllTransformationCore.h>
 #include <type_traits>
 #include <memory>
+#include <vector>
 
 namespace ek {
 namespace promise {
@@ -44,6 +45,27 @@ auto whenAll(Prs&& ...promises) {
     auto pCore = ek::common::make_intrusive<ek::promise::detail::AllTransformationCore<std::decay_t<Prs>...>>();
     detail::addCoreAsHandlerToPromises(pCore, std::forward<Prs>(promises)...);
     return ek::promise::detail::make_promise<Values, Error>(pCore);
+}
+
+template <typename InputIt>
+auto whenAllWithIterator(InputIt begin, InputIt end) {
+    using T = typename InputIt::value_type::Value;
+    using E = typename InputIt::value_type::Error;
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicAllTransformationCore<T, E>>(std::distance(begin, end));
+    size_t idx = 0;
+    auto itr = begin;
+    for (; itr != end; ++itr, ++idx) {
+        const auto& promise = *itr;
+        promise.pipe(ek::promise::detail::make_function_observer<T, E>([pCore, idx](const auto& result){
+            pCore->onResultAt(result, idx);
+        }));
+    }
+    return ek::promise::detail::make_promise<std::vector<T>, E>(pCore);
+}
+
+template <typename Prs>
+auto whenAllWithContainer(const Prs& promises) {
+    return whenAllWithIterator(promises.begin(), promises.end());
 }
 
 }
