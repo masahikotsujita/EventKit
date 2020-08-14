@@ -13,6 +13,7 @@
 #include <eventkit/promise/operators/recover.h>
 #include <eventkit/promise/operators/done.h>
 #include <eventkit/promise/operators/all.h>
+#include <vector>
 #include "../sample_utils/logging.h"
 
 std::atomic_bool g_isDone { false };
@@ -24,7 +25,7 @@ int main(int argc, const char* argv[]) {
     using namespace std::chrono_literals;
     using namespace ek::promise::operators;
     
-    whenAll(
+    whenAllWithContainer( std::vector<Promise> {
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
                 LOG("processing...");
@@ -41,7 +42,9 @@ int main(int argc, const char* argv[]) {
             });
             thread.detach();
         }),
-        ek::promise::StaticPromise<std::string, int>::value(", "),
+        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
+            resolver.fulfill(", ");
+        }),
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
                 LOG("processing...");
@@ -58,10 +61,12 @@ int main(int argc, const char* argv[]) {
             });
             thread.detach();
         }),
-        ek::promise::StaticPromise<std::string, int>::value("!")
-    ) | then([](const std::tuple<std::string, std::string, std::string, std::string>& texts){
+        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
+            resolver.fulfill("!");
+        })
+    }) | then([](const std::vector<std::string>& texts){
         LOG("concatenating...");
-        std::string concatenated = std::get<0>(texts) + std::get<1>(texts) + std::get<2>(texts) + std::get<3>(texts);
+        std::string concatenated = texts[0] + texts[1] + texts[2] + texts[3];
         return ek::promise::StaticPromise<std::string, int>::value(concatenated);
     }) | then([](const std::string& text){
         LOG("quoting...");
