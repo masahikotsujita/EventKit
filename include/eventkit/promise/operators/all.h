@@ -52,8 +52,9 @@ auto whenAll(pack_as_tuple_t, Prs&& ...promises) {
 
 template <typename InputIt>
 auto whenAll(InputIt begin, InputIt end) {
-    using T = typename InputIt::value_type::Value;
-    using E = typename InputIt::value_type::Error;
+    using P = ek::promise::detail::value_type_of_t<InputIt>;
+    using T = typename P::Value;
+    using E = typename P::Error;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicAllTransformationCore<T, E>>(std::distance(begin, end));
     size_t idx = 0;
     auto itr = begin;
@@ -68,6 +69,11 @@ auto whenAll(InputIt begin, InputIt end) {
 
 template <typename Prs>
 auto whenAll(const Prs& promises) {
+    return whenAll(promises.begin(), promises.end());
+}
+
+template <typename Pr>
+auto whenAll(std::initializer_list<Pr> promises) {
     return whenAll(promises.begin(), promises.end());
 }
 
