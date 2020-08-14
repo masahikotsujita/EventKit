@@ -38,8 +38,11 @@ void addCoreAsHandlerToPromises(const ek::common::intrusive_ptr<Cr>& pCore, Prs&
 
 }
 
+struct pack_as_tuple_t { };
+constexpr pack_as_tuple_t pack_as_tuple = pack_as_tuple_t();
+
 template <typename ...Prs>
-auto whenAll(Prs&& ...promises) {
+auto whenAll(pack_as_tuple_t, Prs&& ...promises) {
     using Values = ek::promise::detail::values_of_prmises_t<std::decay_t<Prs>...>;
     using Error = ek::promise::detail::error_of_prmises_t<Prs...>;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::AllTransformationCore<std::decay_t<Prs>...>>();
@@ -48,7 +51,7 @@ auto whenAll(Prs&& ...promises) {
 }
 
 template <typename InputIt>
-auto whenAllWithIterator(InputIt begin, InputIt end) {
+auto whenAll(InputIt begin, InputIt end) {
     using T = typename InputIt::value_type::Value;
     using E = typename InputIt::value_type::Error;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicAllTransformationCore<T, E>>(std::distance(begin, end));
@@ -64,8 +67,8 @@ auto whenAllWithIterator(InputIt begin, InputIt end) {
 }
 
 template <typename Prs>
-auto whenAllWithContainer(const Prs& promises) {
-    return whenAllWithIterator(promises.begin(), promises.end());
+auto whenAll(const Prs& promises) {
+    return whenAll(promises.begin(), promises.end());
 }
 
 }
