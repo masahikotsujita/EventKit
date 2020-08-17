@@ -9,6 +9,8 @@
 #include <eventkit/promise/Result.h>
 #include <bitset>
 #include <vector>
+#include <mutex>
+#include <algorithm>
 
 namespace ek {
 namespace promise {
