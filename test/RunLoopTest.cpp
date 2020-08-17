@@ -29,13 +29,21 @@ SCENARIO("a run loop", "[run_loop]") {
             auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
             pRunLoop->addDispatchQueue(pDispatchQueue);
 
+            auto pTriplet = std::make_shared<std::tuple<std::mutex, std::condition_variable, std::atomic_bool>>();
+            std::get<2>(*pTriplet) = false;
+
             WHEN("the run loop starts running on a thread") {
-                auto pThread = std::make_shared<std::thread>([&]{
+                std::thread thread([pTriplet, pRunLoop]{
                     pRunLoop->run();
+                    std::get<2>(*pTriplet) = true;
+                    std::get<1>(*pTriplet).notify_all();
                 });
+                thread.detach();
 
                 THEN("the thread will keep running") {
-                    REQUIRE_NOT_RETURN_WITH_TIMEOUT(pThread->join(), 5s);
+                    std::unique_lock<std::mutex> lock(std::get<0>(*pTriplet));
+                    auto timeout = std::chrono::system_clock::now() + 5s;
+                    REQUIRE(!std::get<1>(*pTriplet).wait_until(lock, timeout, [&]{ return std::get<2>(*pTriplet).load(); }));
                 }
 
 //                WHEN("the event source is removed from the run loop") {
