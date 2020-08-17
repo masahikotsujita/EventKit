@@ -20,4 +20,4 @@ jobs:
       run: |
         cd cmake-build-debug
         ./eventkittest -s
-        
+      timeout-minutes: 5
