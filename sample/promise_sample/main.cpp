@@ -12,7 +12,7 @@
 #include <eventkit/promise/operators/then.h>
 #include <eventkit/promise/operators/recover.h>
 #include <eventkit/promise/operators/done.h>
-#include <eventkit/promise/operators/all.h>
+#include <eventkit/promise/operators/whenAll.h>
 #include <vector>
 #include "../sample_utils/logging.h"
 

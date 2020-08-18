@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019/09/04.
 //
 
-#ifndef EVENTKIT_ALL_H
-#define EVENTKIT_ALL_H
+#ifndef EVENTKIT_WHENALL_H
+#define EVENTKIT_WHENALL_H
 
 #include <eventkit/promise/detail/type_traits.h>
 #include <eventkit/promise/detail/AllTransformationCore.h>
@@ -81,4 +81,4 @@ auto whenAll(std::initializer_list<Pr> promises) {
 }
 }
 
-#endif //EVENTKIT_ALL_H
+#endif //EVENTKIT_WHENALL_H

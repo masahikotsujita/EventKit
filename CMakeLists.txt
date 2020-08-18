@@ -35,7 +35,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/operators/then.h
     include/eventkit/promise/operators/recover.h
     include/eventkit/promise/operators/done.h
-    include/eventkit/promise/operators/all.h
+    include/eventkit/promise/operators/whenAll.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
