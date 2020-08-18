@@ -40,6 +40,20 @@ public:
         m_pCore = pCore;
     }
 
+    template <typename ...Args>
+    static Promise value(Args&& ...args) {
+        auto pCore = ek::common::make_intrusive<Core>();
+        pCore->onResult(Result<T, E>::succeeded(std::forward<Args>(args)...));
+        return Promise(pCore);
+    }
+
+    template <typename ...Args>
+    static Promise error(Args&& ...args) {
+        auto pCore = ek::common::make_intrusive<Core>();
+        pCore->onResult(Result<T, E>::failed(std::forward<Args>(args)...));
+        return Promise(pCore);
+    }
+
     void pipe(const ek::common::intrusive_ptr<ResultObserver<T, E>>& handler) const {
         m_pCore->addHandler(handler);
     }

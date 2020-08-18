@@ -18,7 +18,6 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/Result.h
     include/eventkit/promise/Promise.h
     include/eventkit/promise/detail/Promise-inl.h
-    include/eventkit/promise/StaticPromise.h
     include/eventkit/promise/Resolver.h
     include/eventkit/promise/ResultObserver.h
     include/eventkit/promise/detail/ResultObserver-inl.h
