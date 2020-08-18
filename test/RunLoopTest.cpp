@@ -16,15 +16,15 @@ SCENARIO("a run loop", "[run_loop]") {
         auto pRunLoop = std::make_shared<ek::dispatch::RunLoop>();
 
         WHEN("the run loop starts running on a thread") {
-            DECLARE_FLAG(RUNLOOP_END);
+            auto pFlag = std::make_shared<std::atomic_bool>(false);
             std::thread thread([=]{
                 pRunLoop->run();
-                SET_FLAG(RUNLOOP_END);
+                *pFlag = true;
             });
             thread.detach();
 
             THEN("the thread will terminate immediately") {
-                REQUIRE_FLAG_SET(RUNLOOP_END, 5s);
+                REQUIRE_EVENTUALLY(*pFlag, 5s);
             }
         }
 
@@ -33,15 +33,15 @@ SCENARIO("a run loop", "[run_loop]") {
             pRunLoop->addDispatchQueue(pDispatchQueue);
 
             WHEN("the run loop starts running on a thread") {
-                DECLARE_FLAG(RUNLOOP_END);
+                auto pFlag = std::make_shared<std::atomic_bool>(false);
                 std::thread thread([=]{
                     pRunLoop->run();
-                    SET_FLAG(RUNLOOP_END);
+                    *pFlag = true;
                 });
                 thread.detach();
 
                 THEN("the thread will keep running") {
-                    REQUIRE_NOT_FLAG_SET(RUNLOOP_END, 5s);
+                    REQUIRE_EVENTUALLY_NOT(*pFlag, 5s);
                 }
 
 //                WHEN("the event source is removed from the run loop") {

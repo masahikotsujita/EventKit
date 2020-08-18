@@ -11,42 +11,23 @@
 #include <condition_variable>
 #include <catch2/catch.hpp>
 
-#define _TRIPLET_NAME(labelName) __pTriplet_ ## name
+template <typename Clock, typename Duration, typename Predicate>
+bool waitUntil(const Predicate& predicate, const std::chrono::time_point<Clock, Duration>& timeout) {
+    while (true) {
+        if (std::chrono::system_clock::now() >= timeout) {
+            return false;
+        }
+        if (predicate()) {
+            return true;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    }
+}
 
-#define DECLARE_FLAG(name)                                                          \
-    auto _TRIPLET_NAME(name) = std::make_shared<                                    \
-        std::tuple<                                                                 \
-            std::mutex,                                                             \
-            std::condition_variable,                                                \
-            std::atomic_bool                                                        \
-        >                                                                           \
-    >();                                                                            \
-    std::get<2>(*_TRIPLET_NAME(name)) = false;
+#define REQUIRE_EVENTUALLY(expression, timeout)                                                                         \
+    REQUIRE(waitUntil([&]() -> bool { return (expression); }, std::chrono::system_clock::now() + timeout));
 
-#define SET_FLAG(flagName)                                                          \
-    do {                                                                            \
-        std::get<2>(*_TRIPLET_NAME(flagName)) = true;                               \
-        std::get<1>(*_TRIPLET_NAME(flagName)).notify_all();                         \
-    } while(0)
-
-#define REQUIRE_FLAG_SET(flagName, timeout)                                         \
-    do {                                                                            \
-        std::unique_lock<std::mutex> lock(std::get<0>(*_TRIPLET_NAME(flagName)));   \
-        auto timeoutAt = std::chrono::system_clock::now() + timeout;                \
-        REQUIRE(std::get<1>(*_TRIPLET_NAME(flagName))                               \
-            .wait_until(lock, timeoutAt, [=]{                                       \
-                return std::get<2>(*_TRIPLET_NAME(name)).load();                    \
-            }));                                                                    \
-    } while (0)
-
-#define REQUIRE_NOT_FLAG_SET(flagName, timeout)                                     \
-    do {                                                                            \
-        std::unique_lock<std::mutex> lock(std::get<0>(*_TRIPLET_NAME(flagName)));   \
-        auto timeoutAt = std::chrono::system_clock::now() + timeout;                \
-        REQUIRE(!std::get<1>(*_TRIPLET_NAME(flagName))                              \
-            .wait_until(lock, timeoutAt, [=]{                                       \
-                return std::get<2>(*_TRIPLET_NAME(name)).load();                    \
-            }));                                                                    \
-    } while (0)
+#define REQUIRE_EVENTUALLY_NOT(expression, timeout)                                                                     \
+    REQUIRE(!waitUntil([&]() -> bool { return (expression); }, std::chrono::system_clock::now() + timeout));
 
 #endif //EVENTKIT_TESTUTILS_H
