@@ -8,6 +8,8 @@
 #include <memory>
 #include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/detail/PromiseCore.h>
+#include <eventkit/promise/detail/ThenTransformationCore.h>
+#include <eventkit/promise/detail/RecoverTransformationCore.h>
 
 namespace ek {
 namespace promise {
@@ -56,6 +58,28 @@ public:
 
     void pipe(const ek::common::intrusive_ptr<ResultObserver<T, E>>& handler) const {
         m_pCore->addHandler(handler);
+    }
+
+    template <typename Handler>
+    auto then(Handler&& handler) -> Promise<typename std::result_of_t<Handler(T)>::Value, E> {
+        using U = typename std::result_of_t<Handler(T)>::Value;
+        auto pCore = ek::common::make_intrusive<ek::promise::detail::ThenTransformationCore<T, E, U, std::decay_t<Handler>>>(std::forward<std::decay_t<Handler>>(handler));
+        pipe(pCore->asHandler());
+        return ek::promise::detail::make_promise(pCore->asCore());
+    }
+
+    template <typename Handler>
+    auto recover(Handler&& handler) -> Promise<T, typename std::result_of_t<Handler(E)>::Error> {
+        using F = typename std::result_of_t<Handler(E)>::Error;
+        auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationCore<T, E, F, std::decay_t<Handler>>>(std::forward<std::decay_t<Handler>>(handler));
+        pipe(pCore->asHandler());
+        return ek::promise::detail::make_promise(pCore->asCore());
+    }
+
+    template <typename Handler>
+    Promise& done(Handler&& handler) {
+        pipe(ek::promise::detail::make_function_observer<T, E>(std::forward<Handler>(handler)));
+        return *this;
     }
 
 private:
