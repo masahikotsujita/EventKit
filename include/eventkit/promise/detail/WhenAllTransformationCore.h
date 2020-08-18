@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019/09/04.
 //
 
-#ifndef EVENTKIT_ALLTRANSFORMATIONCORE_H
-#define EVENTKIT_ALLTRANSFORMATIONCORE_H
+#ifndef EVENTKIT_WHENALLTRANSFORMATIONCORE_H
+#define EVENTKIT_WHENALLTRANSFORMATIONCORE_H
 
 #include <tuple>
 #include <eventkit/promise/Result.h>
@@ -17,7 +17,7 @@ namespace promise {
 namespace detail {
 
 template <typename ...Prs>
-class AllTransformationCore : public PromiseCore<values_of_prmises_t<Prs...>, error_of_prmises_t<Prs...>> {
+class WhenAllTransformationCore : public PromiseCore<values_of_prmises_t < Prs...>, error_of_prmises_t<Prs...>> {
 public:
     using Results = std::tuple<result_of_promise_t<Prs>...>;
     using Values = values_of_prmises_t<Prs...>;
@@ -45,14 +45,14 @@ private:
 };
 
 template <typename T, typename E>
-class DynamicAllTransformationCore : public PromiseCore<std::vector<T>, E> {
+class DynamicWhenAllTransformationCore : public PromiseCore<std::vector<T>, E> {
 public:
     using Values = std::vector<T>;
     using Error = E;
     using Super = PromiseCore<Values, Error>;
     using Results = Result<std::vector<T>, E>;
 
-    explicit DynamicAllTransformationCore(size_t size)
+    explicit DynamicWhenAllTransformationCore(size_t size)
         : Super()
         , m_values(size)
         , m_fulfilledFlags(size, false) {
@@ -86,4 +86,4 @@ private:
 }
 }
 
-#endif //EVENTKIT_ALLTRANSFORMATIONCORE_H
+#endif //EVENTKIT_WHENALLTRANSFORMATIONCORE_H
