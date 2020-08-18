@@ -42,9 +42,7 @@ int main(int argc, const char* argv[]) {
             });
             thread.detach();
         }),
-        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
-            resolver.fulfill(", ");
-        }),
+        Promise::value(", "),
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
                 LOG("processing...");
@@ -61,9 +59,7 @@ int main(int argc, const char* argv[]) {
             });
             thread.detach();
         }),
-        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
-            resolver.fulfill("!");
-        })
+        Promise::value("!")
     }) | then([](const std::vector<std::string>& texts){
         LOG("concatenating...");
         std::string concatenated = texts[0] + texts[1] + texts[2] + texts[3];
