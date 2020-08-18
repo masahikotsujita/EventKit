@@ -8,6 +8,9 @@
 #include <tuple>
 #include <eventkit/promise/Result.h>
 #include <bitset>
+#include <vector>
+#include <mutex>
+#include <algorithm>
 
 namespace ek {
 namespace promise {
@@ -38,6 +41,44 @@ public:
 private:
     Values m_values;
     std::bitset<std::tuple_size<Values>::value> m_fulfilledPromiseFlags;
+
+};
+
+template <typename T, typename E>
+class DynamicAllTransformationCore : public PromiseCore<std::vector<T>, E> {
+public:
+    using Values = std::vector<T>;
+    using Error = E;
+    using Super = PromiseCore<Values, Error>;
+    using Results = Result<std::vector<T>, E>;
+
+    explicit DynamicAllTransformationCore(size_t size)
+        : Super()
+        , m_values(size)
+        , m_fulfilledFlags(size, false) {
+    }
+
+    void onResultAt(const ek::promise::Result<T, E>& result, size_t index) {
+        if (result.getType() == ResultType::succeeded) {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (m_fulfilledFlags[index]) {
+                return;
+            }
+            m_values[index] = result.getValue();
+            m_fulfilledFlags[index] = true;
+            if (std::find(m_fulfilledFlags.begin(), m_fulfilledFlags.end(), false) == m_fulfilledFlags.end()) {
+                Super::onResult(Results::succeeded(m_values));
+            }
+        } else {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            Super::onResult(Results::failed(result.getError()));
+        }
+    }
+
+private:
+    std::mutex m_mutex;
+    Values m_values;
+    std::vector<bool> m_fulfilledFlags;
 
 };
 

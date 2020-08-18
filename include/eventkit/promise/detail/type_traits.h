@@ -24,6 +24,19 @@ using values_of_prmises_t = std::tuple<typename Prs::Value...>;
 template <typename ...Prs>
 using error_of_prmises_t = typename std::tuple_element_t<0, std::tuple<Prs...>>::Error;
 
+template <typename T>
+struct value_type_of {
+    using type = typename T::value_type;
+};
+
+template <typename T>
+struct value_type_of <T*> {
+    using type = T;
+};
+
+template <typename T>
+using value_type_of_t = typename value_type_of<T>::type;
+
 }
 }
 }
