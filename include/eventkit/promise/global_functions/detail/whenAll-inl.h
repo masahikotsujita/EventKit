@@ -7,7 +7,7 @@
 
 namespace ek {
 namespace promise {
-namespace operators {
+namespace global_functions {
 namespace detail {
 
 template <size_t Idx, typename Cr, typename LastPr>

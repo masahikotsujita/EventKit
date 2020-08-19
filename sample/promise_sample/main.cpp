@@ -8,7 +8,7 @@
 #include <eventkit/promise/Promise.h>
 #include <sstream>
 #include <eventkit/promise/Promise.h>
-#include <eventkit/promise/operators/whenAll.h>
+#include <eventkit/promise/global_functions/whenAll.h>
 #include <vector>
 #include "../sample_utils/logging.h"
 
@@ -19,7 +19,7 @@ struct NoError {};
 int main(int argc, const char* argv[]) {
     using Promise = ek::promise::Promise<std::string, int>;
     using namespace std::chrono_literals;
-    using namespace ek::promise::operators;
+    using namespace ek::promise::global_functions;
     
     whenAll({
         Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
