@@ -8,7 +8,6 @@
 #include <eventkit/promise/Promise.h>
 #include <sstream>
 #include <eventkit/promise/Promise.h>
-#include <eventkit/promise/Operator.h>
 #include <eventkit/promise/operators/whenAll.h>
 #include <vector>
 #include "../sample_utils/logging.h"

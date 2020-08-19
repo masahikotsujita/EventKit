@@ -27,7 +27,6 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/RecoverTransformationCore.h
     include/eventkit/promise/detail/type_traits.h
     include/eventkit/promise/detail/WhenAllTransformationCore.h
-    include/eventkit/promise/Operator.h
     include/eventkit/promise/operators/detail/whenAll-inl.h
     include/eventkit/promise/operators/whenAll.h
 )
