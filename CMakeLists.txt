@@ -18,7 +18,6 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/Result.h
     include/eventkit/promise/Promise.h
     include/eventkit/promise/detail/Promise-inl.h
-    include/eventkit/promise/StaticPromise.h
     include/eventkit/promise/Resolver.h
     include/eventkit/promise/ResultObserver.h
     include/eventkit/promise/detail/ResultObserver-inl.h
@@ -28,15 +27,8 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/RecoverTransformationCore.h
     include/eventkit/promise/detail/type_traits.h
     include/eventkit/promise/detail/WhenAllTransformationCore.h
-    include/eventkit/promise/Operator.h
-    include/eventkit/promise/operators/detail/then-inl.h
-    include/eventkit/promise/operators/detail/recover-inl.h
-    include/eventkit/promise/operators/detail/done-inl.h
-    include/eventkit/promise/operators/detail/whenAll-inl.h
-    include/eventkit/promise/operators/then.h
-    include/eventkit/promise/operators/recover.h
-    include/eventkit/promise/operators/done.h
-    include/eventkit/promise/operators/whenAll.h
+    include/eventkit/promise/global_functions/detail/whenAll-inl.h
+    include/eventkit/promise/global_functions/whenAll.h
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})

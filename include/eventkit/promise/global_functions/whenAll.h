@@ -5,7 +5,7 @@
 #ifndef EVENTKIT_WHENALL_H
 #define EVENTKIT_WHENALL_H
 
-#include <eventkit/promise/operators/detail/whenAll-inl.h>
+#include <eventkit/promise/global_functions/detail/whenAll-inl.h>
 #include <eventkit/promise/detail/type_traits.h>
 #include <eventkit/promise/detail/WhenAllTransformationCore.h>
 #include <type_traits>
@@ -14,7 +14,7 @@
 
 namespace ek {
 namespace promise {
-namespace operators {
+namespace global_functions {
 
 struct pack_as_tuple_t { };
 constexpr pack_as_tuple_t pack_as_tuple = pack_as_tuple_t();
