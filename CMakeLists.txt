@@ -32,6 +32,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/operators/detail/then-inl.h
     include/eventkit/promise/operators/detail/recover-inl.h
     include/eventkit/promise/operators/detail/done-inl.h
+    include/eventkit/promise/operators/detail/whenAll-inl.h
     include/eventkit/promise/operators/then.h
     include/eventkit/promise/operators/recover.h
     include/eventkit/promise/operators/done.h
