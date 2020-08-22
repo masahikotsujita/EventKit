@@ -12,7 +12,7 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-ek::promise::Promise<T, E> make_promise(const ek::common::intrusive_ptr<ek::promise::detail::PromiseCore<T, E>>& pCore) {
+ek::promise::Promise<T, E> make_promise(const ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<T, E>>& pCore) {
     return ek::promise::Promise<T, E>(pCore);
 }
 

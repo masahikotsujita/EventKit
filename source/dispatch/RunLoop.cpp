@@ -16,7 +16,7 @@ void RunLoop::run() {
             auto pos = m_dispatchQueues.begin();
             auto end = m_dispatchQueues.end();
             for (; pos != end; ++pos) {
-                const ek::common::intrusive_ptr<DispatchQueue>& pTaskQueue = *pos;
+                const ek::common::IntrusivePtr<DispatchQueue>& pTaskQueue = *pos;
                 pTaskQueue->fire();
             }
         }
@@ -29,7 +29,7 @@ void RunLoop::run() {
     } while (!isFinished);
 }
 
-void RunLoop::addDispatchQueue(const ek::common::intrusive_ptr<DispatchQueue>& pQueue) {
+void RunLoop::addDispatchQueue(const ek::common::IntrusivePtr<DispatchQueue>& pQueue) {
     if (pQueue == nullptr) {
         return;
     }

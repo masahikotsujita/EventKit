@@ -29,14 +29,14 @@ public:
         }
         m_isResolved = true;
         m_result = result;
-        std::list<ek::common::intrusive_ptr<Handler>> handlers = std::move(m_handlers);
+        std::list<ek::common::IntrusivePtr<Handler>> handlers = std::move(m_handlers);
         lock.unlock();
         for (const auto& pHandler : handlers) {
             pHandler->onResult(m_result);
         }
     }
 
-    void addHandler(const ek::common::intrusive_ptr<Handler>& handler) {
+    void addHandler(const ek::common::IntrusivePtr<Handler>& handler) {
         std::lock_guard<std::mutex> lock(m_mutex);
         if (!m_isResolved) {
             m_handlers.push_back(handler);
@@ -57,7 +57,7 @@ private:
     std::mutex m_mutex;
     bool m_isResolved;
     Result<T, E> m_result;
-    std::list<ek::common::intrusive_ptr<Handler>> m_handlers;
+    std::list<ek::common::IntrusivePtr<Handler>> m_handlers;
 };
 
 }
