@@ -34,12 +34,12 @@ public:
         }
     }
     
-    ek::common::intrusive_ptr<PromiseCore<U, E>> asCore() {
-        return ek::common::intrusive_ptr<PromiseCore<U, E>>(static_cast<PromiseCore<U, E>*>(this));
+    ek::common::IntrusivePtr<PromiseCore<U, E>> asCore() {
+        return ek::common::IntrusivePtr<PromiseCore<U, E>>(static_cast<PromiseCore<U, E>*>(this));
     }
     
-    ek::common::intrusive_ptr<ResultObserver<T, E>> asHandler() {
-        return ek::common::intrusive_ptr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
+    ek::common::IntrusivePtr<ResultObserver<T, E>> asHandler() {
+        return ek::common::IntrusivePtr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
     }
     
     virtual void ref(result_observer_multiple_inheritance_helper_tag_t) const override {

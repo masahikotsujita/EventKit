@@ -2,21 +2,21 @@
 // Created by Masahiko Tsujita on 2019/09/12.
 //
 
-#ifndef EVENTKIT_REFCOUNTOBJECT_H
-#define EVENTKIT_REFCOUNTOBJECT_H
+#ifndef EVENTKIT_INTRUSIVEOBJECT_H
+#define EVENTKIT_INTRUSIVEOBJECT_H
 
 #include <atomic>
 
 namespace ek {
 namespace common {
 
-class RefCountObject {
+class IntrusiveObject {
 public:
-    RefCountObject()
+    IntrusiveObject()
         : m_refCount(1) {
     }
     
-    virtual ~RefCountObject() = default;
+    virtual ~IntrusiveObject() = default;
     
     void ref() const {
         std::atomic_fetch_add_explicit(&m_refCount, 1u, std::memory_order_relaxed);
@@ -34,15 +34,15 @@ private:
     
 };
 
-inline void intrusive_ptr_ref(RefCountObject* pObj) {
+inline void intrusive_ptr_ref(IntrusiveObject* pObj) {
     pObj->ref();
 }
 
-inline void intrusive_ptr_unref(RefCountObject* pObj) {
+inline void intrusive_ptr_unref(IntrusiveObject* pObj) {
     pObj->unref();
 }
 
 }
 }
 
-#endif //EVENTKIT_REFCOUNTOBJECT_H
+#endif //EVENTKIT_INTRUSIVEOBJECT_H

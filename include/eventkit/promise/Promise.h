@@ -19,7 +19,7 @@ class Promise;
 
 namespace detail {
 template <typename T, typename E>
-ek::promise::Promise<T, E> make_promise(const ek::common::intrusive_ptr<ek::promise::detail::PromiseCore<T, E>>& pCore);
+ek::promise::Promise<T, E> make_promise(const ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<T, E>>& pCore);
 }
 
 template <typename T, typename E>
@@ -28,7 +28,7 @@ private:
     using Core = detail::PromiseCore<T, E>;
     
     template <typename U, typename F>
-    friend ek::promise::Promise<U, F> detail::make_promise(const ek::common::intrusive_ptr<ek::promise::detail::PromiseCore<U, F>>& pCore);
+    friend ek::promise::Promise<U, F> detail::make_promise(const ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, F>>& pCore);
 
 public:
     using Value = T;
@@ -56,7 +56,7 @@ public:
         return Promise(pCore);
     }
 
-    void pipe(const ek::common::intrusive_ptr<ResultObserver<T, E>>& handler) const {
+    void pipe(const ek::common::IntrusivePtr<ResultObserver<T, E>>& handler) const {
         m_pCore->addHandler(handler);
     }
 
@@ -84,12 +84,12 @@ public:
 
 private:
 
-    explicit Promise(const ek::common::intrusive_ptr<Core>& pCore)
+    explicit Promise(const ek::common::IntrusivePtr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
 private:
-    ek::common::intrusive_ptr<Core> m_pCore;
+    ek::common::IntrusivePtr<Core> m_pCore;
 
 };
 

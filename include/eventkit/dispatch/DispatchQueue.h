@@ -9,12 +9,12 @@
 #include <list>
 #include <queue>
 #include <eventkit/dispatch/RunLoop.h>
-#include <eventkit/common/RefCountObject.h>
+#include <eventkit/common/IntrusiveObject.h>
 
 namespace ek {
 namespace dispatch {
 
-class DispatchItem : public ek::common::RefCountObject {
+class DispatchItem : public ek::common::IntrusiveObject {
 public:
     virtual ~DispatchItem() = default;
 
@@ -38,7 +38,7 @@ private:
 
 };
 
-class DispatchQueue : public ek::common::RefCountObject {
+class DispatchQueue : public ek::common::IntrusiveObject {
 public:
 
     friend class RunLoop;
@@ -48,7 +48,7 @@ public:
 
 private:
 
-    void dispatchItemAsync(const ek::common::intrusive_ptr<DispatchItem>& pTask);
+    void dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask);
 
     void fire();
 
@@ -56,7 +56,7 @@ private:
 
 private:
     std::mutex m_mutex;
-    std::queue<ek::common::intrusive_ptr<DispatchItem>, std::list<ek::common::intrusive_ptr<DispatchItem>>> m_queue;
+    std::queue<ek::common::IntrusivePtr<DispatchItem>, std::list<ek::common::IntrusivePtr<DispatchItem>>> m_queue;
     RunLoop* m_pRunLoop;
 
 };

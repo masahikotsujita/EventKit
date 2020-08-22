@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <eventkit/promise/Result.h>
-#include <eventkit/common/intrusive_ptr.h>
+#include <eventkit/common/IntrusivePtr.h>
 
 namespace ek {
 namespace promise {
@@ -36,7 +36,7 @@ private:
 
 public:
 
-    explicit Resolver(const ek::common::intrusive_ptr<Core>& pCore)
+    explicit Resolver(const ek::common::IntrusivePtr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
@@ -61,7 +61,7 @@ public:
     }
 
 private:
-    ek::common::intrusive_ptr<Core> m_pCore;
+    ek::common::IntrusivePtr<Core> m_pCore;
 
 };
 
@@ -72,7 +72,7 @@ private:
 
 public:
 
-    explicit Fulfiller(const ek::common::intrusive_ptr<Core>& pCore)
+    explicit Fulfiller(const ek::common::IntrusivePtr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
@@ -81,7 +81,7 @@ public:
     }
 
 private:
-    ek::common::intrusive_ptr<Core> m_pCore;
+    ek::common::IntrusivePtr<Core> m_pCore;
 
 };
 
@@ -92,7 +92,7 @@ private:
 
 public:
 
-    explicit Rejecter(const ek::common::intrusive_ptr<Core>& pCore)
+    explicit Rejecter(const ek::common::IntrusivePtr<Core>& pCore)
         : m_pCore(pCore) {
     }
 
@@ -101,7 +101,7 @@ public:
     }
 
 private:
-    ek::common::intrusive_ptr<Core> m_pCore;
+    ek::common::IntrusivePtr<Core> m_pCore;
 
 };
 
