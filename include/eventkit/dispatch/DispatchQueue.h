@@ -9,12 +9,12 @@
 #include <list>
 #include <queue>
 #include <eventkit/dispatch/RunLoop.h>
-#include <eventkit/common/RefCountObject.h>
+#include <eventkit/common/IntrusiveObject.h>
 
 namespace ek {
 namespace dispatch {
 
-class DispatchItem : public ek::common::RefCountObject {
+class DispatchItem : public ek::common::IntrusiveObject {
 public:
     virtual ~DispatchItem() = default;
 
@@ -38,7 +38,7 @@ private:
 
 };
 
-class DispatchQueue : public ek::common::RefCountObject {
+class DispatchQueue : public ek::common::IntrusiveObject {
 public:
 
     friend class RunLoop;

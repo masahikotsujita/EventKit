@@ -7,7 +7,7 @@
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
-#include <eventkit/common/RefCountObject.h>
+#include <eventkit/common/IntrusiveObject.h>
 
 namespace ek {
 namespace promise {

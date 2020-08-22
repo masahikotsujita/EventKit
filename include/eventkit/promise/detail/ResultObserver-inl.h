@@ -10,7 +10,7 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename Function>
-class FunctionResultObserver : public ResultObserver<T, E>, public ek::common::RefCountObject {
+class FunctionResultObserver : public ResultObserver<T, E>, public ek::common::IntrusiveObject {
 public:
     template <typename F>
     explicit FunctionResultObserver(F&& function)
@@ -24,11 +24,11 @@ public:
     }
     
     virtual void ref() const override {
-        ek::common::RefCountObject::ref();
+        ek::common::IntrusiveObject::ref();
     }
     
     virtual void unref() const override {
-        ek::common::RefCountObject::unref();
+        ek::common::IntrusiveObject::unref();
     }
 
 private:
