@@ -5,10 +5,13 @@
 #include <thread>
 #include <catch2/catch.hpp>
 #include "TestUtils.h"
+#include <eventkit/common/SystemAllocator.h>
 #include <eventkit/dispatch/RunLoop.h>
 #include <eventkit/dispatch/DispatchQueue.h>
 
 using namespace std::chrono_literals;
+
+ek::common::SystemAllocator g_allocator;
 
 SCENARIO("a run loop", "[run_loop]") {
 
@@ -29,7 +32,7 @@ SCENARIO("a run loop", "[run_loop]") {
         }
 
         WHEN("a event source added to the run loop") {
-            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
+            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(&g_allocator, &g_allocator);
             pRunLoop->addDispatchQueue(pDispatchQueue);
 
             WHEN("the run loop starts running on a thread") {
