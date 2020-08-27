@@ -7,6 +7,8 @@ find_package(Threads)
 include_directories(include)
 
 set(LIBRARY_SOURCE_FILES
+    include/eventkit/common/Allocator.h
+    include/eventkit/common/SystemAllocator.h
     include/eventkit/common/IntrusivePtr.h
     include/eventkit/common/IntrusiveObject.h
     include/eventkit/dispatch/detail/Semaphore.h
