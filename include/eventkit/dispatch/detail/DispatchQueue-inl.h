@@ -5,13 +5,16 @@
 #ifndef EVENTKIT_DISPATCHQUEUE_INL_H
 #define EVENTKIT_DISPATCHQUEUE_INL_H
 
+#include <eventkit/common/Allocator.h>
+
 namespace ek {
 namespace dispatch {
 
 template <typename Function>
 template <typename F>
-DispatchFunctionItem<Function>::DispatchFunctionItem(F&& function)
-    : m_function(std::forward<F>(function)) {
+DispatchFunctionItem<Function>::DispatchFunctionItem(ek::common::Allocator* pA, F&& function)
+    : DispatchItem(pA)
+    , m_function(std::forward<F>(function)) {
 }
 
 template <typename Function>
@@ -20,8 +23,8 @@ void DispatchFunctionItem<Function>::run() {
 }
 
 template <typename F>
-void DispatchQueue::dispatchAsync(F&& function) {
-    dispatchItemAsync(ek::common::make_intrusive<DispatchFunctionItem<std::decay_t<F>>>(std::forward<F>(function)));
+void DispatchQueue::dispatchAsync(ek::common::Allocator* pA, F&& function) {
+    dispatchItemAsync(ek::common::make_intrusive<DispatchFunctionItem<std::decay_t<F>>>(pA, pA, std::forward<F>(function)));
 }
 
 }

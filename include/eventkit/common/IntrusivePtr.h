@@ -6,6 +6,7 @@
 #define EVENTKIT_INTRUSIVEPTR_H
 
 #include <utility>
+#include <eventkit/common/Allocator.h>
 
 namespace ek {
 namespace common {
@@ -199,8 +200,8 @@ IntrusivePtr<T> dynamic_pointer_cast(const IntrusivePtr<U>& p) {
 #endif
 
 template <typename T, typename ...Args>
-IntrusivePtr<T> make_intrusive(Args&& ...args) {
-    return IntrusivePtr<T>(new T (std::forward<Args>(args)...), false);
+IntrusivePtr<T> make_intrusive(Allocator* pA, Args&& ...args) {
+    return IntrusivePtr<T>(pA->create<T>(std::forward<Args>(args)...), false);
 }
 
 }

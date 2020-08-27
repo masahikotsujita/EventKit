@@ -20,25 +20,25 @@ struct pack_as_tuple_t { };
 constexpr pack_as_tuple_t pack_as_tuple = pack_as_tuple_t();
 
 template <typename ...Prs>
-auto whenAll(pack_as_tuple_t, Prs&& ...promises) {
+auto whenAll(ek::common::Allocator* pA, pack_as_tuple_t, Prs&& ...promises) {
     using Values = ek::promise::detail::values_of_prmises_t<std::decay_t<Prs>...>;
     using Error = ek::promise::detail::error_of_prmises_t<Prs...>;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationCore<std::decay_t<Prs>...>>();
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationCore<std::decay_t<Prs>...>>(pA);
     detail::addCoreAsHandlerToPromises(pCore, std::forward<Prs>(promises)...);
     return ek::promise::detail::make_promise<Values, Error>(pCore);
 }
 
 template <typename InputIt>
-auto whenAll(InputIt begin, InputIt end) {
+auto whenAll(ek::common::Allocator* pA, InputIt begin, InputIt end) {
     using P = ek::promise::detail::value_type_of_t<InputIt>;
     using T = typename P::Value;
     using E = typename P::Error;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicWhenAllTransformationCore<T, E>>(std::distance(begin, end));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicWhenAllTransformationCore<T, E>>(pA, pA, std::distance(begin, end));
     size_t idx = 0;
     auto itr = begin;
     for (; itr != end; ++itr, ++idx) {
         const auto& promise = *itr;
-        promise.pipe(ek::promise::detail::make_function_observer<T, E>([pCore, idx](const auto& result){
+        promise.pipe(ek::promise::detail::make_function_observer<T, E>(pA, [pCore, idx](const auto& result){
             pCore->onResultAt(result, idx);
         }));
     }
@@ -46,13 +46,13 @@ auto whenAll(InputIt begin, InputIt end) {
 }
 
 template <typename Prs>
-auto whenAll(const Prs& promises) {
-    return whenAll(promises.begin(), promises.end());
+auto whenAll(ek::common::Allocator* pA, const Prs& promises) {
+    return whenAll(pA, promises.begin(), promises.end());
 }
 
 template <typename Pr>
-auto whenAll(std::initializer_list<Pr> promises) {
-    return whenAll(promises.begin(), promises.end());
+auto whenAll(ek::common::Allocator* pA, std::initializer_list<Pr> promises) {
+    return whenAll(pA, promises.begin(), promises.end());
 }
 
 }

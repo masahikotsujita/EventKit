@@ -24,6 +24,12 @@ public:
     using Error = error_of_prmises_t<Prs...>;
     using Super = PromiseCore<Values, Error>;
     using Result = ek::promise::Result<Values, Error>;
+
+    explicit WhenAllTransformationCore(ek::common::Allocator* pA)
+        : Super(pA)
+        , m_values()
+        , m_fulfilledPromiseFlags() {
+    }
     
     template <size_t Index>
     void onResultAt(const std::tuple_element_t<Index, Results>& result) {
@@ -52,8 +58,8 @@ public:
     using Super = PromiseCore<Values, Error>;
     using Results = Result<std::vector<T>, E>;
 
-    explicit DynamicWhenAllTransformationCore(size_t size)
-        : Super()
+    explicit DynamicWhenAllTransformationCore(ek::common::Allocator* pA, size_t size)
+        : Super(pA)
         , m_values(size)
         , m_fulfilledFlags(size, false) {
     }
