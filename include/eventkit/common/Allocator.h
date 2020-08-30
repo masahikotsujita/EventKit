@@ -45,7 +45,7 @@ public:
 
 };
 
-Allocator* GetDefaultAllocator();
+Allocator* getDefaultAllocator();
 
 }
 }

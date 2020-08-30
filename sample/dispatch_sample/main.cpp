@@ -10,24 +10,26 @@
 
 int main(int argc, const char* argv[]) {
     ek::dispatch::RunLoop mainLoop;
-    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::GetDefaultAllocator(), ek::common::GetDefaultAllocator());
+    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
+                                                                              ek::common::getDefaultAllocator());
     mainLoop.addDispatchQueue(pMainQueue);
 
     ek::dispatch::RunLoop bgLoop;
-    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::GetDefaultAllocator(), ek::common::GetDefaultAllocator());
+    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
+                                                                            ek::common::getDefaultAllocator());
     bgLoop.addDispatchQueue(pBgQueue);
 
-    pMainQueue->dispatchAsync(ek::common::GetDefaultAllocator(), [] {
+    pMainQueue->dispatchAsync(ek::common::getDefaultAllocator(), [] {
         printf("a task running on main thread.\n");
     });
 
-    pBgQueue->dispatchAsync(ek::common::GetDefaultAllocator(), [] {
+    pBgQueue->dispatchAsync(ek::common::getDefaultAllocator(), [] {
         printf("a task running on background thread.\n");
     });
 
-    pBgQueue->dispatchAsync(ek::common::GetDefaultAllocator(), [&] {
+    pBgQueue->dispatchAsync(ek::common::getDefaultAllocator(), [&] {
         printf("dispatching a task to main thread from background thread.\n");
-        pMainQueue->dispatchAsync(ek::common::GetDefaultAllocator(), [] {
+        pMainQueue->dispatchAsync(ek::common::getDefaultAllocator(), [] {
             printf("a task running on main thread dispatched from background thread.\n");
         });
     });

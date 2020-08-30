@@ -30,7 +30,9 @@ SCENARIO("a run loop", "[run_loop]") {
         }
 
         WHEN("a event source added to the run loop") {
-            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::GetDefaultAllocator(), ek::common::GetDefaultAllocator());
+            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(
+                    ek::common::getDefaultAllocator(),
+                                                                                          ek::common::getDefaultAllocator());
             pRunLoop->addDispatchQueue(pDispatchQueue);
 
             WHEN("the run loop starts running on a thread") {
