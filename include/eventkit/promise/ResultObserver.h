@@ -19,9 +19,9 @@ public:
 
     virtual void onResult(const Result <T, E>& result) = 0;
     
-    virtual void ref() const = 0;
+    virtual void ref() = 0;
     
-    virtual void unref() const = 0;
+    virtual void unref() = 0;
 
 };
 

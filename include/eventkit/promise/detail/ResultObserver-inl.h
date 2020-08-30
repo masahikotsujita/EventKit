@@ -10,11 +10,12 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename Function>
-class FunctionResultObserver : public ResultObserver<T, E>, public ek::common::IntrusiveObject {
+class FunctionResultObserver : public ek::common::IntrusiveObject, public ResultObserver<T, E> {
 public:
     template <typename F>
-    explicit FunctionResultObserver(F&& function)
-        : m_function(std::forward<F>(function)) {
+    explicit FunctionResultObserver(ek::common::Allocator* pA, F&& function)
+        : ek::common::IntrusiveObject(pA)
+        , m_function(std::forward<F>(function)) {
     }
     
     virtual ~FunctionResultObserver() override = default;
@@ -23,11 +24,11 @@ public:
         m_function(result);
     }
     
-    virtual void ref() const override {
+    virtual void ref() override {
         ek::common::IntrusiveObject::ref();
     }
     
-    virtual void unref() const override {
+    virtual void unref() override {
         ek::common::IntrusiveObject::unref();
     }
 
@@ -37,8 +38,8 @@ private:
 };
 
 template <typename T, typename E, typename Function>
-auto make_function_observer(Function&& function) -> ek::common::IntrusivePtr<ResultObserver < T, E>> {
-    return ek::common::make_intrusive<FunctionResultObserver<T, E, std::decay_t<Function>>>(std::forward<Function>(function));
+auto make_function_observer(ek::common::Allocator* pA, Function&& function) -> ek::common::IntrusivePtr<ResultObserver < T, E>> {
+    return ek::common::make_intrusive<FunctionResultObserver<T, E, std::decay_t<Function>>>(pA, pA, std::forward<Function>(function));
 }
 
 }

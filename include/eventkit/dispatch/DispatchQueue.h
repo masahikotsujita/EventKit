@@ -8,6 +8,7 @@
 #include <mutex>
 #include <list>
 #include <queue>
+#include <eventkit/common/Allocator.h>
 #include <eventkit/dispatch/RunLoop.h>
 #include <eventkit/common/IntrusiveObject.h>
 
@@ -16,6 +17,8 @@ namespace dispatch {
 
 class DispatchItem : public ek::common::IntrusiveObject {
 public:
+    explicit DispatchItem(ek::common::Allocator* pA) : ek::common::IntrusiveObject(pA) {}
+
     virtual ~DispatchItem() = default;
 
     virtual void run() = 0;
@@ -27,7 +30,7 @@ class DispatchFunctionItem : public DispatchItem {
 public:
 
     template <typename F>
-    explicit DispatchFunctionItem(F&& function);
+    explicit DispatchFunctionItem(ek::common::Allocator* pA, F&& function);
 
     ~DispatchFunctionItem() override = default;
 
@@ -43,8 +46,13 @@ public:
 
     friend class RunLoop;
 
+    explicit DispatchQueue(ek::common::Allocator* pA)
+        : ek::common::IntrusiveObject(pA)
+        , m_pRunLoop(nullptr) {
+    }
+
     template <typename F>
-    void dispatchAsync(F&& function);
+    void dispatchAsync(ek::common::Allocator* pA, F&& function);
 
 private:
 

@@ -19,8 +19,9 @@ class ThenTransformationCore :
     public ResultObserverMultipleInheritanceHelper<T, E> {
 public:
     template <typename Tr>
-    explicit ThenTransformationCore(Tr&& transformation)
-        : m_transformation(std::forward<Tr>(transformation))
+    explicit ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation)
+        : PromiseCore<U, E>(pA)
+        , m_transformation(std::forward<Tr>(transformation))
     {
     }
 
@@ -42,11 +43,11 @@ public:
         return ek::common::IntrusivePtr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
     }
     
-    virtual void ref(result_observer_multiple_inheritance_helper_tag_t) const override {
+    virtual void ref(result_observer_multiple_inheritance_helper_tag_t) override {
         PromiseCore<U, E>::ref();
     }
     
-    virtual void unref(result_observer_multiple_inheritance_helper_tag_t) const override {
+    virtual void unref(result_observer_multiple_inheritance_helper_tag_t) override {
         PromiseCore<U, E>::unref();
     }
 

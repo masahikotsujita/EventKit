@@ -16,11 +16,14 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ResultObserver<T, E>, public ek::common::IntrusiveObject {
+class PromiseCore : public ek::common::IntrusiveObject, public ResultObserver<T, E> {
 public:
     using Handler = ResultObserver<T, E>;
 
-    PromiseCore() : m_isResolved(false) {}
+    explicit PromiseCore(ek::common::Allocator* pA)
+        : ek::common::IntrusiveObject(pA)
+        , m_isResolved(false) {
+    }
 
     virtual void onResult(const Result<T, E>& result) override {
         std::unique_lock<std::mutex> lock(m_mutex);
@@ -45,11 +48,11 @@ public:
         }
     }
     
-    virtual void ref() const override {
+    virtual void ref() override {
         ek::common::IntrusiveObject::ref();
     }
     
-    virtual void unref() const override {
+    virtual void unref() override {
         ek::common::IntrusiveObject::unref();
     }
 

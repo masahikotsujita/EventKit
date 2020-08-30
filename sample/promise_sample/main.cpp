@@ -5,6 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <eventkit/common/SystemAllocator.h>
 #include <eventkit/promise/Promise.h>
 #include <sstream>
 #include <eventkit/promise/Promise.h>
@@ -21,8 +22,8 @@ int main(int argc, const char* argv[]) {
     using namespace std::chrono_literals;
     using namespace ek::promise::global_functions;
     
-    whenAll({
-        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
+    whenAll(ek::common::GetDefaultAllocator(), {
+        Promise(ek::common::GetDefaultAllocator(), [argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
                 LOG("processing...");
                 std::this_thread::sleep_for(5s);
@@ -38,8 +39,8 @@ int main(int argc, const char* argv[]) {
             });
             thread.detach();
         }),
-        Promise::value(", "),
-        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
+        Promise::value(ek::common::GetDefaultAllocator(), ", "),
+        Promise(ek::common::GetDefaultAllocator(), [argc, argv](const ek::promise::Resolver<std::string, int>& resolver){
             std::thread thread([resolver, argc, argv]{
                 LOG("processing...");
                 std::this_thread::sleep_for(3s);
@@ -55,24 +56,24 @@ int main(int argc, const char* argv[]) {
             });
             thread.detach();
         }),
-        Promise::value("!")
-    }).then([](const std::vector<std::string>& texts){
+        Promise::value(ek::common::GetDefaultAllocator(), "!")
+    }).then(ek::common::GetDefaultAllocator(), [](const std::vector<std::string>& texts){
         LOG("concatenating...");
         std::string concatenated = texts[0] + texts[1] + texts[2] + texts[3];
-        return ek::promise::Promise<std::string, int>::value(concatenated);
-    }).then([](const std::string& text){
+        return ek::promise::Promise<std::string, int>::value(ek::common::GetDefaultAllocator(), concatenated);
+    }).then(ek::common::GetDefaultAllocator(), [](const std::string& text){
         LOG("quoting...");
         std::stringstream ss;
         ss << "\"" << text << "\"";
         std::string quoted = ss.str();
-        return ek::promise::Promise<std::string, int>::value(quoted);
-    }).then([](const std::string& text){
+        return ek::promise::Promise<std::string, int>::value(ek::common::GetDefaultAllocator(), quoted);
+    }).then(ek::common::GetDefaultAllocator(), [](const std::string& text){
         LOG("succeeded: ", text);
-        return ek::promise::Promise<Unit, int>::value();
-    }).recover([](int error){
+        return ek::promise::Promise<Unit, int>::value(ek::common::GetDefaultAllocator());
+    }).recover(ek::common::GetDefaultAllocator(), [](int error){
         LOG("failed: ", error);
-        return ek::promise::Promise<Unit, NoError>::value();
-    }).done([](const ek::promise::Result<Unit, NoError>& result){
+        return ek::promise::Promise<Unit, NoError>::value(ek::common::GetDefaultAllocator());
+    }).done(ek::common::GetDefaultAllocator(), [](const ek::promise::Result<Unit, NoError>& result){
         LOG("done. ");
         g_isDone = true;
     });
