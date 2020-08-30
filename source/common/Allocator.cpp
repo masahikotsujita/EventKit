@@ -10,7 +10,7 @@ namespace common {
 
 SystemAllocator g_systemAllocator;
 
-Allocator* GetDefaultAllocator() {
+Allocator* getDefaultAllocator() {
     return &g_systemAllocator;
 }
 
