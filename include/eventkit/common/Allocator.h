@@ -45,6 +45,8 @@ public:
 
 };
 
+Allocator* GetDefaultAllocator();
+
 }
 }
 
