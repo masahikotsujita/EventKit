@@ -29,7 +29,7 @@ public:
 
     virtual void onResult(result_observer_multiple_inheritance_helper_tag_t, const Result<T, E>& result) override {
         if (result.getType() == ResultType::succeeded) {
-            m_transformation(result.getValue()).pipe(asCore());
+            m_transformation(result.getValue()).done(asCore());
         } else {
             PromiseCore<U, E>::onResult(Result<U, E>::failed(result.getError()));
         }

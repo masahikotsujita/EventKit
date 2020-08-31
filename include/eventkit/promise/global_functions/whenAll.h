@@ -38,7 +38,7 @@ auto whenAll(ek::common::Allocator* pA, InputIt begin, InputIt end) {
     auto itr = begin;
     for (; itr != end; ++itr, ++idx) {
         const auto& promise = *itr;
-        promise.pipe(ek::promise::detail::make_function_observer<T, E>(pA, [pCore, idx](const auto& result){
+        promise.done(ek::promise::detail::make_function_observer<T, E>(pA, [pCore, idx](const auto& result){
             pCore->onResultAt(result, idx);
         }));
     }
