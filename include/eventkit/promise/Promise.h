@@ -74,13 +74,14 @@ public:
     }
 
     template <typename Handler>
-    Promise& done(ek::common::Allocator* pA, Handler&& handler) {
+    Promise done(ek::common::Allocator* pA, Handler&& handler) {
         done(ek::promise::detail::make_function_observer<T, E>(pA, std::forward<Handler>(handler)));
         return *this;
     }
 
-    void done(const ek::common::IntrusivePtr<ResultObserver<T, E>>& handler) const {
+    Promise done(const ek::common::IntrusivePtr<ResultObserver<T, E>>& handler) const {
         m_pCore->addHandler(handler);
+        return *this;
     }
 
 private:
