@@ -57,10 +57,6 @@ public:
         return Promise(pCore);
     }
 
-    void done(const ek::common::IntrusivePtr<ResultObserver<T, E>>& handler) const {
-        m_pCore->addHandler(handler);
-    }
-
     template <typename Handler>
     auto then(ek::common::Allocator* pA, Handler&& handler) -> Promise<typename std::result_of_t<Handler(T)>::Value, E> {
         using U = typename std::result_of_t<Handler(T)>::Value;
@@ -81,6 +77,10 @@ public:
     Promise& done(ek::common::Allocator* pA, Handler&& handler) {
         done(ek::promise::detail::make_function_observer<T, E>(pA, std::forward<Handler>(handler)));
         return *this;
+    }
+
+    void done(const ek::common::IntrusivePtr<ResultObserver<T, E>>& handler) const {
+        m_pCore->addHandler(handler);
     }
 
 private:
