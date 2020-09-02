@@ -25,9 +25,9 @@ bool waitUntil(const Predicate& predicate, const std::chrono::time_point<Clock, 
 }
 
 #define REQUIRE_EVENTUALLY(expression, timeout)                                                                         \
-    REQUIRE(waitUntil([&]() -> bool { return (expression); }, std::chrono::system_clock::now() + timeout));
+    REQUIRE(waitUntil([&]() -> bool { return (expression); }, std::chrono::system_clock::now() + (timeout)));
 
 #define REQUIRE_EVENTUALLY_NOT(expression, timeout)                                                                     \
-    REQUIRE(!waitUntil([&]() -> bool { return (expression); }, std::chrono::system_clock::now() + timeout));
+    REQUIRE(!waitUntil([&]() -> bool { return (expression); }, std::chrono::system_clock::now() + (timeout)));
 
 #endif //EVENTKIT_TESTUTILS_H
