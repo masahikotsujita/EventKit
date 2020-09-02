@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019/09/04.
 //
 
-#ifndef EVENTKIT_PROMISE_INL_H
-#define EVENTKIT_PROMISE_INL_H
+#ifndef EVENTKIT_MAKE_PROMISE_H
+#define EVENTKIT_MAKE_PROMISE_H
 
 #include <eventkit/promise/detail/PromiseCore.h>
 
@@ -20,4 +20,4 @@ ek::promise::Promise<T, E> make_promise(const ek::common::IntrusivePtr<ek::promi
 }
 }
 
-#endif //EVENTKIT_PROMISE_INL_H
+#endif //EVENTKIT_MAKE_PROMISE_H

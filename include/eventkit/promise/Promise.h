@@ -98,6 +98,6 @@ private:
 }
 }
 
-#include <eventkit/promise/detail/Promise-inl.h>
+#include <eventkit/promise/detail/make_promise.h>
 
 #endif //EVENTKIT_PROMISE_H
