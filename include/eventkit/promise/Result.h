@@ -139,9 +139,9 @@ private:
         new(&m_value) Value(std::forward<Args>(args)...);
     }
 
-    template <typename _T>
-    void assignValue(_T&& value) {
-        m_value = std::forward<_T>(value);
+    template <typename U>
+    void assignValue(U&& value) {
+        m_value = std::forward<U>(value);
     }
 
     template <typename ...Args>
@@ -149,9 +149,9 @@ private:
         new(&m_error) Error(std::forward<Args>(args)...);
     }
 
-    template <typename _E>
-    void assignError(_E&& error) {
-        m_error = std::forward<_E>(error);
+    template <typename F>
+    void assignError(F&& error) {
+        m_error = std::forward<F>(error);
     }
 
     void clear() {
