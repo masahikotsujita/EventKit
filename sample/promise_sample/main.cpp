@@ -5,12 +5,11 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <sstream>
 #include <eventkit/common/SystemAllocator.h>
 #include <eventkit/promise/Promise.h>
-#include <sstream>
-#include <eventkit/promise/Promise.h>
+#include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/global_functions/whenAll.h>
-#include <vector>
 #include "../sample_utils/logging.h"
 
 std::atomic_bool g_isDone { false };
