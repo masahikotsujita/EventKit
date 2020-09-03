@@ -27,7 +27,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/ResultHandler.h
     include/eventkit/promise/detail/ResultHandler-inl.h
     include/eventkit/promise/detail/PromiseCore.h
-    include/eventkit/promise/detail/ResultObserverMultipleInheritanceHelper.h
+    include/eventkit/promise/detail/ResultHandlerMultipleInheritanceHelper.h
     include/eventkit/promise/detail/ThenTransformationCore.h
     include/eventkit/promise/detail/RecoverTransformationCore.h
     include/eventkit/promise/detail/type_traits.h
