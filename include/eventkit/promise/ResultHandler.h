@@ -25,14 +25,10 @@ public:
 };
 
 template <typename T, typename E>
-void intrusive_ptr_ref(ResultHandler<T, E>* p) {
-    p->ref();
-}
+void intrusive_ptr_ref(ResultHandler<T, E>* p);
 
 template <typename T, typename E>
-void intrusive_ptr_unref(ResultHandler<T, E>* p) {
-    p->unref();
-}
+void intrusive_ptr_unref(ResultHandler<T, E>* p);
 
 }
 }

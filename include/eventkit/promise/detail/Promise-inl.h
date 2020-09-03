@@ -7,6 +7,7 @@
 
 #include <eventkit/promise/Promise.h>
 #include <eventkit/promise/detail/make_promise.h>
+#include <eventkit/promise/detail/FunctionResultHandler.h>
 #include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/detail/ThenTransformationCore.h>
 #include <eventkit/promise/detail/RecoverTransformationCore.h>
