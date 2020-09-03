@@ -65,7 +65,7 @@ Promise<T, E> Promise<T, E>::done(ek::common::Allocator* pA, Handler&& handler) 
 }
 
 template<typename T, typename E>
-Promise<T, E> Promise<T, E>::done(const common::IntrusivePtr<ResultObserver<T, E>>& handler) const {
+Promise<T, E> Promise<T, E>::done(const common::IntrusivePtr<ResultHandler<T, E>>& handler) const {
     m_pCore->addHandler(handler);
     return *this;
 }

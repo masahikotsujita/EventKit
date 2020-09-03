@@ -39,8 +39,8 @@ public:
         return ek::common::IntrusivePtr<PromiseCore<T, F>>(static_cast<PromiseCore<T, F>*>(this));
     }
     
-    ek::common::IntrusivePtr<ResultObserver < T, E>> asHandler() {
-        return ek::common::IntrusivePtr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
+    ek::common::IntrusivePtr<ResultHandler< T, E>> asHandler() {
+        return ek::common::IntrusivePtr<ResultHandler<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
     }
     
     virtual void ref(result_observer_multiple_inheritance_helper_tag_t) override {

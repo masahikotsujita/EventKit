@@ -5,7 +5,7 @@
 #ifndef EVENTKIT_RESULTOBSERVERMULTIPLEINHERITANCEHELPER_H
 #define EVENTKIT_RESULTOBSERVERMULTIPLEINHERITANCEHELPER_H
 
-#include <eventkit/promise/ResultObserver.h>
+#include <eventkit/promise/ResultHandler.h>
 
 namespace ek {
 namespace promise {
@@ -18,10 +18,10 @@ constexpr result_observer_multiple_inheritance_helper_tag_t
 
 /**
  * @class       ResultObserverMultipleInheritanceHelper
- * @brief       A helper class to inherit multiple `ResultObserver`s without conflict.
+ * @brief       A helper class to inherit multiple `ResultHandler`s without conflict.
  */
 template <typename T, typename E>
-class ResultObserverMultipleInheritanceHelper : public ResultObserver<T, E> {
+class ResultObserverMultipleInheritanceHelper : public ResultHandler<T, E> {
 public:
     virtual ~ResultObserverMultipleInheritanceHelper() override = default;
     

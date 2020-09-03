@@ -11,7 +11,7 @@
 namespace ek {
 namespace promise {
 template <typename T, typename E>
-class ResultObserver;
+class ResultHandler;
 template <typename T, typename E>
 class Promise;
 namespace detail {
@@ -50,7 +50,7 @@ public:
     template <typename Handler>
     Promise done(ek::common::Allocator* pA, Handler&& handler) const;
 
-    Promise done(const ek::common::IntrusivePtr<ResultObserver<T, E>>& handler) const;
+    Promise done(const ek::common::IntrusivePtr<ResultHandler<T, E>>& handler) const;
 
 private:
     using Core = detail::PromiseCore<T, E>;
