@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019-08-15.
 //
 
-#ifndef EVENTKIT_RESULTOBSERVER_H
-#define EVENTKIT_RESULTOBSERVER_H
+#ifndef EVENTKIT_RESULTHANDLER_H
+#define EVENTKIT_RESULTHANDLER_H
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/common/IntrusiveObject.h>
@@ -12,9 +12,9 @@ namespace ek {
 namespace promise {
 
 template <typename T, typename E>
-class ResultObserver {
+class ResultHandler {
 public:
-    virtual ~ResultObserver() = default;
+    virtual ~ResultHandler() = default;
 
     virtual void onResult(const Result <T, E>& result) = 0;
     
@@ -25,18 +25,18 @@ public:
 };
 
 template <typename T, typename E>
-void intrusive_ptr_ref(ResultObserver<T, E>* p) {
+void intrusive_ptr_ref(ResultHandler<T, E>* p) {
     p->ref();
 }
 
 template <typename T, typename E>
-void intrusive_ptr_unref(ResultObserver<T, E>* p) {
+void intrusive_ptr_unref(ResultHandler<T, E>* p) {
     p->unref();
 }
 
 }
 }
 
-#include <eventkit/promise/detail/ResultObserver-inl.h>
+#include <eventkit/promise/detail/ResultHandler-inl.h>
 
-#endif //EVENTKIT_RESULTOBSERVER_H
+#endif //EVENTKIT_RESULTHANDLER_H

@@ -7,7 +7,7 @@
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
-#include <eventkit/promise/detail/ResultObserverMultipleInheritanceHelper.h>
+#include <eventkit/promise/detail/ResultHandlerMultipleInheritanceHelper.h>
 
 namespace ek {
 namespace promise {
@@ -16,7 +16,7 @@ namespace detail {
 template <typename T, typename E, typename U, typename Handler>
 class ThenTransformationCore :
     public PromiseCore<U, E>,
-    public ResultObserverMultipleInheritanceHelper<T, E> {
+    public ResultHandlerMultipleInheritanceHelper<T, E> {
 public:
     template <typename Tr>
     explicit ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation)
@@ -39,8 +39,8 @@ public:
         return ek::common::IntrusivePtr<PromiseCore<U, E>>(static_cast<PromiseCore<U, E>*>(this));
     }
     
-    ek::common::IntrusivePtr<ResultObserver<T, E>> asHandler() {
-        return ek::common::IntrusivePtr<ResultObserver<T, E>>(static_cast<ResultObserverMultipleInheritanceHelper<T, E>*>(this));
+    ek::common::IntrusivePtr<ResultHandler<T, E>> asHandler() {
+        return ek::common::IntrusivePtr<ResultHandler<T, E>>(static_cast<ResultHandlerMultipleInheritanceHelper<T, E>*>(this));
     }
     
     virtual void ref(result_observer_multiple_inheritance_helper_tag_t) override {

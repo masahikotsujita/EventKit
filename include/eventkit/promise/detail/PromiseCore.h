@@ -9,16 +9,16 @@
 #include <mutex>
 #include <list>
 #include <eventkit/promise/Result.h>
-#include <eventkit/promise/ResultObserver.h>
+#include <eventkit/promise/ResultHandler.h>
 
 namespace ek {
 namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ek::common::IntrusiveObject, public ResultObserver<T, E> {
+class PromiseCore : public ek::common::IntrusiveObject, public ResultHandler<T, E> {
 public:
-    using Handler = ResultObserver<T, E>;
+    using Handler = ResultHandler<T, E>;
 
     explicit PromiseCore(ek::common::Allocator* pA)
         : ek::common::IntrusiveObject(pA)
