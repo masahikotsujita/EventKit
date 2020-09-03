@@ -6,7 +6,6 @@
 #define EVENTKIT_RESULTOBSERVER_H
 
 #include <eventkit/promise/Result.h>
-#include <eventkit/promise/Promise.h>
 #include <eventkit/common/IntrusiveObject.h>
 
 namespace ek {

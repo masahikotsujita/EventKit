@@ -11,6 +11,7 @@
 #include <vector>
 #include <mutex>
 #include <algorithm>
+#include <eventkit/promise/detail/PromiseCore.h>
 
 namespace ek {
 namespace promise {
