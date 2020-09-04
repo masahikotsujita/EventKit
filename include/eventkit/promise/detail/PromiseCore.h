@@ -17,7 +17,7 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ResultHandler<T, E> {
+class PromiseCore {
 public:
     using Handler = ResultHandler<T, E>;
 
@@ -30,7 +30,7 @@ public:
         }, this) {
     }
 
-    virtual void onResult(const Result<T, E>& result) override {
+    virtual void resolve(const Result<T, E>& result) {
         std::unique_lock<std::mutex> lock(m_mutex);
         if (m_isResolved) {
             return;
@@ -53,11 +53,11 @@ public:
         }
     }
     
-    void ref() override {
+    void ref() {
         m_intrusiveMixin.ref();
     }
     
-    void unref() override {
+    void unref() {
         m_intrusiveMixin.unref();
     }
 

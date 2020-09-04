@@ -28,7 +28,7 @@ template<typename T, typename E>
 template<typename... Args>
 Promise<T, E> Promise<T, E>::value(ek::common::Allocator* pA, Args&& ... args) {
     auto pCore = ek::common::make_intrusive<Core>(pA, pA);
-    pCore->onResult(Result<T, E>::succeeded(std::forward<Args>(args)...));
+    pCore->resolve(Result<T, E>::succeeded(std::forward<Args>(args)...));
     return Promise(pCore);
 }
 
@@ -36,7 +36,7 @@ template<typename T, typename E>
 template<typename... Args>
 Promise<T, E> Promise<T, E>::error(ek::common::Allocator* pA, Args&& ... args) {
     auto pCore = ek::common::make_intrusive<Core>(pA, pA);
-    pCore->onResult(Result<T, E>::failed(std::forward<Args>(args)...));
+    pCore->resolve(Result<T, E>::failed(std::forward<Args>(args)...));
     return Promise(pCore);
 }
 
