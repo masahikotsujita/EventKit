@@ -14,7 +14,7 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename Function>
-class FunctionResultHandler : public ek::common::IntrusiveObject, public ResultHandler<T, E> {
+class FunctionResultHandler : public ResultHandler<T, E> {
 public:
     template <typename F>
     explicit FunctionResultHandler(ek::common::Allocator* pA, F&& function);
@@ -29,6 +29,8 @@ public:
 
 private:
     Function m_function;
+    ek::common::Allocator* m_pA;
+    ek::common::IntrusiveMixin m_intrusiveMixin;
 
 };
 

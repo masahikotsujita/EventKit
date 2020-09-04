@@ -8,6 +8,7 @@
 #include <memory>
 #include <mutex>
 #include <list>
+#include <eventkit/common/IntrusiveMixin.h>
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/ResultHandler.h>
 
@@ -16,13 +17,17 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ek::common::IntrusiveObject, public ResultHandler<T, E> {
+class PromiseCore : public ResultHandler<T, E> {
 public:
     using Handler = ResultHandler<T, E>;
 
     explicit PromiseCore(ek::common::Allocator* pA)
-        : ek::common::IntrusiveObject(pA)
-        , m_isResolved(false) {
+        : m_isResolved(false)
+        , m_pA(pA)
+        , m_intrusiveMixin([](ek::common::IntrusiveMixin*, void* pContext){
+            auto* pThis = static_cast<PromiseCore*>(pContext);
+            pThis->m_pA->destroy(pThis);
+        }, this) {
     }
 
     virtual void onResult(const Result<T, E>& result) override {
@@ -48,12 +53,12 @@ public:
         }
     }
     
-    virtual void ref() override {
-        ek::common::IntrusiveObject::ref();
+    void ref() override {
+        m_intrusiveMixin.ref();
     }
     
-    virtual void unref() override {
-        ek::common::IntrusiveObject::unref();
+    void unref() override {
+        m_intrusiveMixin.unref();
     }
 
 private:
@@ -61,7 +66,19 @@ private:
     bool m_isResolved;
     Result<T, E> m_result;
     std::list<ek::common::IntrusivePtr<Handler>> m_handlers;
+    ek::common::Allocator* m_pA;
+    ek::common::IntrusiveMixin m_intrusiveMixin;
+
 };
+
+template <typename T, typename E>
+void intrusive_ptr_ref(PromiseCore<T, E>* pObj) {
+    pObj->ref();
+}
+template <typename T, typename E>
+void intrusive_ptr_unref(PromiseCore<T, E>* pObj) {
+    pObj->unref();
+}
 
 }
 }
