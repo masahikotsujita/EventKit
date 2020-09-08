@@ -21,14 +21,11 @@ class PromiseCore {
 public:
     using Handler = ResultHandler<T, E>;
 
-    explicit PromiseCore(ek::common::Allocator* pA)
-        : m_isResolved(false)
-        , m_pA(pA)
-        , m_intrusiveMixin([](ek::common::IntrusiveMixin*, void* pContext){
-            auto* pThis = static_cast<PromiseCore*>(pContext);
-            pThis->m_pA->destroy(pThis);
-        }, this) {
+    PromiseCore()
+        : m_isResolved(false) {
     }
+
+    virtual ~PromiseCore() = default;
 
     virtual void resolve(const Result<T, E>& result) {
         std::unique_lock<std::mutex> lock(m_mutex);
@@ -53,21 +50,15 @@ public:
         }
     }
     
-    void ref() {
-        m_intrusiveMixin.ref();
-    }
+    virtual void ref() = 0;
     
-    void unref() {
-        m_intrusiveMixin.unref();
-    }
+    virtual void unref() = 0;
 
 private:
     std::mutex m_mutex;
     bool m_isResolved;
     Result<T, E> m_result;
     std::list<ek::common::IntrusivePtr<Handler>> m_handlers;
-    ek::common::Allocator* m_pA;
-    ek::common::IntrusiveMixin m_intrusiveMixin;
 
 };
 
