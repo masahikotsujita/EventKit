@@ -31,7 +31,6 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/FunctionResultHandler-inl.h
     include/eventkit/promise/detail/PromiseCore.h
     include/eventkit/promise/detail/BasicPromiseCore.h
-    include/eventkit/promise/detail/ResultHandlerMultipleInheritanceHelper.h
     include/eventkit/promise/detail/ResultHandlerMixin.h
     include/eventkit/promise/detail/ThenTransformationCore.h
     include/eventkit/promise/detail/RecoverTransformationCore.h
