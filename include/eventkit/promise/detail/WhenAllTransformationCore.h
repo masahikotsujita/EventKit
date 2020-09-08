@@ -60,9 +60,10 @@ public:
     using Results = Result<std::vector<T>, E>;
 
     explicit DynamicWhenAllTransformationCore(ek::common::Allocator* pA, size_t size)
-        : Super(pA)
-        , m_values(size)
-        , m_fulfilledFlags(size, false) {
+        : m_values(size)
+        , m_fulfilledFlags(size, false)
+        , m_pA(pA)
+        , m_intrusiveMixin(deleteCallback, this) {
     }
 
     void onResultAt(const ek::promise::Result<T, E>& result, size_t index) {
@@ -74,18 +75,35 @@ public:
             m_values[index] = result.getValue();
             m_fulfilledFlags[index] = true;
             if (std::find(m_fulfilledFlags.begin(), m_fulfilledFlags.end(), false) == m_fulfilledFlags.end()) {
-                Super::onResult(Results::succeeded(m_values));
+                Super::resolve(Results::succeeded(m_values));
             }
         } else {
             std::lock_guard<std::mutex> lock(m_mutex);
-            Super::onResult(Results::failed(result.getError()));
+            Super::resolve(Results::failed(result.getError()));
         }
+    }
+
+    virtual void ref() override {
+        m_intrusiveMixin.ref();
+    }
+
+    virtual void unref() override {
+        m_intrusiveMixin.unref();
+    }
+
+private:
+
+    static void deleteCallback(ek::common::IntrusiveMixin*, void* pContext) {
+        auto* pThis = static_cast<DynamicWhenAllTransformationCore<T, E>*>(pContext);
+        pThis->m_pA->destroy(pThis);
     }
 
 private:
     std::mutex m_mutex;
     Values m_values;
     std::vector<bool> m_fulfilledFlags;
+    ek::common::Allocator* m_pA;
+    ek::common::IntrusiveMixin m_intrusiveMixin;
 
 };
 
