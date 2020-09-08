@@ -55,8 +55,8 @@ template<typename Handler>
 auto Promise<T, E>::recover(ek::common::Allocator* pA, Handler&& handler) const -> Promise<T, typename std::result_of_t<Handler(E)>::Error> {
     using F = typename std::result_of_t<Handler(E)>::Error;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationCore<T, E, F, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
-    done(pCore->asHandler());
-    return ek::promise::detail::make_promise(pCore->asCore());
+    done(pCore->asSrcResultHandler());
+    return ek::promise::detail::make_promise(ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<T, F>>(pCore));
 }
 
 template<typename T, typename E>
