@@ -46,8 +46,8 @@ template<typename Handler>
 auto Promise<T, E>::then(ek::common::Allocator* pA, Handler&& handler) const -> Promise<typename std::result_of_t<Handler(T)>::Value, E> {
     using U = typename std::result_of_t<Handler(T)>::Value;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::ThenTransformationCore<T, E, U, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
-    done(pCore->asHandler());
-    return ek::promise::detail::make_promise(pCore->asCore());
+    done(pCore->asSrcResultHandler());
+    return ek::promise::detail::make_promise(ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, E>>(pCore));
 }
 
 template<typename T, typename E>
