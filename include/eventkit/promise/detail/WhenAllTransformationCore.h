@@ -27,9 +27,10 @@ public:
     using Result = ek::promise::Result<Values, Error>;
 
     explicit WhenAllTransformationCore(ek::common::Allocator* pA)
-        : Super(pA)
-        , m_values()
-        , m_fulfilledPromiseFlags() {
+        : m_values()
+        , m_fulfilledPromiseFlags()
+        , m_pA(pA)
+        , m_intrusiveMixin(deleteCallback, this)  {
     }
     
     template <size_t Index>
@@ -45,9 +46,26 @@ public:
         }
     }
 
+    virtual void ref() override {
+        m_intrusiveMixin.ref();
+    }
+
+    virtual void unref() override {
+        m_intrusiveMixin.unref();
+    }
+
+private:
+
+    static void deleteCallback(ek::common::IntrusiveMixin*, void* pContext) {
+        auto* pThis = static_cast<WhenAllTransformationCore<Values, Error>*>(pContext);
+        pThis->m_pA->destroy(pThis);
+    }
+
 private:
     Values m_values;
     std::bitset<std::tuple_size<Values>::value> m_fulfilledPromiseFlags;
+    ek::common::Allocator* m_pA;
+    ek::common::IntrusiveMixin m_intrusiveMixin;
 
 };
 
