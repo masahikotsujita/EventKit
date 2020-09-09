@@ -5,6 +5,7 @@
 #ifndef EVENTKIT_INTRUSIVEOBJECTMIXIN_H
 #define EVENTKIT_INTRUSIVEOBJECTMIXIN_H
 
+#include <cassert>
 #include <atomic>
 #include <eventkit/common/Allocator.h>
 
