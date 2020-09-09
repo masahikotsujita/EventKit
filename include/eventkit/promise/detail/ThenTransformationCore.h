@@ -7,54 +7,115 @@
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
-#include <eventkit/promise/detail/ResultHandlerMultipleInheritanceHelper.h>
+#include <eventkit/promise/detail/ResultHandlerMixin.h>
 
 namespace ek {
 namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename U, typename Handler>
-class ThenTransformationCore :
-    public PromiseCore<U, E>,
-    public ResultHandlerMultipleInheritanceHelper<T, E> {
+class ThenTransformationCore final : public PromiseCore<U, E> {
 public:
     template <typename Tr>
-    explicit ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation)
-        : PromiseCore<U, E>(pA)
-        , m_transformation(std::forward<Tr>(transformation))
-    {
-    }
+    explicit ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation);
 
     ~ThenTransformationCore() override = default;
 
-    virtual void onResult(result_observer_multiple_inheritance_helper_tag_t, const Result<T, E>& result) override {
-        if (result.getType() == ResultType::succeeded) {
-            m_transformation(result.getValue()).done(asCore());
-        } else {
-            PromiseCore<U, E>::onResult(Result<U, E>::failed(result.getError()));
-        }
-    }
+    inline ek::common::IntrusivePtr<ResultHandler<U, E>> asDstResultHandler();
     
-    ek::common::IntrusivePtr<PromiseCore<U, E>> asCore() {
-        return ek::common::IntrusivePtr<PromiseCore<U, E>>(static_cast<PromiseCore<U, E>*>(this));
-    }
+    inline ek::common::IntrusivePtr<ResultHandler<T, E>> asSrcResultHandler();
     
-    ek::common::IntrusivePtr<ResultHandler<T, E>> asHandler() {
-        return ek::common::IntrusivePtr<ResultHandler<T, E>>(static_cast<ResultHandlerMultipleInheritanceHelper<T, E>*>(this));
-    }
+    inline virtual void ref() override;
     
-    virtual void ref(result_observer_multiple_inheritance_helper_tag_t) override {
-        PromiseCore<U, E>::ref();
-    }
-    
-    virtual void unref(result_observer_multiple_inheritance_helper_tag_t) override {
-        PromiseCore<U, E>::unref();
-    }
+    inline virtual void unref() override;
+
+private:
+
+    static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext);
+
+    static void onSrcResultCallback(const ek::promise::Result<T, E>& result, void* pContext);
+
+    static void onDstResultCallback(const ek::promise::Result<U, E>& result, void* pContext);
+
+    static void refCallback(void* pContext);
+
+    static void unrefCallback(void* pContext);
 
 private:
     Handler m_transformation;
+    ek::common::Allocator* m_pA;
+    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
+    ek::promise::detail::ResultHandlerMixin<T, E> m_srcResultHandlerMixin;
+    ek::promise::detail::ResultHandlerMixin<U, E> m_dstResultHandlerMixin;
 
 };
+
+template <typename T, typename E, typename U, typename Handler>
+template <typename Tr>
+ThenTransformationCore<T, E, U, Handler>::ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation)
+    : PromiseCore<U, E>()
+    , m_transformation(std::forward<Tr>(transformation))
+    , m_pA(pA)
+    , m_intrusiveMixin(deleteCallback, this)
+    , m_srcResultHandlerMixin(onSrcResultCallback, refCallback, unrefCallback, this)
+    , m_dstResultHandlerMixin(onDstResultCallback, refCallback, unrefCallback, this)
+{
+}
+
+template <typename T, typename E, typename U, typename Handler>
+common::IntrusivePtr<ResultHandler<U, E>> ThenTransformationCore<T, E, U, Handler>::asDstResultHandler() {
+    return ek::common::IntrusivePtr<ResultHandler<U, E>>(&m_dstResultHandlerMixin);
+}
+
+template <typename T, typename E, typename U, typename Handler>
+common::IntrusivePtr<ResultHandler<T, E>> ThenTransformationCore<T, E, U, Handler>::asSrcResultHandler() {
+    return ek::common::IntrusivePtr<ResultHandler<T, E>>(&m_srcResultHandlerMixin);
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void ThenTransformationCore<T, E, U, Handler>::ref() {
+    m_intrusiveMixin.ref();
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void ThenTransformationCore<T, E, U, Handler>::unref() {
+    m_intrusiveMixin.unref();
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void ThenTransformationCore<T, E, U, Handler>::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
+    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+    pThis->m_pA->destroy(pThis);
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void ThenTransformationCore<T, E, U, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
+    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+    if (result.getType() == ResultType::succeeded) {
+        pThis->m_transformation(result.getValue()).done(pThis->asDstResultHandler());
+    } else {
+        pThis->resolve(Result<U, E>::failed(result.getError()));
+    }
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void
+ThenTransformationCore<T, E, U, Handler>::onDstResultCallback(const Result<U, E>& result, void* pContext) {
+    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+    pThis->resolve(result);
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void ThenTransformationCore<T, E, U, Handler>::refCallback(void* pContext) {
+    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+    pThis->ref();
+}
+
+template <typename T, typename E, typename U, typename Handler>
+void ThenTransformationCore<T, E, U, Handler>::unrefCallback(void* pContext) {
+    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+    pThis->unref();
+}
 
 }
 }

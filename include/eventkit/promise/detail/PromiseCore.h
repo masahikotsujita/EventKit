@@ -8,6 +8,7 @@
 #include <memory>
 #include <mutex>
 #include <list>
+#include <eventkit/common/IntrusiveObjectMixin.h>
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/ResultHandler.h>
 
@@ -16,16 +17,17 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E>
-class PromiseCore : public ek::common::IntrusiveObject, public ResultHandler<T, E> {
+class PromiseCore {
 public:
     using Handler = ResultHandler<T, E>;
 
-    explicit PromiseCore(ek::common::Allocator* pA)
-        : ek::common::IntrusiveObject(pA)
-        , m_isResolved(false) {
+    PromiseCore()
+        : m_isResolved(false) {
     }
 
-    virtual void onResult(const Result<T, E>& result) override {
+    virtual ~PromiseCore() = default;
+
+    virtual void resolve(const Result<T, E>& result) {
         std::unique_lock<std::mutex> lock(m_mutex);
         if (m_isResolved) {
             return;
@@ -48,20 +50,26 @@ public:
         }
     }
     
-    virtual void ref() override {
-        ek::common::IntrusiveObject::ref();
-    }
+    virtual void ref() = 0;
     
-    virtual void unref() override {
-        ek::common::IntrusiveObject::unref();
-    }
+    virtual void unref() = 0;
 
 private:
     std::mutex m_mutex;
     bool m_isResolved;
     Result<T, E> m_result;
     std::list<ek::common::IntrusivePtr<Handler>> m_handlers;
+
 };
+
+template <typename T, typename E>
+void intrusive_ptr_ref(PromiseCore<T, E>* pObj) {
+    pObj->ref();
+}
+template <typename T, typename E>
+void intrusive_ptr_unref(PromiseCore<T, E>* pObj) {
+    pObj->unref();
+}
 
 }
 }
