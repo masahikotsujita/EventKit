@@ -31,7 +31,7 @@ public:
 
 private:
 
-    static void deleteCallback(ek::common::IntrusiveMixin*, void* pContext);
+    static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext);
 
     static void onSrcResultCallback(const ek::promise::Result<T, E>& result, void* pContext);
 
@@ -44,7 +44,7 @@ private:
 private:
     Handler m_transformation;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
     ek::promise::detail::ResultHandlerMixin<T, E> m_srcResultHandlerMixin;
     ek::promise::detail::ResultHandlerMixin<T, F> m_dstResultHandlerMixin;
 
@@ -83,7 +83,7 @@ void RecoverTransformationCore<T, E, F, Handler>::unref() {
 }
 
 template <typename T, typename E, typename F, typename Handler>
-void RecoverTransformationCore<T, E, F, Handler>::deleteCallback(ek::common::IntrusiveMixin*, void* pContext) {
+void RecoverTransformationCore<T, E, F, Handler>::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
     auto* pThis = static_cast<RecoverTransformationCore*>(pContext);
     pThis->m_pA->destroy(pThis);
 }

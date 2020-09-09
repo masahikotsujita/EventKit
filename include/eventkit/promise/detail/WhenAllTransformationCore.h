@@ -56,7 +56,7 @@ public:
 
 private:
 
-    static void deleteCallback(ek::common::IntrusiveMixin*, void* pContext) {
+    static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
         auto* pThis = static_cast<WhenAllTransformationCore<Values, Error>*>(pContext);
         pThis->m_pA->destroy(pThis);
     }
@@ -65,7 +65,7 @@ private:
     Values m_values;
     std::bitset<std::tuple_size<Values>::value> m_fulfilledPromiseFlags;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
 
 };
 
@@ -111,7 +111,7 @@ public:
 
 private:
 
-    static void deleteCallback(ek::common::IntrusiveMixin*, void* pContext) {
+    static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
         auto* pThis = static_cast<DynamicWhenAllTransformationCore<T, E>*>(pContext);
         pThis->m_pA->destroy(pThis);
     }
@@ -121,7 +121,7 @@ private:
     Values m_values;
     std::vector<bool> m_fulfilledFlags;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
 
 };
 

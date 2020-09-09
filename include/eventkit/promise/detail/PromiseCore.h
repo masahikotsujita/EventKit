@@ -8,7 +8,7 @@
 #include <memory>
 #include <mutex>
 #include <list>
-#include <eventkit/common/IntrusiveMixin.h>
+#include <eventkit/common/IntrusiveObjectMixin.h>
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/ResultHandler.h>
 

@@ -34,14 +34,14 @@ public:
 
 private:
 
-    static void deleteCallback(ek::common::IntrusiveMixin*, void* pContext) {
+    static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
         auto* pThis = static_cast<BasicPromiseCore<T, E>*>(pContext);
         pThis->m_pA->destroy(pThis);
     }
 
 private:
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
 
 };
 

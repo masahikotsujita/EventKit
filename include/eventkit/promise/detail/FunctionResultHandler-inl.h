@@ -16,7 +16,7 @@ template <typename F>
 FunctionResultHandler<T, E, Function>::FunctionResultHandler(ek::common::Allocator* pA, F&& function)
     : m_function(std::forward<F>(function))
     , m_pA(pA)
-    , m_intrusiveMixin([](ek::common::IntrusiveMixin*, void* pContext){
+    , m_intrusiveMixin([](ek::common::IntrusiveObjectMixin*, void* pContext){
         auto* pThis = static_cast<FunctionResultHandler*>(pContext);
         pThis->m_pA->destroy(pThis);
     }, this) {

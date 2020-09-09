@@ -2,8 +2,8 @@
 // Created by Tsujita Masahiko on 2020/09/04.
 //
 
-#ifndef EVENTKIT_INTRUSIVEMIXIN_H
-#define EVENTKIT_INTRUSIVEMIXIN_H
+#ifndef EVENTKIT_INTRUSIVEOBJECTMIXIN_H
+#define EVENTKIT_INTRUSIVEOBJECTMIXIN_H
 
 #include <atomic>
 #include <eventkit/common/Allocator.h>
@@ -11,21 +11,21 @@
 namespace ek {
 namespace common {
 
-class IntrusiveMixin final {
+class IntrusiveObjectMixin final {
 public:
 
-    using Deleter = void (*)(IntrusiveMixin* pMixin, void* pContext);
+    using Deleter = void (*)(IntrusiveObjectMixin* pMixin, void* pContext);
 
-    explicit IntrusiveMixin(Deleter pDeleter, void* pContext)
+    explicit IntrusiveObjectMixin(Deleter pDeleter, void* pContext)
         : m_pDeleter(pDeleter)
         , m_pContext(pContext)
         , m_refCount(1) {
     }
 
-    IntrusiveMixin(const IntrusiveMixin&) = delete;
-    IntrusiveMixin& operator = (const IntrusiveMixin&) = delete;
+    IntrusiveObjectMixin(const IntrusiveObjectMixin&) = delete;
+    IntrusiveObjectMixin& operator = (const IntrusiveObjectMixin&) = delete;
 
-    ~IntrusiveMixin() {
+    ~IntrusiveObjectMixin() {
         assert(m_refCount == 0);
     }
 
@@ -50,4 +50,4 @@ private:
 }
 }
 
-#endif //EVENTKIT_INTRUSIVEMIXIN_H
+#endif //EVENTKIT_INTRUSIVEOBJECTMIXIN_H
