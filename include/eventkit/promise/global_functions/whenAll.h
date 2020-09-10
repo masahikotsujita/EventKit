@@ -7,7 +7,7 @@
 
 #include <eventkit/promise/global_functions/detail/whenAll-inl.h>
 #include <eventkit/promise/detail/type_traits.h>
-#include <eventkit/promise/detail/WhenAllTransformationCore.h>
+#include <eventkit/promise/detail/WhenAllTransformationPromiseCore.h>
 #include <type_traits>
 #include <memory>
 #include <vector>
@@ -23,7 +23,7 @@ template <typename ...Prs>
 auto whenAll(ek::common::Allocator* pA, pack_as_tuple_t, Prs&& ...promises) {
     using Values = ek::promise::detail::values_of_prmises_t<std::decay_t<Prs>...>;
     using Error = ek::promise::detail::error_of_prmises_t<Prs...>;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationCore<std::decay_t<Prs>...>>(pA);
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationPromiseCore<std::decay_t<Prs>...>>(pA);
     detail::addCoreAsHandlerToPromises(pCore, std::forward<Prs>(promises)...);
     return ek::promise::detail::make_promise<Values, Error>(pCore);
 }
@@ -33,7 +33,7 @@ auto whenAll(ek::common::Allocator* pA, InputIt begin, InputIt end) {
     using P = ek::promise::detail::value_type_of_t<InputIt>;
     using T = typename P::Value;
     using E = typename P::Error;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicWhenAllTransformationCore<T, E>>(pA, pA, std::distance(begin, end));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicWhenAllTransformationPromiseCore<T, E>>(pA, pA, std::distance(begin, end));
     size_t idx = 0;
     auto itr = begin;
     for (; itr != end; ++itr, ++idx) {
