@@ -10,8 +10,8 @@
 #include <eventkit/promise/detail/FunctionResultHandler.h>
 #include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/detail/BasicPromiseCore.h>
-#include <eventkit/promise/detail/ThenTransformationCore.h>
-#include <eventkit/promise/detail/RecoverTransformationCore.h>
+#include <eventkit/promise/detail/ThenTransformationPromiseCore.h>
+#include <eventkit/promise/detail/RecoverTransformationPromiseCore.h>
 
 namespace ek {
 namespace promise {
@@ -45,7 +45,7 @@ template<typename T, typename E>
 template<typename Handler>
 auto Promise<T, E>::then(ek::common::Allocator* pA, Handler&& handler) const -> Promise<typename std::result_of_t<Handler(T)>::Value, E> {
     using U = typename std::result_of_t<Handler(T)>::Value;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::ThenTransformationCore<T, E, U, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::ThenTransformationPromiseCore<T, E, U, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
     done(pCore->asSrcResultHandler());
     return ek::promise::detail::make_promise(ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, E>>(pCore));
 }
@@ -54,7 +54,7 @@ template<typename T, typename E>
 template<typename Handler>
 auto Promise<T, E>::recover(ek::common::Allocator* pA, Handler&& handler) const -> Promise<T, typename std::result_of_t<Handler(E)>::Error> {
     using F = typename std::result_of_t<Handler(E)>::Error;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationCore<T, E, F, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationPromiseCore<T, E, F, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
     done(pCore->asSrcResultHandler());
     return ek::promise::detail::make_promise(ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<T, F>>(pCore));
 }

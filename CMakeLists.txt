@@ -32,10 +32,10 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/PromiseCore.h
     include/eventkit/promise/detail/BasicPromiseCore.h
     include/eventkit/promise/detail/ResultHandlerMixin.h
-    include/eventkit/promise/detail/ThenTransformationCore.h
-    include/eventkit/promise/detail/RecoverTransformationCore.h
+    include/eventkit/promise/detail/ThenTransformationPromiseCore.h
+    include/eventkit/promise/detail/RecoverTransformationPromiseCore.h
     include/eventkit/promise/detail/type_traits.h
-    include/eventkit/promise/detail/WhenAllTransformationCore.h
+    include/eventkit/promise/detail/WhenAllTransformationPromiseCore.h
     include/eventkit/promise/global_functions/detail/whenAll-inl.h
     include/eventkit/promise/global_functions/whenAll.h
 )

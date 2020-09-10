@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019/09/04.
 //
 
-#ifndef EVENTKIT_WHENALLTRANSFORMATIONCORE_H
-#define EVENTKIT_WHENALLTRANSFORMATIONCORE_H
+#ifndef EVENTKIT_WHENALLTRANSFORMATIONPROMISECORE_H
+#define EVENTKIT_WHENALLTRANSFORMATIONPROMISECORE_H
 
 #include <tuple>
 #include <eventkit/promise/Result.h>
@@ -18,7 +18,7 @@ namespace promise {
 namespace detail {
 
 template <typename ...Prs>
-class WhenAllTransformationCore : public PromiseCore<values_of_prmises_t < Prs...>, error_of_prmises_t<Prs...>> {
+class WhenAllTransformationPromiseCore : public PromiseCore<values_of_prmises_t < Prs...>, error_of_prmises_t<Prs...>> {
 public:
     using Results = std::tuple<result_of_promise_t<Prs>...>;
     using Values = values_of_prmises_t<Prs...>;
@@ -26,7 +26,7 @@ public:
     using Super = PromiseCore<Values, Error>;
     using Result = ek::promise::Result<Values, Error>;
 
-    explicit WhenAllTransformationCore(ek::common::Allocator* pA)
+    explicit WhenAllTransformationPromiseCore(ek::common::Allocator* pA)
         : m_values()
         , m_fulfilledPromiseFlags()
         , m_pA(pA)
@@ -57,7 +57,7 @@ public:
 private:
 
     static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
-        auto* pThis = static_cast<WhenAllTransformationCore<Values, Error>*>(pContext);
+        auto* pThis = static_cast<WhenAllTransformationPromiseCore<Values, Error>*>(pContext);
         pThis->m_pA->destroy(pThis);
     }
 
@@ -70,14 +70,14 @@ private:
 };
 
 template <typename T, typename E>
-class DynamicWhenAllTransformationCore : public PromiseCore<std::vector<T>, E> {
+class DynamicWhenAllTransformationPromiseCore : public PromiseCore<std::vector<T>, E> {
 public:
     using Values = std::vector<T>;
     using Error = E;
     using Super = PromiseCore<Values, Error>;
     using Results = Result<std::vector<T>, E>;
 
-    explicit DynamicWhenAllTransformationCore(ek::common::Allocator* pA, size_t size)
+    explicit DynamicWhenAllTransformationPromiseCore(ek::common::Allocator* pA, size_t size)
         : m_values(size)
         , m_fulfilledFlags(size, false)
         , m_pA(pA)
@@ -112,7 +112,7 @@ public:
 private:
 
     static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
-        auto* pThis = static_cast<DynamicWhenAllTransformationCore<T, E>*>(pContext);
+        auto* pThis = static_cast<DynamicWhenAllTransformationPromiseCore<T, E>*>(pContext);
         pThis->m_pA->destroy(pThis);
     }
 
@@ -129,4 +129,4 @@ private:
 }
 }
 
-#endif //EVENTKIT_WHENALLTRANSFORMATIONCORE_H
+#endif //EVENTKIT_WHENALLTRANSFORMATIONPROMISECORE_H

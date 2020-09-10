@@ -2,8 +2,8 @@
 // Created by Masahiko Tsujita on 2019-08-16.
 //
 
-#ifndef EVENTKIT_THENTRANSFORMATIONCORE_H
-#define EVENTKIT_THENTRANSFORMATIONCORE_H
+#ifndef EVENTKIT_THENTRANSFORMATIONPROMISECORE_H
+#define EVENTKIT_THENTRANSFORMATIONPROMISECORE_H
 
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/Promise.h>
@@ -14,12 +14,12 @@ namespace promise {
 namespace detail {
 
 template <typename T, typename E, typename U, typename Handler>
-class ThenTransformationCore final : public PromiseCore<U, E> {
+class ThenTransformationPromiseCore final : public PromiseCore<U, E> {
 public:
     template <typename Tr>
-    explicit ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation);
+    explicit ThenTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation);
 
-    ~ThenTransformationCore() override = default;
+    ~ThenTransformationPromiseCore() override = default;
 
     inline ek::common::IntrusivePtr<ResultHandler<U, E>> asDstResultHandler();
     
@@ -52,7 +52,7 @@ private:
 
 template <typename T, typename E, typename U, typename Handler>
 template <typename Tr>
-ThenTransformationCore<T, E, U, Handler>::ThenTransformationCore(ek::common::Allocator* pA, Tr&& transformation)
+ThenTransformationPromiseCore<T, E, U, Handler>::ThenTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation)
     : PromiseCore<U, E>()
     , m_transformation(std::forward<Tr>(transformation))
     , m_pA(pA)
@@ -63,34 +63,34 @@ ThenTransformationCore<T, E, U, Handler>::ThenTransformationCore(ek::common::All
 }
 
 template <typename T, typename E, typename U, typename Handler>
-common::IntrusivePtr<ResultHandler<U, E>> ThenTransformationCore<T, E, U, Handler>::asDstResultHandler() {
+common::IntrusivePtr<ResultHandler<U, E>> ThenTransformationPromiseCore<T, E, U, Handler>::asDstResultHandler() {
     return ek::common::IntrusivePtr<ResultHandler<U, E>>(&m_dstResultHandlerMixin);
 }
 
 template <typename T, typename E, typename U, typename Handler>
-common::IntrusivePtr<ResultHandler<T, E>> ThenTransformationCore<T, E, U, Handler>::asSrcResultHandler() {
+common::IntrusivePtr<ResultHandler<T, E>> ThenTransformationPromiseCore<T, E, U, Handler>::asSrcResultHandler() {
     return ek::common::IntrusivePtr<ResultHandler<T, E>>(&m_srcResultHandlerMixin);
 }
 
 template <typename T, typename E, typename U, typename Handler>
-void ThenTransformationCore<T, E, U, Handler>::ref() {
+void ThenTransformationPromiseCore<T, E, U, Handler>::ref() {
     m_intrusiveMixin.ref();
 }
 
 template <typename T, typename E, typename U, typename Handler>
-void ThenTransformationCore<T, E, U, Handler>::unref() {
+void ThenTransformationPromiseCore<T, E, U, Handler>::unref() {
     m_intrusiveMixin.unref();
 }
 
 template <typename T, typename E, typename U, typename Handler>
-void ThenTransformationCore<T, E, U, Handler>::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
-    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+void ThenTransformationPromiseCore<T, E, U, Handler>::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
+    auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     pThis->m_pA->destroy(pThis);
 }
 
 template <typename T, typename E, typename U, typename Handler>
-void ThenTransformationCore<T, E, U, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
-    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+void ThenTransformationPromiseCore<T, E, U, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
+    auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     if (result.getType() == ResultType::succeeded) {
         pThis->m_transformation(result.getValue()).done(pThis->asDstResultHandler());
     } else {
@@ -100,20 +100,20 @@ void ThenTransformationCore<T, E, U, Handler>::onSrcResultCallback(const Result<
 
 template <typename T, typename E, typename U, typename Handler>
 void
-ThenTransformationCore<T, E, U, Handler>::onDstResultCallback(const Result<U, E>& result, void* pContext) {
-    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+ThenTransformationPromiseCore<T, E, U, Handler>::onDstResultCallback(const Result<U, E>& result, void* pContext) {
+    auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     pThis->resolve(result);
 }
 
 template <typename T, typename E, typename U, typename Handler>
-void ThenTransformationCore<T, E, U, Handler>::refCallback(void* pContext) {
-    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+void ThenTransformationPromiseCore<T, E, U, Handler>::refCallback(void* pContext) {
+    auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     pThis->ref();
 }
 
 template <typename T, typename E, typename U, typename Handler>
-void ThenTransformationCore<T, E, U, Handler>::unrefCallback(void* pContext) {
-    auto* pThis = static_cast<ThenTransformationCore*>(pContext);
+void ThenTransformationPromiseCore<T, E, U, Handler>::unrefCallback(void* pContext) {
+    auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     pThis->unref();
 }
 
@@ -121,4 +121,4 @@ void ThenTransformationCore<T, E, U, Handler>::unrefCallback(void* pContext) {
 }
 }
 
-#endif //EVENTKIT_THENTRANSFORMATIONCORE_H
+#endif //EVENTKIT_THENTRANSFORMATIONPROMISECORE_H
