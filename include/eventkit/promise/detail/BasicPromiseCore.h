@@ -19,17 +19,17 @@ public:
     explicit BasicPromiseCore(ek::common::Allocator* pA)
         : PromiseCore<T, E>()
         , m_pA(pA)
-        , m_intrusiveMixin(deleteCallback, this) {
+        , m_intrusiveObjectMixin(deleteCallback, this) {
     }
 
     virtual ~BasicPromiseCore() override = default;
 
     virtual void ref() override {
-        m_intrusiveMixin.ref();
+        m_intrusiveObjectMixin.ref();
     }
 
     virtual void unref() override {
-        m_intrusiveMixin.unref();
+        m_intrusiveObjectMixin.unref();
     }
 
 private:
@@ -41,7 +41,7 @@ private:
 
 private:
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };
 

@@ -16,7 +16,7 @@ template <typename F>
 FunctionResultHandler<T, E, Function>::FunctionResultHandler(ek::common::Allocator* pA, F&& function)
     : m_function(std::forward<F>(function))
     , m_pA(pA)
-    , m_intrusiveMixin([](ek::common::IntrusiveObjectMixin*, void* pContext){
+    , m_intrusiveObjectMixin([](ek::common::IntrusiveObjectMixin*, void* pContext){
         auto* pThis = static_cast<FunctionResultHandler*>(pContext);
         pThis->m_pA->destroy(pThis);
     }, this) {
@@ -29,12 +29,12 @@ void FunctionResultHandler<T, E, Function>::onResult(const Result <T, E>& result
 
 template <typename T, typename E, typename Function>
 void FunctionResultHandler<T, E, Function>::ref() {
-    m_intrusiveMixin.ref();
+    m_intrusiveObjectMixin.ref();
 }
 
 template <typename T, typename E, typename Function>
 void FunctionResultHandler<T, E, Function>::unref() {
-    m_intrusiveMixin.unref();
+    m_intrusiveObjectMixin.unref();
 }
 
 template <typename T, typename E, typename Function>

@@ -30,7 +30,7 @@ public:
         : m_values()
         , m_fulfilledPromiseFlags()
         , m_pA(pA)
-        , m_intrusiveMixin(deleteCallback, this)  {
+        , m_intrusiveObjectMixin(deleteCallback, this)  {
     }
     
     template <size_t Index>
@@ -47,11 +47,11 @@ public:
     }
 
     virtual void ref() override {
-        m_intrusiveMixin.ref();
+        m_intrusiveObjectMixin.ref();
     }
 
     virtual void unref() override {
-        m_intrusiveMixin.unref();
+        m_intrusiveObjectMixin.unref();
     }
 
 private:
@@ -65,7 +65,7 @@ private:
     Values m_values;
     std::bitset<std::tuple_size<Values>::value> m_fulfilledPromiseFlags;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };
 
@@ -81,7 +81,7 @@ public:
         : m_values(size)
         , m_fulfilledFlags(size, false)
         , m_pA(pA)
-        , m_intrusiveMixin(deleteCallback, this) {
+        , m_intrusiveObjectMixin(deleteCallback, this) {
     }
 
     void onResultAt(const ek::promise::Result<T, E>& result, size_t index) {
@@ -102,11 +102,11 @@ public:
     }
 
     virtual void ref() override {
-        m_intrusiveMixin.ref();
+        m_intrusiveObjectMixin.ref();
     }
 
     virtual void unref() override {
-        m_intrusiveMixin.unref();
+        m_intrusiveObjectMixin.unref();
     }
 
 private:
@@ -121,7 +121,7 @@ private:
     Values m_values;
     std::vector<bool> m_fulfilledFlags;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };
 

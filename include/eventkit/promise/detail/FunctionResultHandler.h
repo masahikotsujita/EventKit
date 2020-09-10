@@ -30,7 +30,7 @@ public:
 private:
     Function m_function;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };
 
