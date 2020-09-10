@@ -44,7 +44,7 @@ private:
 private:
     Handler m_transformation;
     ek::common::Allocator* m_pA;
-    ek::common::IntrusiveObjectMixin m_intrusiveMixin;
+    ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
     ek::promise::detail::ResultHandlerMixin<T, E> m_srcResultHandlerMixin;
     ek::promise::detail::ResultHandlerMixin<U, E> m_dstResultHandlerMixin;
 
@@ -56,7 +56,7 @@ ThenTransformationPromiseCore<T, E, U, Handler>::ThenTransformationPromiseCore(e
     : PromiseCore<U, E>()
     , m_transformation(std::forward<Tr>(transformation))
     , m_pA(pA)
-    , m_intrusiveMixin(deleteCallback, this)
+    , m_intrusiveObjectMixin(deleteCallback, this)
     , m_srcResultHandlerMixin(onSrcResultCallback, refCallback, unrefCallback, this)
     , m_dstResultHandlerMixin(onDstResultCallback, refCallback, unrefCallback, this)
 {
@@ -74,12 +74,12 @@ common::IntrusivePtr<ResultHandler<T, E>> ThenTransformationPromiseCore<T, E, U,
 
 template <typename T, typename E, typename U, typename Handler>
 void ThenTransformationPromiseCore<T, E, U, Handler>::ref() {
-    m_intrusiveMixin.ref();
+    m_intrusiveObjectMixin.ref();
 }
 
 template <typename T, typename E, typename U, typename Handler>
 void ThenTransformationPromiseCore<T, E, U, Handler>::unref() {
-    m_intrusiveMixin.unref();
+    m_intrusiveObjectMixin.unref();
 }
 
 template <typename T, typename E, typename U, typename Handler>
