@@ -11,6 +11,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/common/detail/Allocator-inl.h
     include/eventkit/common/SystemAllocator.h
     include/eventkit/common/IntrusivePtr.h
+    include/eventkit/common/detail/IntrusivePtr-inl.h
     include/eventkit/common/IntrusiveObject.h
     include/eventkit/common/IntrusiveObjectMixin.h
     source/common/Allocator.cpp
