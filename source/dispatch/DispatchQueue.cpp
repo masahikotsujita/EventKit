@@ -3,6 +3,7 @@
 //
 
 #include <eventkit/dispatch/DispatchQueue.h>
+#include <eventkit/dispatch/RunLoop.h>
 
 namespace ek {
 namespace dispatch {
