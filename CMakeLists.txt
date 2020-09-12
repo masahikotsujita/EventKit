@@ -16,6 +16,7 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/common/IntrusiveObjectMixin.h
     source/common/Allocator.cpp
     source/common/SystemAllocator.cpp
+    source/common/IntrusiveObjectMixin.cpp
     include/eventkit/dispatch/detail/Semaphore.h
     include/eventkit/dispatch/DispatchQueue.h
     include/eventkit/dispatch/detail/DispatchQueue-inl.h
