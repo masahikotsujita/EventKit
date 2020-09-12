@@ -8,11 +8,15 @@ include_directories(include)
 
 set(LIBRARY_SOURCE_FILES
     include/eventkit/common/Allocator.h
+    include/eventkit/common/detail/Allocator-inl.h
     include/eventkit/common/SystemAllocator.h
     include/eventkit/common/IntrusivePtr.h
+    include/eventkit/common/detail/IntrusivePtr-inl.h
     include/eventkit/common/IntrusiveObject.h
     include/eventkit/common/IntrusiveObjectMixin.h
     source/common/Allocator.cpp
+    source/common/SystemAllocator.cpp
+    source/common/IntrusiveObjectMixin.cpp
     include/eventkit/dispatch/detail/Semaphore.h
     include/eventkit/dispatch/DispatchQueue.h
     include/eventkit/dispatch/detail/DispatchQueue-inl.h
