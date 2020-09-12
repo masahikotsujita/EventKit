@@ -42,10 +42,11 @@ public:
     }
 
     void addHandler(const ek::common::IntrusivePtr<Handler>& handler) {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         if (!m_isResolved) {
             m_handlers.push_back(handler);
         } else {
+            lock.unlock();
             handler->onResult(m_result);
         }
     }
