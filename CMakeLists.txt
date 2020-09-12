@@ -8,6 +8,7 @@ include_directories(include)
 
 set(LIBRARY_SOURCE_FILES
     include/eventkit/common/Allocator.h
+    include/eventkit/common/detail/Allocator-inl.h
     include/eventkit/common/SystemAllocator.h
     include/eventkit/common/IntrusivePtr.h
     include/eventkit/common/IntrusiveObject.h
