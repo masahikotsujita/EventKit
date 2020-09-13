@@ -3,9 +3,15 @@
 //
 
 #include <eventkit/dispatch/DispatchQueue.h>
+#include <eventkit/dispatch/RunLoop.h>
 
 namespace ek {
 namespace dispatch {
+
+DispatchQueue::DispatchQueue(ek::common::Allocator* pA)
+    : ek::common::IntrusiveObject(pA)
+    , m_pRunLoop(nullptr) {
+}
 
 void DispatchQueue::dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask) {
     std::lock_guard<std::mutex> lock(m_mutex);

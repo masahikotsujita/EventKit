@@ -21,6 +21,9 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/dispatch/DispatchQueue.h
     include/eventkit/dispatch/detail/DispatchQueue-inl.h
     include/eventkit/dispatch/RunLoop.h
+    include/eventkit/dispatch/DispatchItem.h
+    include/eventkit/dispatch/detail/FunctionDispatchItem.h
+    include/eventkit/dispatch/detail/DispatchFunctionItem-inl.h
     source/dispatch/DispatchQueue.cpp
     source/dispatch/RunLoop.cpp
     include/eventkit/promise/Result.h
