@@ -5,7 +5,7 @@
 #ifndef EVENTKIT_DISPATCHFUNCTIONITEM_INL_H
 #define EVENTKIT_DISPATCHFUNCTIONITEM_INL_H
 
-#include <eventkit/dispatch/DispatchFunctionItem.h>
+#include <eventkit/dispatch/FunctionDispatchItem.h>
 #include <eventkit/common/Allocator.h>
 
 namespace ek {
@@ -13,13 +13,13 @@ namespace dispatch {
 
 template <typename Function>
 template <typename F>
-DispatchFunctionItem<Function>::DispatchFunctionItem(ek::common::Allocator* pA, F&& function)
+FunctionDispatchItem<Function>::FunctionDispatchItem(ek::common::Allocator* pA, F&& function)
     : DispatchItem(pA)
     , m_function(std::forward<F>(function)) {
 }
 
 template <typename Function>
-void DispatchFunctionItem<Function>::run() {
+void FunctionDispatchItem<Function>::run() {
     m_function();
 }
 

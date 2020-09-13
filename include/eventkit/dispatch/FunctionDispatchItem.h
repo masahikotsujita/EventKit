@@ -2,8 +2,8 @@
 // Created by Tsujita Masahiko on 2020/09/13.
 //
 
-#ifndef EVENTKIT_DISPATCHFUNCTIONITEM_H
-#define EVENTKIT_DISPATCHFUNCTIONITEM_H
+#ifndef EVENTKIT_FUNCTIONDISPATCHITEM_H
+#define EVENTKIT_FUNCTIONDISPATCHITEM_H
 
 #include <eventkit/dispatch/DispatchItem.h>
 
@@ -11,13 +11,13 @@ namespace ek {
 namespace dispatch {
 
 template <typename Function>
-class DispatchFunctionItem : public DispatchItem {
+class FunctionDispatchItem : public DispatchItem {
 public:
 
     template <typename F>
-    explicit DispatchFunctionItem(ek::common::Allocator* pA, F&& function);
+    explicit FunctionDispatchItem(ek::common::Allocator* pA, F&& function);
 
-    ~DispatchFunctionItem() override = default;
+    ~FunctionDispatchItem() override = default;
 
     void run() override;
 
@@ -31,4 +31,4 @@ private:
 
 #include <eventkit/dispatch/detail/DispatchFunctionItem-inl.h>
 
-#endif //EVENTKIT_DISPATCHFUNCTIONITEM_H
+#endif //EVENTKIT_FUNCTIONDISPATCHITEM_H
