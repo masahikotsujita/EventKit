@@ -23,10 +23,7 @@ public:
 
     friend class RunLoop;
 
-    explicit DispatchQueue(ek::common::Allocator* pA)
-        : ek::common::IntrusiveObject(pA)
-        , m_pRunLoop(nullptr) {
-    }
+    explicit DispatchQueue(ek::common::Allocator* pA);
 
     template <typename F>
     void dispatchAsync(ek::common::Allocator* pA, F&& function);
