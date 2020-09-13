@@ -9,6 +9,7 @@
 
 namespace ek {
 namespace dispatch {
+namespace detail {
 
 template <typename Function>
 class FunctionDispatchItem : public DispatchItem {
@@ -26,6 +27,7 @@ private:
 
 };
 
+}
 }
 }
 

@@ -5,11 +5,12 @@
 #ifndef EVENTKIT_DISPATCHFUNCTIONITEM_INL_H
 #define EVENTKIT_DISPATCHFUNCTIONITEM_INL_H
 
-#include <eventkit/dispatch/FunctionDispatchItem.h>
+#include <eventkit/dispatch/detail/FunctionDispatchItem.h>
 #include <eventkit/common/Allocator.h>
 
 namespace ek {
 namespace dispatch {
+namespace detail {
 
 template <typename Function>
 template <typename F>
@@ -23,6 +24,7 @@ void FunctionDispatchItem<Function>::run() {
     m_function();
 }
 
+}
 }
 }
 
