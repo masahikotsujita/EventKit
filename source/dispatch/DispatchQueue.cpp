@@ -3,20 +3,20 @@
 //
 
 #include <eventkit/dispatch/DispatchQueue.h>
-#include <eventkit/dispatch/RunLoop.h>
+#include <eventkit/dispatch/detail/Semaphore.h>
 
 namespace ek {
 namespace dispatch {
 
 DispatchQueue::DispatchQueue(ek::common::Allocator* pA)
-    : ek::common::IntrusiveObject(pA)
-    , m_pRunLoop(nullptr) {
+    : m_pA(pA)
+    , m_intrusiveObjectMixin(deleteCallback, this) {
 }
 
 void DispatchQueue::dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask) {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_queue.push(pTask);
-    m_pRunLoop->signal();
+    getSemaphore()->notify();
 }
 
 void DispatchQueue::fire() {
@@ -38,8 +38,17 @@ void DispatchQueue::fire() {
     } while (!isEmpty);
 }
 
-void DispatchQueue::setRunLoop(RunLoop* pRunLoop) {
-    m_pRunLoop = pRunLoop;
+void DispatchQueue::ref() {
+    m_intrusiveObjectMixin.ref();
+}
+
+void DispatchQueue::unref() {
+    m_intrusiveObjectMixin.unref();
+}
+
+void DispatchQueue::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
+    auto* pThis = static_cast<DispatchQueue*>(pContext);
+    pThis->m_pA->destroy(pThis);
 }
 
 }

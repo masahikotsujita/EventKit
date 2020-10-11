@@ -8,38 +8,41 @@
 #include <mutex>
 #include <list>
 #include <queue>
+#include <eventkit/common/IntrusiveObjectMixin.h>
 #include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
-#include <eventkit/common/IntrusiveObject.h>
+#include <eventkit/dispatch/RunLoopSource.h>
 
 namespace ek {
 namespace dispatch {
 
-class RunLoop;
 class DispatchItem;
 
-class DispatchQueue : public ek::common::IntrusiveObject {
+class DispatchQueue : public ek::dispatch::RunLoopSource {
 public:
-
-    friend class RunLoop;
 
     explicit DispatchQueue(ek::common::Allocator* pA);
 
     template <typename F>
     void dispatchAsync(ek::common::Allocator* pA, F&& function);
 
+    virtual void fire() override;
+
+    virtual void ref() override;
+
+    virtual void unref() override;
+
 private:
 
     void dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask);
 
-    void fire();
-
-    void setRunLoop(RunLoop* pRunLoop);
+    static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext);
 
 private:
+    ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
+    ek::common::Allocator* m_pA;
     std::mutex m_mutex;
     std::queue<ek::common::IntrusivePtr<DispatchItem>, std::list<ek::common::IntrusivePtr<DispatchItem>>> m_queue;
-    RunLoop* m_pRunLoop;
 
 };
 

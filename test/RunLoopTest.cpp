@@ -33,7 +33,7 @@ SCENARIO("a run loop", "[run_loop]") {
             auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(
                     ek::common::getDefaultAllocator(),
                                                                                           ek::common::getDefaultAllocator());
-            pRunLoop->addDispatchQueue(pDispatchQueue);
+            pRunLoop->addSource(pDispatchQueue);
 
             WHEN("the run loop starts running on a thread") {
                 auto pFlag = std::make_shared<std::atomic_bool>(false);
