@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include <eventkit/dispatch/RunLoop.h>
-#include <eventkit/dispatch/DispatchQueue.h>
+#include <eventkit/dispatch/RunLoopSource.h>
 
 namespace ek {
 namespace dispatch {
@@ -13,15 +13,15 @@ void RunLoop::run() {
     bool isFinished = false;
     do {
         { // dispatch all tasks
-            auto pos = m_dispatchQueues.begin();
-            auto end = m_dispatchQueues.end();
+            auto pos = m_sources.begin();
+            auto end = m_sources.end();
             for (; pos != end; ++pos) {
-                const ek::common::IntrusivePtr<DispatchQueue>& pTaskQueue = *pos;
+                const ek::common::IntrusivePtr<RunLoopSource>& pTaskQueue = *pos;
                 pTaskQueue->fire();
             }
         }
         // wait for next event
-        if (m_dispatchQueues.empty()) {
+        if (m_sources.empty()) {
             isFinished = true;
         } else {
             m_semaphore.wait();
@@ -29,23 +29,20 @@ void RunLoop::run() {
     } while (!isFinished);
 }
 
-void RunLoop::addDispatchQueue(const ek::common::IntrusivePtr<DispatchQueue>& pQueue) {
+void RunLoop::addSource(const ek::common::IntrusivePtr<RunLoopSource>& pQueue) {
     if (pQueue == nullptr) {
         return;
     }
-    m_dispatchQueues.push_back(pQueue);
-    pQueue->setRunLoop(this);
+    m_sources.push_back(pQueue);
+    pQueue->setSemaphore(&m_semaphore);
 }
 
-void RunLoop::removeDispatchQueue(DispatchQueue* pQueue) {
-    auto pos = std::find_if(m_dispatchQueues.begin(), m_dispatchQueues.end(), [&](const auto& s){ return s.get() == pQueue; });
-    if (pos != m_dispatchQueues.end()) {
-        auto itr = m_dispatchQueues.erase(pos);
+void RunLoop::removeSource(RunLoopSource* pQueue) {
+    auto pos = std::find_if(m_sources.begin(), m_sources.end(), [&](const auto& s){ return s.get() == pQueue; });
+    if (pos != m_sources.end()) {
+        (*pos)->setSemaphore(nullptr);
+        auto itr = m_sources.erase(pos);
     }
-}
-
-void RunLoop::signal() {
-    m_semaphore.notify();
 }
 
 }

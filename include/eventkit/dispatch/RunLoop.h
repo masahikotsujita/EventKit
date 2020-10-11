@@ -12,12 +12,10 @@
 namespace ek {
 namespace dispatch {
 
-class DispatchQueue;
+class RunLoopSource;
 
 class RunLoop final {
 public:
-
-    friend class DispatchQueue;
 
     RunLoop() = default;
 
@@ -25,20 +23,19 @@ public:
 
     void run();
 
-    void addDispatchQueue(const ek::common::IntrusivePtr<DispatchQueue>& pQueue);
+    void addSource(const ek::common::IntrusivePtr<RunLoopSource>& pQueue);
 
-    void removeDispatchQueue(DispatchQueue* pQueue);
+    void removeSource(RunLoopSource* pQueue);
 
 public:
+
     RunLoop(const RunLoop&) = delete;
+
     RunLoop& operator=(const RunLoop&) = delete;
 
 private:
-    void signal();
-
-private:
     detail::Semaphore m_semaphore;
-    std::list<ek::common::IntrusivePtr<DispatchQueue>> m_dispatchQueues;
+    std::list<ek::common::IntrusivePtr<RunLoopSource>> m_sources;
 
 };
 

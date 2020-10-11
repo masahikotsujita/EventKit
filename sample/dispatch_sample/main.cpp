@@ -12,12 +12,12 @@ int main(int argc, const char* argv[]) {
     ek::dispatch::RunLoop mainLoop;
     auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
                                                                               ek::common::getDefaultAllocator());
-    mainLoop.addDispatchQueue(pMainQueue);
+    mainLoop.addSource(pMainQueue);
 
     ek::dispatch::RunLoop bgLoop;
     auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
                                                                             ek::common::getDefaultAllocator());
-    bgLoop.addDispatchQueue(pBgQueue);
+    bgLoop.addSource(pBgQueue);
 
     pMainQueue->dispatchAsync(ek::common::getDefaultAllocator(), [] {
         printf("a task running on main thread.\n");
