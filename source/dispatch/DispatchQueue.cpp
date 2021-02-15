@@ -3,7 +3,7 @@
 //
 
 #include <eventkit/dispatch/DispatchQueue.h>
-#include <eventkit/dispatch/detail/Semaphore.h>
+#include <eventkit/common/Condition.h>
 
 namespace ek {
 namespace dispatch {
@@ -14,9 +14,10 @@ DispatchQueue::DispatchQueue(ek::common::Allocator* pA)
 }
 
 void DispatchQueue::dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    m_queue.push(pTask);
-    getSemaphore()->notify();
+    getCondition()->modify([&](bool& isOpen){
+        m_queue.push(pTask);
+        isOpen = true;
+    });
 }
 
 void DispatchQueue::fire() {
@@ -24,13 +25,14 @@ void DispatchQueue::fire() {
     do {
         ek::common::IntrusivePtr<DispatchItem> item = nullptr;
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
-
-            if (!m_queue.empty()) {
-                item = m_queue.front();
-                m_queue.pop();
-            }
-            isEmpty = m_queue.empty();
+            getCondition()->wait([&](bool& isOpen){
+                if (!m_queue.empty()) {
+                    item = m_queue.front();
+                    m_queue.pop();
+                }
+                isEmpty = m_queue.empty();
+                isOpen = !isEmpty;
+            });
         }
         if (item != nullptr) {
             item->run();
