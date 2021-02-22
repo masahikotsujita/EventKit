@@ -34,7 +34,7 @@ public:
     RunLoop& operator=(const RunLoop&) = delete;
 
 private:
-    ek::common::Condition m_condition;
+    ek::common::Condition<uint64_t> m_condition { 0 };
     std::list<ek::common::IntrusivePtr<RunLoopSource>> m_sources;
 
 };

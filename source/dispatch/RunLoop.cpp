@@ -10,22 +10,24 @@ namespace ek {
 namespace dispatch {
 
 void RunLoop::run() {
-    bool isFinished = false;
     do {
-        m_condition.wait([&](bool& isOpen){});
-        { // dispatch all tasks
+        ek::common::Condition<uint64_t>::LockHandle lock;
+        do {
             auto pos = m_sources.begin();
             auto end = m_sources.end();
+            if (pos == end) { return; }
             for (; pos != end; ++pos) {
-                const ek::common::IntrusivePtr<RunLoopSource>& pTaskQueue = *pos;
-                pTaskQueue->fire();
+                const ek::common::IntrusivePtr<RunLoopSource>& pSource = *pos;
+                pSource->fire();
             }
-        }
-        // wait for next event
-        if (m_sources.empty()) {
-            isFinished = true;
-        }
-    } while (!isFinished);
+            if (m_condition.getValue(&lock) > 0) {
+                lock.unlock();
+            } else {
+                break;
+            }
+        } while (true);
+        m_condition.wait([&](uint64_t count){ return count > 0; }, lock);
+    } while (true);
 }
 
 void RunLoop::addSource(const ek::common::IntrusivePtr<RunLoopSource>& pQueue) {

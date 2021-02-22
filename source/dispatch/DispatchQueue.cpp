@@ -4,6 +4,7 @@
 
 #include <eventkit/dispatch/DispatchQueue.h>
 #include <eventkit/common/Condition.h>
+#include <cstdio>
 
 namespace ek {
 namespace dispatch {
@@ -14,30 +15,25 @@ DispatchQueue::DispatchQueue(ek::common::Allocator* pA)
 }
 
 void DispatchQueue::dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask) {
-    getCondition()->modify([&](bool& isOpen){
+    getCondition()->mutateValue([&](uint64_t& count, bool* pShouldNotify) {
         m_queue.push(pTask);
-        isOpen = true;
+        count += 1;
+        *pShouldNotify = true;
     });
 }
 
 void DispatchQueue::fire() {
-    bool isEmpty = false;
-    do {
-        ek::common::IntrusivePtr<DispatchItem> item = nullptr;
-        {
-            getCondition()->wait([&](bool& isOpen){
-                if (!m_queue.empty()) {
-                    item = m_queue.front();
-                    m_queue.pop();
-                }
-                isEmpty = m_queue.empty();
-                isOpen = !isEmpty;
-            });
-        }
-        if (item != nullptr) {
-            item->run();
-        }
-    } while (!isEmpty);
+    ek::common::IntrusivePtr<DispatchItem> item = nullptr;
+        getCondition()->mutateValue([&](uint64_t& count, bool*) {
+            if (!m_queue.empty()) {
+                item = m_queue.front();
+                m_queue.pop();
+                count -= 1;
+            }
+        });
+    if (item != nullptr) {
+        item->run();
+    }
 }
 
 void DispatchQueue::ref() {
