@@ -6,7 +6,7 @@
 #define EVENTKIT_RUNLOOP_H
 
 #include <list>
-#include <eventkit/dispatch/detail/Semaphore.h>
+#include <eventkit/common/Condition.h>
 #include <eventkit/common/IntrusivePtr.h>
 
 namespace ek {
@@ -34,7 +34,7 @@ public:
     RunLoop& operator=(const RunLoop&) = delete;
 
 private:
-    detail::Semaphore m_semaphore;
+    ek::common::Condition<uint64_t> m_condition { 0 };
     std::list<ek::common::IntrusivePtr<RunLoopSource>> m_sources;
 
 };
