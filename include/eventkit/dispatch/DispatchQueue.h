@@ -41,7 +41,6 @@ private:
 private:
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
     ek::common::Allocator* m_pA;
-    std::mutex m_mutex;
     std::queue<ek::common::IntrusivePtr<DispatchItem>, std::list<ek::common::IntrusivePtr<DispatchItem>>> m_queue;
 
 };

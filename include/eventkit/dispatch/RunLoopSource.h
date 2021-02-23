@@ -6,13 +6,14 @@
 #define EVENTKIT_RUNLOOPSOURCE_H
 
 namespace ek {
-namespace dispatch {
-
-namespace detail {
-
-class Semaphore;
-
+namespace common {
+template <typename T>
+class Condition;
 }
+}
+
+namespace ek {
+namespace dispatch {
 
 class RunLoopSource {
 public:
@@ -21,16 +22,16 @@ public:
 
     virtual void fire() = 0;
 
-    detail::Semaphore* getSemaphore() const;
+    ek::common::Condition<uint64_t>* getCondition() const;
 
-    void setSemaphore(detail::Semaphore* pSemaphore);
+    void setCondition(ek::common::Condition<uint64_t>* pCondition);
 
     virtual void ref() = 0;
 
     virtual void unref() = 0;
 
 private:
-    detail::Semaphore* m_pSemaphore = nullptr;
+    ek::common::Condition<uint64_t>* m_pCondition = nullptr;
 
 };
 
@@ -42,12 +43,12 @@ inline void intrusive_ptr_unref(RunLoopSource* pObj) {
     pObj->unref();
 }
 
-inline detail::Semaphore* RunLoopSource::getSemaphore() const {
-    return m_pSemaphore;
+inline ek::common::Condition<uint64_t>* RunLoopSource::getCondition() const {
+    return m_pCondition;
 }
 
-inline void RunLoopSource::setSemaphore(detail::Semaphore* pSemaphore) {
-    m_pSemaphore = pSemaphore;
+inline void RunLoopSource::setCondition(ek::common::Condition<uint64_t>* pCondition) {
+    m_pCondition = pCondition;
 }
 
 }

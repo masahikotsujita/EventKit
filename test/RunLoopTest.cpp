@@ -49,7 +49,7 @@ SCENARIO("a run loop", "[run_loop]") {
 
 //                WHEN("the event source is removed from the run loop") {
 //                    pDispatchQueue->dispatchAsync([=]{
-//                        pRunLoop->removeDispatchQueue(pDispatchQueue.get());
+//                        pRunLoop->removeDispatchQueue(pDispatchQueue.getValue());
 //                    });
 //
 //                    THEN("the thread will terminate immediately") {

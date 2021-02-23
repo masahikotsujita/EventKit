@@ -3,7 +3,8 @@
 //
 
 #include <eventkit/dispatch/DispatchQueue.h>
-#include <eventkit/dispatch/detail/Semaphore.h>
+#include <eventkit/common/Condition.h>
+#include <cstdio>
 
 namespace ek {
 namespace dispatch {
@@ -14,28 +15,25 @@ DispatchQueue::DispatchQueue(ek::common::Allocator* pA)
 }
 
 void DispatchQueue::dispatchItemAsync(const ek::common::IntrusivePtr<DispatchItem>& pTask) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    m_queue.push(pTask);
-    getSemaphore()->notify();
+    getCondition()->mutateValue([&](uint64_t& count, bool* pShouldNotify) {
+        m_queue.push(pTask);
+        count += 1;
+        *pShouldNotify = true;
+    });
 }
 
 void DispatchQueue::fire() {
-    bool isEmpty = false;
-    do {
-        ek::common::IntrusivePtr<DispatchItem> item = nullptr;
-        {
-            std::lock_guard<std::mutex> lock(m_mutex);
-
+    ek::common::IntrusivePtr<DispatchItem> item = nullptr;
+        getCondition()->mutateValue([&](uint64_t& count, bool*) {
             if (!m_queue.empty()) {
                 item = m_queue.front();
                 m_queue.pop();
+                count -= 1;
             }
-            isEmpty = m_queue.empty();
-        }
-        if (item != nullptr) {
-            item->run();
-        }
-    } while (!isEmpty);
+        });
+    if (item != nullptr) {
+        item->run();
+    }
 }
 
 void DispatchQueue::ref() {
