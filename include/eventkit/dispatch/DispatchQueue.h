@@ -11,14 +11,14 @@
 #include <eventkit/common/IntrusiveObjectMixin.h>
 #include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
-#include <eventkit/dispatch/RunLoopSource.h>
+#include <eventkit/dispatch/EventSource.h>
 
 namespace ek {
 namespace dispatch {
 
 class DispatchItem;
 
-class DispatchQueue : public ek::dispatch::RunLoopSource {
+class DispatchQueue : public ek::dispatch::EventSource {
 public:
 
     explicit DispatchQueue(ek::common::Allocator* pA);

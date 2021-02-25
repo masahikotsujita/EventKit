@@ -20,13 +20,13 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/common/Condition.h
     include/eventkit/dispatch/DispatchQueue.h
     include/eventkit/dispatch/detail/DispatchQueue-inl.h
-    include/eventkit/dispatch/RunLoopSource.h
-    include/eventkit/dispatch/RunLoop.h
+    include/eventkit/dispatch/EventSource.h
+    include/eventkit/dispatch/EventLoop.h
     include/eventkit/dispatch/DispatchItem.h
     include/eventkit/dispatch/detail/FunctionDispatchItem.h
     include/eventkit/dispatch/detail/DispatchFunctionItem-inl.h
     source/dispatch/DispatchQueue.cpp
-    source/dispatch/RunLoop.cpp
+    source/dispatch/EventLoop.cpp
     include/eventkit/promise/Result.h
     include/eventkit/promise/Promise.h
     include/eventkit/promise/detail/Promise-inl.h
@@ -62,7 +62,7 @@ if(BUILD_TEST)
     set(TEST_SOURCE_FILES
         test/testMain.cpp
         test/TestUtils.h
-        test/RunLoopTest.cpp
+        test/EventLoopTest.cpp
     )
     add_executable(eventkittest ${TEST_SOURCE_FILES})
     target_link_libraries(eventkittest eventkit ${CMAKE_THREAD_LIBS_INIT})
