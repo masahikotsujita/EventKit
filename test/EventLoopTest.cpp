@@ -6,20 +6,20 @@
 #include <catch2/catch.hpp>
 #include "TestUtils.h"
 #include <eventkit/common/SystemAllocator.h>
-#include <eventkit/dispatch/RunLoop.h>
+#include <eventkit/dispatch/EventLoop.h>
 #include <eventkit/dispatch/DispatchQueue.h>
 
 using namespace std::chrono_literals;
 
-SCENARIO("a run loop", "[run_loop]") {
+SCENARIO("a event loop", "[event_loop]") {
 
-    GIVEN("a run loop without any event sources") {
-        auto pRunLoop = std::make_shared<ek::dispatch::RunLoop>();
+    GIVEN("a event loop without any event sources") {
+        auto pEventLoop = std::make_shared<ek::dispatch::EventLoop>();
 
-        WHEN("the run loop starts running on a thread") {
+        WHEN("the event loop starts running on a thread") {
             auto pFlag = std::make_shared<std::atomic_bool>(false);
             std::thread thread([=]{
-                pRunLoop->run();
+                pEventLoop->run();
                 *pFlag = true;
             });
             thread.detach();
@@ -29,16 +29,16 @@ SCENARIO("a run loop", "[run_loop]") {
             }
         }
 
-        WHEN("a event source added to the run loop") {
+        WHEN("a event source added to the event loop") {
             auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(
                     ek::common::getDefaultAllocator(),
                                                                                           ek::common::getDefaultAllocator());
-            pRunLoop->addSource(pDispatchQueue);
+            pEventLoop->addSource(pDispatchQueue);
 
-            WHEN("the run loop starts running on a thread") {
+            WHEN("the event loop starts running on a thread") {
                 auto pFlag = std::make_shared<std::atomic_bool>(false);
                 std::thread thread([=]{
-                    pRunLoop->run();
+                    pEventLoop->run();
                     *pFlag = true;
                 });
                 thread.detach();
@@ -47,9 +47,9 @@ SCENARIO("a run loop", "[run_loop]") {
                     REQUIRE_EVENTUALLY_NOT(*pFlag, 5s);
                 }
 
-//                WHEN("the event source is removed from the run loop") {
+//                WHEN("the event source is removed from the event loop") {
 //                    pDispatchQueue->dispatchAsync([=]{
-//                        pRunLoop->removeDispatchQueue(pDispatchQueue.getValue());
+//                        pEventLoop->removeDispatchQueue(pDispatchQueue.getValue());
 //                    });
 //
 //                    THEN("the thread will terminate immediately") {

@@ -5,16 +5,16 @@
 #include <iostream>
 #include <thread>
 #include <eventkit/common/SystemAllocator.h>
-#include <eventkit/dispatch/RunLoop.h>
+#include <eventkit/dispatch/EventLoop.h>
 #include <eventkit/dispatch/DispatchQueue.h>
 
 int main(int argc, const char* argv[]) {
-    ek::dispatch::RunLoop mainLoop;
+    ek::dispatch::EventLoop mainLoop;
     auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
                                                                               ek::common::getDefaultAllocator());
     mainLoop.addSource(pMainQueue);
 
-    ek::dispatch::RunLoop bgLoop;
+    ek::dispatch::EventLoop bgLoop;
     auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
                                                                             ek::common::getDefaultAllocator());
     bgLoop.addSource(pBgQueue);
