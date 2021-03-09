@@ -8,6 +8,7 @@
 #include <memory>
 #include <mutex>
 #include <list>
+#include <eventkit/common/AllocatorScope.h>
 #include <eventkit/common/IntrusiveObjectMixin.h>
 #include <eventkit/promise/Result.h>
 #include <eventkit/promise/ResultHandler.h>
@@ -21,8 +22,9 @@ class PromiseCore {
 public:
     using Handler = ResultHandler<T, E>;
 
-    PromiseCore()
-        : m_isResolved(false) {
+    explicit PromiseCore(ek::common::Allocator* pAllocator)
+        : m_isResolved(false)
+        , m_pAllocator(pAllocator) {
     }
 
     virtual ~PromiseCore() = default;
@@ -36,6 +38,7 @@ public:
         m_result = result;
         std::list<ek::common::IntrusivePtr<Handler>> handlers = std::move(m_handlers);
         lock.unlock();
+        EK_USING_ALLOCATOR(m_pAllocator);
         for (const auto& pHandler : handlers) {
             pHandler->onResult(m_result);
         }
@@ -47,6 +50,7 @@ public:
             m_handlers.push_back(handler);
         } else {
             lock.unlock();
+            EK_USING_ALLOCATOR(m_pAllocator);
             handler->onResult(m_result);
         }
     }
@@ -60,6 +64,7 @@ private:
     bool m_isResolved;
     Result<T, E> m_result;
     std::list<ek::common::IntrusivePtr<Handler>> m_handlers;
+    ek::common::Allocator* m_pAllocator;
 
 };
 

@@ -17,7 +17,7 @@ public:
     using Handler = ResultHandler<T, E>;
 
     explicit BasicPromiseCore(ek::common::Allocator* pA)
-        : PromiseCore<T, E>()
+        : PromiseCore<T, E>(pA)
         , m_pA(pA)
         , m_intrusiveObjectMixin(deleteCallback, this) {
     }

@@ -53,7 +53,7 @@ private:
 template <typename T, typename E, typename U, typename Handler>
 template <typename Tr>
 ThenTransformationPromiseCore<T, E, U, Handler>::ThenTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation)
-    : PromiseCore<U, E>()
+    : PromiseCore<U, E>(pA)
     , m_transformation(std::forward<Tr>(transformation))
     , m_pA(pA)
     , m_intrusiveObjectMixin(deleteCallback, this)
