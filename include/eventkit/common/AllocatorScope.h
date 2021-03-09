@@ -30,13 +30,13 @@ public:
 
 template <typename Block>
 std::result_of_t<Block()> withAllocator(Allocator* pAllocator, Block&& block) {
-    AllocatorScope scopedAllocation(pAllocator);
+    AllocatorScope allocatorScope(pAllocator);
     return block();
 }
 
 }
 }
 
-#define EK_USING_ALLOCATOR(pA) ek::common::AllocatorScope __ek_scoped_allocator_using ## __LINE__ { pA }
+#define EK_USING_ALLOCATOR(pA) ek::common::AllocatorScope __EK_USING_ALLOCATOR_allocatorScope ## __LINE__ { pA }
 
 #endif //EVENTKIT_ALLOCATORSCOPE_H
