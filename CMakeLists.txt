@@ -46,6 +46,9 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/promise/detail/WhenAllTransformationPromiseCore.h
     include/eventkit/promise/global_functions/detail/whenAll-inl.h
     include/eventkit/promise/global_functions/whenAll.h
+    include/eventkit/common/AllocatorStack.h
+    include/eventkit/common/AllocatorScope.h
+    source/common/AllocatorStack.cpp
 )
 
 add_library(eventkit ${LIBRARY_SOURCE_FILES})
