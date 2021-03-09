@@ -92,7 +92,7 @@ template <typename T, typename E, typename U, typename Handler>
 void ThenTransformationPromiseCore<T, E, U, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
     auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     if (result.getType() == ResultType::succeeded) {
-        pThis->m_transformation(result.getValue()).done(pThis->asDstResultHandler());
+        pThis->m_transformation(result.getValue()).done(pThis->asDstResultHandler(), nullptr);
     } else {
         pThis->resolve(Result<U, E>::failed(result.getError()));
     }

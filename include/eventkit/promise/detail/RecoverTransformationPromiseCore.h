@@ -92,7 +92,7 @@ template <typename T, typename E, typename F, typename Handler>
 void RecoverTransformationPromiseCore<T, E, F, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
     auto* pThis = static_cast<RecoverTransformationPromiseCore*>(pContext);
     if (result.getType() == ResultType::failed) {
-        pThis->m_transformation(result.getError()).done(pThis->asDstResultHandler());
+        pThis->m_transformation(result.getError()).done(pThis->asDstResultHandler(), nullptr);
     } else {
         pThis->resolve(Result<T, F>::succeeded(result.getValue()));
     }

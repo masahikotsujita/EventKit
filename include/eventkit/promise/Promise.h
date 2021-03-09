@@ -33,24 +33,24 @@ public:
     using Error = E;
 
     template <typename StartHandler>
-    explicit Promise(ek::common::Allocator* pA, const StartHandler& startHandler);
+    explicit Promise(const StartHandler& startHandler);
 
     template <typename ...Args>
-    static Promise value(ek::common::Allocator* pA, Args&& ...args);
+    static Promise value(Args&& ...args);
 
     template <typename ...Args>
-    static Promise error(ek::common::Allocator* pA, Args&& ...args);
+    static Promise error(Args&& ...args);
 
     template <typename Handler>
-    Promise<typename std::result_of_t<Handler(T)>::Value, E> then(ek::common::Allocator* pA, Handler&& handler) const;
+    Promise<typename std::result_of_t<Handler(T)>::Value, E> then(Handler&& handler) const;
 
     template <typename Handler>
-    Promise<T, typename std::result_of_t<Handler(E)>::Error> recover(ek::common::Allocator* pA, Handler&& handler) const;
+    Promise<T, typename std::result_of_t<Handler(E)>::Error> recover(Handler&& handler) const;
 
     template <typename Handler>
-    Promise done(ek::common::Allocator* pA, Handler&& handler) const;
+    Promise done(Handler&& handler) const;
 
-    Promise done(const ek::common::IntrusivePtr<ResultHandler<T, E>>& handler) const;
+    Promise done(const ek::common::IntrusivePtr<ResultHandler<T, E>>& handler, void*) const;
 
 private:
     using Core = detail::PromiseCore<T, E>;
@@ -58,7 +58,7 @@ private:
     template <typename U, typename F>
     friend ek::promise::Promise<U, F> detail::make_promise(const ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, F>>& pCore);
 
-    explicit Promise(const ek::common::IntrusivePtr<Core>& pCore);
+    explicit Promise(const ek::common::IntrusivePtr<Core>& pCore, void*);
 
 private:
     ek::common::IntrusivePtr<Core> m_pCore;
