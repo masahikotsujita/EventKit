@@ -59,23 +59,19 @@ int main(int argc, const char* argv[]) {
         }),
         Promise::value("!")
     }).then([](const std::vector<std::string>& texts) {
-        EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
         LOG("concatenating...");
         std::string concatenated = texts[0] + texts[1] + texts[2] + texts[3];
         return ek::promise::Promise<std::string, int>::value(concatenated);
     }).then([](const std::string& text) {
-        EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
         LOG("quoting...");
         std::stringstream ss;
         ss << "\"" << text << "\"";
         std::string quoted = ss.str();
         return ek::promise::Promise<std::string, int>::value(quoted);
     }).then([](const std::string& text) {
-        EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
         LOG("succeeded: ", text);
         return ek::promise::Promise<Unit, int>::value();
     }).recover([](int error) {
-        EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
         LOG("failed: ", error);
         return ek::promise::Promise<Unit, NoError>::value();
     }).done([](const ek::promise::Result<Unit, NoError>& result){
