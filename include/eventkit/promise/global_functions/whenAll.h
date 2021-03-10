@@ -11,6 +11,7 @@
 #include <type_traits>
 #include <memory>
 #include <vector>
+#include <eventkit/common/AllocatorStack.h>
 
 namespace ek {
 namespace promise {
@@ -20,7 +21,8 @@ struct pack_as_tuple_t { };
 constexpr pack_as_tuple_t pack_as_tuple = pack_as_tuple_t();
 
 template <typename ...Prs>
-auto whenAll(ek::common::Allocator* pA, pack_as_tuple_t, Prs&& ...promises) {
+auto whenAll(pack_as_tuple_t, Prs&& ...promises) {
+    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
     using Values = ek::promise::detail::values_of_prmises_t<std::decay_t<Prs>...>;
     using Error = ek::promise::detail::error_of_prmises_t<Prs...>;
     auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationPromiseCore<std::decay_t<Prs>...>>(pA);
@@ -29,7 +31,8 @@ auto whenAll(ek::common::Allocator* pA, pack_as_tuple_t, Prs&& ...promises) {
 }
 
 template <typename InputIt>
-auto whenAll(ek::common::Allocator* pA, InputIt begin, InputIt end) {
+auto whenAll(InputIt begin, InputIt end) {
+    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
     using P = ek::promise::detail::value_type_of_t<InputIt>;
     using T = typename P::Value;
     using E = typename P::Error;
@@ -40,19 +43,19 @@ auto whenAll(ek::common::Allocator* pA, InputIt begin, InputIt end) {
         const auto& promise = *itr;
         promise.done(ek::promise::detail::make_function_observer<T, E>(pA, [pCore, idx](const auto& result){
             pCore->onResultAt(result, idx);
-        }));
+        }), nullptr);
     }
     return ek::promise::detail::make_promise<std::vector<T>, E>(pCore);
 }
 
 template <typename Prs>
-auto whenAll(ek::common::Allocator* pA, const Prs& promises) {
-    return whenAll(pA, promises.begin(), promises.end());
+auto whenAll(const Prs& promises) {
+    return whenAll(promises.begin(), promises.end());
 }
 
 template <typename Pr>
-auto whenAll(ek::common::Allocator* pA, std::initializer_list<Pr> promises) {
-    return whenAll(pA, promises.begin(), promises.end());
+auto whenAll(std::initializer_list<Pr> promises) {
+    return whenAll(promises.begin(), promises.end());
 }
 
 }

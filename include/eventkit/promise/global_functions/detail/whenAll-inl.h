@@ -14,14 +14,14 @@ template <size_t Idx, typename Cr, typename LastPr>
 void addCoreAsHandlerToPromisesAt(const ek::common::IntrusivePtr<Cr>& pCore, LastPr&& lastPr) {
     lastPr.done(ek::promise::detail::make_function_observer<typename LastPr::Value, typename LastPr::Error>([pCore](const auto& result){
         pCore->template onResultAt<Idx>(result);
-    }));
+    }), nullptr);
 }
 
 template <size_t Idx, typename Cr, typename PrAtIndex, typename ...RestPrs>
 void addCoreAsHandlerToPromisesAt(const ek::common::IntrusivePtr<Cr>& pCore, PrAtIndex&& promiseAtIndex, RestPrs&& ...restPromises) {
     promiseAtIndex.done(ek::promise::detail::make_function_observer<typename PrAtIndex::Value, typename PrAtIndex::Error>([pCore](const auto& result){
         pCore->template onResultAt<Idx>(result);
-    }));
+    }), nullptr);
     addCoreAsHandlerToPromisesAt<Idx + 1>(pCore, std::forward<RestPrs>(restPromises)...);
 }
 

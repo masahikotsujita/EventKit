@@ -53,7 +53,7 @@ private:
 template <typename T, typename E, typename U, typename Handler>
 template <typename Tr>
 ThenTransformationPromiseCore<T, E, U, Handler>::ThenTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation)
-    : PromiseCore<U, E>()
+    : PromiseCore<U, E>(pA)
     , m_transformation(std::forward<Tr>(transformation))
     , m_pA(pA)
     , m_intrusiveObjectMixin(deleteCallback, this)
@@ -92,7 +92,7 @@ template <typename T, typename E, typename U, typename Handler>
 void ThenTransformationPromiseCore<T, E, U, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
     auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
     if (result.getType() == ResultType::succeeded) {
-        pThis->m_transformation(result.getValue()).done(pThis->asDstResultHandler());
+        pThis->m_transformation(result.getValue()).done(pThis->asDstResultHandler(), nullptr);
     } else {
         pThis->resolve(Result<U, E>::failed(result.getError()));
     }

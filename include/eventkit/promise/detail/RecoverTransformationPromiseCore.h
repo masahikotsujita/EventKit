@@ -53,7 +53,7 @@ private:
 template <typename T, typename E, typename F, typename Handler>
 template <typename Tr>
 RecoverTransformationPromiseCore<T, E, F, Handler>::RecoverTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation)
-    : PromiseCore<T, F>()
+    : PromiseCore<T, F>(pA)
     , m_transformation(std::forward<Tr>(transformation))
     , m_pA(pA)
     , m_intrusiveObjectMixin(deleteCallback, this)
@@ -92,7 +92,7 @@ template <typename T, typename E, typename F, typename Handler>
 void RecoverTransformationPromiseCore<T, E, F, Handler>::onSrcResultCallback(const Result<T, E>& result, void* pContext) {
     auto* pThis = static_cast<RecoverTransformationPromiseCore*>(pContext);
     if (result.getType() == ResultType::failed) {
-        pThis->m_transformation(result.getError()).done(pThis->asDstResultHandler());
+        pThis->m_transformation(result.getError()).done(pThis->asDstResultHandler(), nullptr);
     } else {
         pThis->resolve(Result<T, F>::succeeded(result.getValue()));
     }

@@ -78,7 +78,8 @@ public:
     using Results = Result<std::vector<T>, E>;
 
     explicit DynamicWhenAllTransformationPromiseCore(ek::common::Allocator* pA, size_t size)
-        : m_values(size)
+        : PromiseCore<std::vector<T>, E>(pA)
+        , m_values(size)
         , m_fulfilledFlags(size, false)
         , m_pA(pA)
         , m_intrusiveObjectMixin(deleteCallback, this) {
