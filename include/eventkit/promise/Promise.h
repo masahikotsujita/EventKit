@@ -50,7 +50,7 @@ public:
     template <typename Handler>
     Promise done(Handler&& handler) const;
 
-    Promise done(const ek::common::IntrusivePtr<ResultHandler<T, E>>& handler, void*) const;
+    Promise pipe(const ek::common::IntrusivePtr<ResultHandler<T, E>>& handler) const;
 
 private:
     using Core = detail::PromiseCore<T, E>;
@@ -58,7 +58,10 @@ private:
     template <typename U, typename F>
     friend ek::promise::Promise<U, F> detail::make_promise(const ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, F>>& pCore);
 
-    explicit Promise(const ek::common::IntrusivePtr<Core>& pCore, void*);
+    struct with_core_t {};
+    static constexpr with_core_t with_core = with_core_t {};
+
+    explicit Promise(with_core_t, const ek::common::IntrusivePtr<Core>& pCore);
 
 private:
     ek::common::IntrusivePtr<Core> m_pCore;

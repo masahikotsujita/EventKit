@@ -15,7 +15,7 @@ namespace detail {
 
 template<typename T, typename E>
 ek::promise::Promise<T, E> make_promise(const common::IntrusivePtr<PromiseCore<T, E>>& pCore) {
-    return ek::promise::Promise<T, E>(pCore, nullptr);
+    return ek::promise::Promise<T, E>(ek::promise::Promise<T, E>::with_core, pCore);
 }
 
 }
