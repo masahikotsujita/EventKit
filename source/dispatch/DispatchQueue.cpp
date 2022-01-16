@@ -9,6 +9,8 @@
 namespace ek {
 namespace dispatch {
 
+thread_local DispatchQueue* g_pCurrentDispatchQueue = nullptr;
+
 DispatchQueue::DispatchQueue(ek::common::Allocator* pA)
     : m_pA(pA)
     , m_intrusiveObjectMixin(deleteCallback, this) {
@@ -47,6 +49,14 @@ void DispatchQueue::unref() {
 void DispatchQueue::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
     auto* pThis = static_cast<DispatchQueue*>(pContext);
     pThis->m_pA->destroy(pThis);
+}
+
+DispatchQueue* getCurrentDispatchQueue() {
+    return g_pCurrentDispatchQueue;
+}
+
+void setCurrentDispatchQueue(DispatchQueue* pDispatchQueue) {
+    g_pCurrentDispatchQueue = pDispatchQueue;
 }
 
 }

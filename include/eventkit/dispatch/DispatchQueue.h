@@ -45,6 +45,10 @@ private:
 
 };
 
+DispatchQueue* getCurrentDispatchQueue();
+
+void setCurrentDispatchQueue(DispatchQueue* pDispatchQueue);
+
 }
 }
 
