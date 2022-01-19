@@ -34,7 +34,10 @@ int main(int argc, const char* argv[]) {
         });
     });
 
+    ek::dispatch::setCurrentDispatchQueue(pMainQueue.get());
+
     std::thread bgThread([&]{
+        ek::dispatch::setCurrentDispatchQueue(pBgQueue.get());
         bgLoop.run();
     });
 
