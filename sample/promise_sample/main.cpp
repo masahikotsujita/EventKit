@@ -11,52 +11,81 @@
 #include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/global_functions/whenAll.h>
 #include "../sample_utils/logging.h"
+#include <eventkit/dispatch/EventLoop.h>
 #include <eventkit/common/AllocatorScope.h>
+
+using namespace std::chrono_literals;
 
 std::atomic_bool g_isDone { false };
 struct Unit {};
 struct NoError {};
 
+void innerMain();
+
 int main(int argc, const char* argv[]) {
+    ek::dispatch::EventLoop mainLoop;
+    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
+                                                                              ek::common::getDefaultAllocator());
+    mainLoop.addSource(pMainQueue);
+
+    ek::dispatch::EventLoop bgLoop;
+    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
+                                                                            ek::common::getDefaultAllocator());
+    bgLoop.addSource(pBgQueue);
+
+    ek::dispatch::setCurrentDispatchQueue(pMainQueue.get());
+
+    std::thread bgThread([&]{
+        ek::dispatch::setCurrentDispatchQueue(pBgQueue.get());
+        bgLoop.run();
+    });
+
+    pMainQueue->dispatchAsync(ek::common::getDefaultAllocator(), []{
+        innerMain();
+    });
+
+    mainLoop.run();
+
+    bgThread.join();
+
+    return 0;
+}
+
+void innerMain() {
     using Promise = ek::promise::Promise<std::string, int>;
-    using namespace std::chrono_literals;
     using namespace ek::promise::global_functions;
     EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
 
-    whenAll({
-        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver) {
-            std::thread thread([resolver, argc, argv] {
+    auto getHello = []{
+        return Promise([](const ek::promise::Resolver<std::string, int>& resolver) {
+            std::thread thread([resolver] {
                 LOG("processing...");
                 std::this_thread::sleep_for(5s);
-                if (argc >= 2) {
-                    std::string text = argv[1];
-                    LOG("fulfill with: ", text);
-                    resolver.fulfill(text);
-                } else {
-                    int error = -1;
-                    LOG("reject with: ", error);
-                    resolver.reject(error);
-                }
+                std::string text = "Hello";
+                LOG("fulfill with: ", text);
+                resolver.fulfill(text);
             });
             thread.detach();
-        }),
-        Promise::value(", "),
-        Promise([argc, argv](const ek::promise::Resolver<std::string, int>& resolver) {
-            std::thread thread([resolver, argc, argv] {
+        });
+    };
+
+    auto getWorld = []{
+        return Promise([](const ek::promise::Resolver<std::string, int>& resolver) {
+            std::thread thread([resolver] {
                 LOG("processing...");
                 std::this_thread::sleep_for(3s);
-                if (argc >= 3) {
-                    std::string text = argv[2];
-                    LOG("fulfill with: ", text);
-                    resolver.fulfill(text);
-                } else {
-                    int error = -1;
-                    LOG("reject with: ", error);
-                    resolver.reject(error);
-                }
+                std::string text = "world";
+                LOG("fulfill with: ", text);
+                resolver.fulfill(text);
             });
             thread.detach();
-        }),
+        });
+    };
+
+    whenAll({
+        getHello(),
+        Promise::value(", "),
+        getWorld(),
         Promise::value("!")
     }).then([](const std::vector<std::string>& texts) {
         LOG("concatenating...");
@@ -78,13 +107,4 @@ int main(int argc, const char* argv[]) {
         LOG("done. ");
         g_isDone = true;
     });
-
-    while (true) {
-        if (g_isDone) {
-            break;
-        }
-        std::this_thread::sleep_for(16ms);
-    }
-
-    return 0;
 }
