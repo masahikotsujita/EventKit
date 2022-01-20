@@ -75,7 +75,7 @@ Promise<T, E> Promise<T, E>::done(Handler&& handler) const {
 
 template<typename T, typename E>
 Promise<T, E> Promise<T, E>::pipe(const common::IntrusivePtr<ResultHandler<T, E>>& handler) const {
-    m_pCore->addHandler(handler);
+    m_pCore->addHandler(ek::dispatch::getCurrentDispatchQueue(), handler);
     return *this;
 }
 
