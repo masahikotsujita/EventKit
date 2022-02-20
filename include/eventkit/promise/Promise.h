@@ -7,6 +7,7 @@
 
 #include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
+#include <eventkit/promise/Resolver.h>
 
 namespace ek {
 namespace promise {
@@ -32,6 +33,8 @@ public:
     using Value = T;
     using Error = E;
 
+    Promise();
+
     template <typename StartHandler>
     explicit Promise(const StartHandler& startHandler);
 
@@ -51,6 +54,72 @@ public:
     Promise done(Handler&& handler) const;
 
     Promise pipe(const ek::common::IntrusivePtr<ResultHandler<T, E>>& handler) const;
+
+    Resolver<T, E> getResolver() {
+        return Resolver<T, E>(m_pCore);
+    }
+
+    bool isResolved() const noexcept {
+        return m_pCore->isResolved();
+    }
+
+    const Result<T, E>& getResult() const {
+        return m_pCore->getResult();
+    }
+
+    struct promise_type {
+
+        std::suspend_never initial_suspend() noexcept { return {}; }
+
+        std::suspend_never final_suspend() noexcept { return {}; }
+
+        std::suspend_never return_value(const T& value) {
+            m_promise.getResolver().fulfill(value);
+            return {};
+        }
+
+        void unhandled_exception() {
+            auto pException = std::current_exception();
+            if constexpr (std::is_same_v<E, std::exception_ptr>) {
+                m_promise.getResolver().reject(pException);
+            } else {
+                std::terminate();
+            }
+        }
+
+        auto get_return_object() {
+            return m_promise;
+        };
+
+        template <typename U>
+        auto await_transform(ek::promise::Promise<U, E> promise) {
+            struct Unit {};
+            struct Awaiter {
+                ek::promise::Promise<U, E> m_promise;
+
+                bool await_ready() const {
+                    return m_promise.isResolved();
+                }
+
+                void await_suspend(std::coroutine_handle<promise_type> handle) {
+                    m_promise.then([handle](const U&){
+                        handle.resume();
+                        return ek::promise::Promise<Unit, E>::value();
+                    });
+                }
+
+                const U& await_resume() {
+                    return m_promise.getResult().getValue();
+                }
+            };
+
+            return Awaiter { promise };
+        }
+
+    private:
+        Promise m_promise {};
+
+    };
 
 private:
     using Core = detail::PromiseCore<T, E>;

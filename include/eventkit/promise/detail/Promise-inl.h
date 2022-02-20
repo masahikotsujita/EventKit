@@ -17,6 +17,13 @@
 namespace ek {
 namespace promise {
 
+template <typename T, typename E>
+promise::Promise<T, E>::Promise() {
+    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
+    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>(pA, pA);
+    m_pCore = pCore;
+}
+
 template<typename T, typename E>
 template<typename StartHandler>
 Promise<T, E>::Promise(const StartHandler& startHandler) {

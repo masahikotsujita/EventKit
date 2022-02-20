@@ -61,6 +61,14 @@ public:
             });
         }
     }
+
+    bool isResolved() const noexcept {
+        return m_isResolved;
+    }
+
+    const Result<T, E>& getResult() const {
+        return m_result;
+    }
     
     virtual void ref() = 0;
     
