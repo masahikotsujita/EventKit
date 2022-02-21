@@ -5,6 +5,7 @@
 #ifndef EVENTKIT_PROMISE_H
 #define EVENTKIT_PROMISE_H
 
+#include <coroutine>
 #include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
 #include <eventkit/promise/Resolver.h>
