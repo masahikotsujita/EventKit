@@ -11,6 +11,9 @@
 #include "../sample_utils/logging.h"
 #include "main.h"
 
+ek::common::IntrusivePtr<ek::dispatch::DispatchQueue> g_pMainQueue = nullptr;
+ek::common::IntrusivePtr<ek::dispatch::DispatchQueue> g_pBackgroundQueue = nullptr;
+
 int main(int argc, const char* argv[]) {
     ek::dispatch::EventLoop mainLoop;
     auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
@@ -38,4 +41,16 @@ int main(int argc, const char* argv[]) {
     bgThread.join();
 
     return 0;
+}
+
+ek::promise::Promise<Unit, std::exception_ptr> switchToMainThread() {
+    co_return {};
+}
+
+ek::promise::Promise<Unit, std::exception_ptr> switchToBackgroundThread() {
+    co_return {};
+}
+
+ek::promise::Promise<Unit, std::exception_ptr> after(std::chrono::system_clock::time_point timePoint) {
+    co_return {};
 }

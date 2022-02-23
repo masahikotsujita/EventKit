@@ -9,4 +9,10 @@ struct Unit {};
 
 void innerMain();
 
+ek::promise::Promise<Unit, std::exception_ptr> switchToMainThread();
+
+ek::promise::Promise<Unit, std::exception_ptr> switchToBackgroundThread();
+
+ek::promise::Promise<Unit, std::exception_ptr> after(std::chrono::system_clock::time_point timePoint);
+
 #endif //EVENTKIT_MAIN_H
