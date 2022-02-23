@@ -59,7 +59,7 @@ target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 add_executable(promiseexample sample/promise_sample/main.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp)
 target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(coroutinesample sample/coroutine/main.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp)
+add_executable(coroutinesample sample/coroutine/innerMain.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp sample/coroutine/main.h sample/coroutine/main.cpp)
 target_link_libraries(coroutinesample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
 if(BUILD_TEST)

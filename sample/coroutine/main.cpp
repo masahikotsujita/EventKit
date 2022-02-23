@@ -1,3 +1,7 @@
+//
+// Created by Tsujita Masahiko on 2022/02/22.
+//
+
 #include <iostream>
 #include <utility>
 #include <sstream>
@@ -5,10 +9,7 @@
 #include <eventkit/dispatch/EventLoop.h>
 #include <eventkit/promise/Promise.h>
 #include "../sample_utils/logging.h"
-
-struct Unit {};
-
-void innerMain();
+#include "main.h"
 
 int main(int argc, const char* argv[]) {
     ek::dispatch::EventLoop mainLoop;
@@ -37,28 +38,4 @@ int main(int argc, const char* argv[]) {
     bgThread.join();
 
     return 0;
-}
-
-ek::promise::Promise<std::string, std::exception_ptr> getHello() {
-    co_return "hello";
-}
-
-ek::promise::Promise<std::string, std::exception_ptr> getWorld() {
-    co_return "world";
-}
-
-ek::promise::Promise<std::string, std::exception_ptr> getHelloWorld() {
-    std::string hello = co_await getHello();
-    std::string world = co_await getWorld();
-    std::stringstream ss;
-    ss << hello << ", " << world << "!";
-    co_return ss.str();
-}
-
-void innerMain() {
-    EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
-    getHelloWorld().then([=](const std::string& helloWorld){
-        LOG(helloWorld.c_str());
-        return ek::promise::Promise<Unit, std::exception_ptr>::value();
-    });
 }
