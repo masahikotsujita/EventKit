@@ -1,3 +1,4 @@
+#include <thread>
 #include <sstream>
 #include <chrono>
 #include <eventkit/promise/Promise.h>
