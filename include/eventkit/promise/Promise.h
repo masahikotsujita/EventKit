@@ -101,7 +101,15 @@ public:
                 }
 
                 const U& await_resume() {
-                    return m_promise.m_pCore->getResult().getValue();
+                    if (m_promise.m_pCore->getResult().getType() == ek::promise::ResultType::succeeded) {
+                        return m_promise.m_pCore->getResult().getValue();
+                    } else {
+                        if constexpr (std::is_same_v<E, std::exception_ptr>) {
+                            std::rethrow_exception(m_promise.m_pCore->getResult().getError());
+                        } else {
+                            std::terminate();
+                        }
+                    }
                 }
             };
 
