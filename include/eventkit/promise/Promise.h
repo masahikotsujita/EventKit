@@ -59,14 +59,6 @@ public:
         return Resolver<T, E>(m_pCore);
     }
 
-    bool isResolved() const noexcept {
-        return m_pCore->isResolved();
-    }
-
-    const Result<T, E>& getResult() const {
-        return m_pCore->getResult();
-    }
-
     struct promise_type {
 
         std::suspend_never initial_suspend() noexcept { return {}; }
@@ -98,7 +90,7 @@ public:
                 ek::promise::Promise<U, E> m_promise;
 
                 bool await_ready() const {
-                    return m_promise.isResolved();
+                    return m_promise.m_pCore->isResolved();
                 }
 
                 void await_suspend(std::coroutine_handle<promise_type> handle) {
@@ -109,7 +101,7 @@ public:
                 }
 
                 const U& await_resume() {
-                    return m_promise.getResult().getValue();
+                    return m_promise.m_pCore->getResult().getValue();
                 }
             };
 
@@ -123,6 +115,9 @@ public:
 
 private:
     using Core = detail::PromiseCore<T, E>;
+
+    template <typename U, typename F>
+    friend class ek::promise::Promise;
 
     template <typename U, typename F>
     friend ek::promise::Promise<U, F> detail::make_promise(const ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, F>>& pCore);
