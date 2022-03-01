@@ -84,43 +84,42 @@ public:
             return m_promise;
         };
 
-        template <typename U>
-        auto await_transform(ek::promise::Promise<U, E> promise) {
-            struct Unit {};
-            struct Awaiter {
-                ek::promise::Promise<U, E> m_promise;
-
-                bool await_ready() const {
-                    return m_promise.m_pCore->isResolved();
-                }
-
-                void await_suspend(std::coroutine_handle<promise_type> handle) {
-                    m_promise.then([handle](const U&){
-                        handle.resume();
-                        return ek::promise::Promise<Unit, E>::value();
-                    });
-                }
-
-                const U& await_resume() {
-                    if (m_promise.m_pCore->getResult().getType() == ek::promise::ResultType::succeeded) {
-                        return m_promise.m_pCore->getResult().getValue();
-                    } else {
-                        if constexpr (std::is_same_v<E, std::exception_ptr>) {
-                            std::rethrow_exception(m_promise.m_pCore->getResult().getError());
-                        } else {
-                            std::terminate();
-                        }
-                    }
-                }
-            };
-
-            return Awaiter { promise };
-        }
-
     private:
         Promise m_promise {};
 
     };
+
+    auto operator co_await () const {
+        struct Unit {};
+        struct Awaiter {
+            ek::promise::Promise<T, E> m_promise;
+
+            bool await_ready() const {
+                return m_promise.m_pCore->isResolved();
+            }
+
+            void await_suspend(std::coroutine_handle<> handle) {
+                m_promise.then([handle](const T&){
+                    handle.resume();
+                    return ek::promise::Promise<Unit, E>::value();
+                });
+            }
+
+            const T& await_resume() {
+                if (m_promise.m_pCore->getResult().getType() == ek::promise::ResultType::succeeded) {
+                    return m_promise.m_pCore->getResult().getValue();
+                } else {
+                    if constexpr (std::is_same_v<E, std::exception_ptr>) {
+                        std::rethrow_exception(m_promise.m_pCore->getResult().getError());
+                    } else {
+                        std::terminate();
+                    }
+                }
+            }
+        };
+
+        return Awaiter { *this };
+    }
 
 private:
     using Core = detail::PromiseCore<T, E>;
