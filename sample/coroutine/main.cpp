@@ -11,23 +11,28 @@
 #include "../sample_utils/logging.h"
 #include "main.h"
 
-ek::common::IntrusivePtr<ek::dispatch::DispatchQueue> g_pMainQueue = nullptr;
-ek::common::IntrusivePtr<ek::dispatch::DispatchQueue> g_pBackgroundQueue = nullptr;
+ek::dispatch::DispatchQueue* g_pMainQueue = nullptr;
+ek::dispatch::DispatchQueue* g_pBackgroundQueue = nullptr;
 
 int main(int argc, const char* argv[]) {
+    ek::common::pushAllocator(ek::common::getDefaultAllocator());
+
     ek::dispatch::EventLoop mainLoop;
     auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
                                                                               ek::common::getDefaultAllocator());
     mainLoop.addSource(pMainQueue);
+    g_pMainQueue = pMainQueue.get();
 
     ek::dispatch::EventLoop bgLoop;
     auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
                                                                             ek::common::getDefaultAllocator());
     bgLoop.addSource(pBgQueue);
+    g_pBackgroundQueue = pBgQueue.get();
 
     ek::dispatch::setCurrentDispatchQueue(pMainQueue.get());
 
     std::thread bgThread([&]{
+        ek::common::pushAllocator(ek::common::getDefaultAllocator());
         ek::dispatch::setCurrentDispatchQueue(pBgQueue.get());
         bgLoop.run();
     });
@@ -43,12 +48,12 @@ int main(int argc, const char* argv[]) {
     return 0;
 }
 
-ek::promise::Promise<Unit, std::exception_ptr> switchToMainThread() {
-    co_return {};
+DispatchAwaitable switchToMainThread() {
+    return DispatchAwaitable { g_pMainQueue };
 }
 
-ek::promise::Promise<Unit, std::exception_ptr> switchToBackgroundThread() {
-    co_return {};
+DispatchAwaitable switchToBackgroundThread() {
+    return DispatchAwaitable { g_pBackgroundQueue };
 }
 
 ek::promise::Promise<Unit, std::exception_ptr> after(std::chrono::system_clock::time_point timePoint) {
