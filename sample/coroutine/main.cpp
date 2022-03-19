@@ -48,12 +48,12 @@ int main(int argc, const char* argv[]) {
     return 0;
 }
 
-DispatchAwaitable switchToMainThread() {
-    return DispatchAwaitable { g_pMainQueue };
+ek::dispatch::DispatchAwaitable switchToMainThread() {
+    return ek::dispatch::DispatchAwaitable { g_pMainQueue };
 }
 
-DispatchAwaitable switchToBackgroundThread() {
-    return DispatchAwaitable { g_pBackgroundQueue };
+ek::dispatch::DispatchAwaitable switchToBackgroundThread() {
+    return ek::dispatch::DispatchAwaitable { g_pBackgroundQueue };
 }
 
 ek::promise::Promise<Unit, std::exception_ptr> after(std::chrono::system_clock::time_point timePoint) {
