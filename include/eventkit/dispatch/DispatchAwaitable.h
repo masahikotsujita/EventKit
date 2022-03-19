@@ -5,6 +5,8 @@
 #ifndef EVENTKIT_DISPATCHAWAITABLE_H
 #define EVENTKIT_DISPATCHAWAITABLE_H
 
+#if defined(EVENTKIT_ENABLE_COROUTINE)
+
 #include <coroutine>
 #include <eventkit/dispatch/DispatchQueue.h>
 
@@ -40,5 +42,7 @@ private:
 
 }
 }
+
+#endif
 
 #endif //EVENTKIT_DISPATCHAWAITABLE_H

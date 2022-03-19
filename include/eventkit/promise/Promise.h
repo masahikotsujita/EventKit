@@ -5,7 +5,9 @@
 #ifndef EVENTKIT_PROMISE_H
 #define EVENTKIT_PROMISE_H
 
+#if defined(EVENTKIT_ENABLE_COROUTINE)
 #include <coroutine>
+#endif
 #include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
 #include <eventkit/promise/Resolver.h>
@@ -59,6 +61,8 @@ public:
     Resolver<T, E> getResolver() {
         return Resolver<T, E>(m_pCore);
     }
+
+#if defined(EVENTKIT_ENABLE_COROUTINE)
 
     struct promise_type {
 
@@ -120,6 +124,8 @@ public:
 
         return Awaiter { *this };
     }
+
+#endif
 
 private:
     using Core = detail::PromiseCore<T, E>;

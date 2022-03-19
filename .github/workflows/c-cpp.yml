@@ -21,3 +21,15 @@ jobs:
         cd cmake-build-debug
         ./eventkittest -s
       timeout-minutes: 5
+
+    - name: build-coroutine
+      run: |
+        mkdir cmake-build-debug-coroutine
+        cd cmake-build-debug-coroutine
+        cmake .. -DBUILD_TEST=true -DENABLE_COROUTINE=true
+        make
+    - name: test-coroutine
+      run: |
+        cd cmake-build-debug-coroutine
+        ./eventkittest -s
+      timeout-minutes: 5

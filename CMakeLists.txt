@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
 project(eventkit)
 
-add_compile_options(-std=c++20)
+if(ENABLE_COROUTINE)
+    add_compile_definitions(EVENTKIT_ENABLE_COROUTINE)
+    add_compile_options(-std=c++20)
+else()
+    add_compile_options(-std=c++14)
+endif()
 
 find_package(Threads)
 include_directories(include)
@@ -60,8 +65,10 @@ target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 add_executable(promiseexample sample/promise_sample/main.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp)
 target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(coroutinesample sample/coroutine/innerMain.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp sample/coroutine/main.h sample/coroutine/main.cpp)
-target_link_libraries(coroutinesample eventkit ${CMAKE_THREAD_LIBS_INIT})
+if(ENABLE_COROUTINE)
+    add_executable(coroutinesample sample/coroutine/innerMain.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp sample/coroutine/main.h sample/coroutine/main.cpp)
+    target_link_libraries(coroutinesample eventkit ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 if(BUILD_TEST)
     include_directories(/usr/local/include)
