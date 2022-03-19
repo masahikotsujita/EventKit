@@ -57,5 +57,6 @@ ek::dispatch::DispatchAwaitable switchToBackgroundThread() {
 }
 
 ek::promise::Promise<Unit, std::exception_ptr> after(std::chrono::system_clock::time_point timePoint) {
+    std::this_thread::sleep_until(timePoint);
     co_return {};
 }
