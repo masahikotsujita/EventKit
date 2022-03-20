@@ -6,7 +6,7 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-    container: masahikotsujita/build-containers:gcc-11-catch-2.13.0-ub1804
+    container: masahikotsujita/build-containers:ubuntu18.04-gcc11-cmake3.22.3-catch2.13.0
 
     steps:
     - uses: actions/checkout@v2
