@@ -6,7 +6,7 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-    container: masahikotsujita/build-containers:clang-10-catch-2.13.0-ub1804
+    container: masahikotsujita/build-containers:ubuntu18.04-gcc11-cmake3.22.3-catch2.13.0
 
     steps:
     - uses: actions/checkout@v2
@@ -19,5 +19,17 @@ jobs:
     - name: test
       run: |
         cd cmake-build-debug
+        ./eventkittest -s
+      timeout-minutes: 5
+
+    - name: build-coroutine
+      run: |
+        mkdir cmake-build-debug-coroutine
+        cd cmake-build-debug-coroutine
+        cmake .. -DBUILD_TEST=true -DENABLE_COROUTINE=true
+        make
+    - name: test-coroutine
+      run: |
+        cd cmake-build-debug-coroutine
         ./eventkittest -s
       timeout-minutes: 5
