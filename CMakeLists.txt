@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.12)
 project(eventkit)
 
+Include(FetchContent)
+FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v2.13.10
+)
+FetchContent_MakeAvailable(Catch2)
+
 if(ENABLE_COROUTINE)
     add_compile_definitions(EVENTKIT_ENABLE_COROUTINE)
     add_compile_options(-std=c++20)
@@ -79,5 +87,5 @@ if(BUILD_TEST)
         test/EventLoopTest.cpp
     )
     add_executable(eventkittest ${TEST_SOURCE_FILES})
-    target_link_libraries(eventkittest eventkit ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(eventkittest eventkit ${CMAKE_THREAD_LIBS_INIT} Catch2)
 endif()
