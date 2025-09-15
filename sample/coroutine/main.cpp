@@ -10,11 +10,17 @@
 #include <eventkit/promise/Promise.h>
 #include "../sample_utils/logging.h"
 #include "main.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 ek::dispatch::DispatchQueue* g_pMainQueue = nullptr;
 ek::dispatch::DispatchQueue* g_pBackgroundQueue = nullptr;
 
 int main(int argc, const char* argv[]) {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     ek::common::pushAllocator(ek::common::getDefaultAllocator());
 
     ek::dispatch::EventLoop mainLoop;
