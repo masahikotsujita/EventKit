@@ -5,7 +5,7 @@ Include(FetchContent)
 FetchContent_Declare(
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v2.13.10
+        GIT_TAG        v3.10.0
 )
 FetchContent_MakeAvailable(Catch2)
 
@@ -87,5 +87,5 @@ if(BUILD_TEST)
         test/EventLoopTest.cpp
     )
     add_executable(eventkittest ${TEST_SOURCE_FILES})
-    target_link_libraries(eventkittest eventkit ${CMAKE_THREAD_LIBS_INIT} Catch2)
+    target_link_libraries(eventkittest eventkit ${CMAKE_THREAD_LIBS_INIT} Catch2::Catch2WithMain)
 endif()
