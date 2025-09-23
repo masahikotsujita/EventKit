@@ -16,9 +16,9 @@ add_library(eventkit
     include/eventkit/common/detail/IntrusivePtr-inl.h
     include/eventkit/common/IntrusiveObject.h
     include/eventkit/common/IntrusiveObjectMixin.h
-    source/common/Allocator.cpp
-    source/common/SystemAllocator.cpp
-    source/common/IntrusiveObjectMixin.cpp
+    src/common/Allocator.cpp
+    src/common/SystemAllocator.cpp
+    src/common/IntrusiveObjectMixin.cpp
     include/eventkit/common/Condition.h
     include/eventkit/dispatch/DispatchQueue.h
     include/eventkit/dispatch/detail/DispatchQueue-inl.h
@@ -28,8 +28,8 @@ add_library(eventkit
     include/eventkit/dispatch/detail/FunctionDispatchItem.h
     include/eventkit/dispatch/detail/DispatchFunctionItem-inl.h
     include/eventkit/dispatch/DispatchAwaitable.h
-    source/dispatch/DispatchQueue.cpp
-    source/dispatch/EventLoop.cpp
+    src/dispatch/DispatchQueue.cpp
+    src/dispatch/EventLoop.cpp
     include/eventkit/promise/Result.h
     include/eventkit/promise/Promise.h
     include/eventkit/promise/detail/Promise-inl.h
@@ -51,7 +51,7 @@ add_library(eventkit
     include/eventkit/promise/global_functions/whenAll.h
     include/eventkit/common/AllocatorStack.h
     include/eventkit/common/AllocatorScope.h
-    source/common/AllocatorStack.cpp
+    src/common/AllocatorStack.cpp
 )
 target_include_directories(eventkit PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -67,9 +67,9 @@ endif()
 
 if(EVENTKIT_BUILD_TESTS)
     enable_testing()
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif()
 
 if(EVENTKIT_BUILD_EXAMPLES)
-    add_subdirectory(sample)
+    add_subdirectory(examples)
 endif()
