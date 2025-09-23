@@ -8,7 +8,6 @@
 #include <memory>
 #include <mutex>
 #include <list>
-#include <eventkit/common/AllocatorScope.h>
 #include <eventkit/common/IntrusiveObjectMixin.h>
 #include <eventkit/dispatch/DispatchQueue.h>
 #include <eventkit/promise/Result.h>
@@ -23,9 +22,8 @@ class PromiseCore {
 public:
     using Handler = ResultHandler<T, E>;
 
-    explicit PromiseCore(ek::common::Allocator* pAllocator)
-        : m_isResolved(false)
-        , m_pAllocator(pAllocator) {
+    explicit PromiseCore()
+        : m_isResolved(false) {
     }
 
     virtual ~PromiseCore() = default;
@@ -39,11 +37,10 @@ public:
         m_result = result;
         std::list<std::tuple<ek::dispatch::DispatchQueue*, ek::common::IntrusivePtr<Handler>>> handlers = std::move(m_handlers);
         lock.unlock();
-        EK_USING_ALLOCATOR(m_pAllocator);
         for (const auto& handler : handlers) {
             ek::dispatch::DispatchQueue* pQueue = std::get<0>(handler);
             ek::common::IntrusivePtr<Handler> pHandler = std::get<1>(handler);
-            pQueue->dispatchAsync(m_pAllocator, [pHandler, result=result]{
+            pQueue->dispatchAsync([pHandler, result=result]{
                 pHandler->onResult(result);
             });
         }
@@ -55,8 +52,7 @@ public:
             m_handlers.push_back(std::make_tuple(pDispatchQueue, handler));
         } else {
             lock.unlock();
-            pDispatchQueue->template dispatchAsync(m_pAllocator, [pAllocator=m_pAllocator, handler, result=m_result]{
-                EK_USING_ALLOCATOR(pAllocator);
+            pDispatchQueue->template dispatchAsync([handler, result=m_result]{
                 handler->onResult(result);
             });
         }
@@ -79,7 +75,6 @@ private:
     bool m_isResolved;
     Result<T, E> m_result;
     std::list<std::tuple<ek::dispatch::DispatchQueue*, ek::common::IntrusivePtr<Handler>>> m_handlers;
-    ek::common::Allocator* m_pAllocator;
 
 };
 

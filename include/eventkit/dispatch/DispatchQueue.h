@@ -9,7 +9,6 @@
 #include <list>
 #include <queue>
 #include <eventkit/common/IntrusiveObjectMixin.h>
-#include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
 #include <eventkit/dispatch/EventSource.h>
 
@@ -21,10 +20,10 @@ class DispatchItem;
 class DispatchQueue : public ek::dispatch::EventSource {
 public:
 
-    explicit DispatchQueue(ek::common::Allocator* pA);
+    explicit DispatchQueue();
 
     template <typename F>
-    void dispatchAsync(ek::common::Allocator* pA, F&& function);
+    void dispatchAsync(F&& function);
 
     virtual void fire() override;
 
@@ -40,7 +39,6 @@ private:
 
 private:
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
-    ek::common::Allocator* m_pA;
     std::queue<ek::common::IntrusivePtr<DispatchItem>, std::list<ek::common::IntrusivePtr<DispatchItem>>> m_queue;
 
 };

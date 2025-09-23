@@ -11,7 +11,6 @@
 #include <type_traits>
 #include <memory>
 #include <vector>
-#include <eventkit/common/AllocatorStack.h>
 
 namespace ek {
 namespace promise {
@@ -22,26 +21,24 @@ constexpr pack_as_tuple_t pack_as_tuple = pack_as_tuple_t();
 
 template <typename ...Prs>
 auto whenAll(pack_as_tuple_t, Prs&& ...promises) {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
     using Values = ek::promise::detail::values_of_prmises_t<std::decay_t<Prs>...>;
     using Error = ek::promise::detail::error_of_prmises_t<Prs...>;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationPromiseCore<std::decay_t<Prs>...>>(pA);
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::WhenAllTransformationPromiseCore<std::decay_t<Prs>...>>();
     detail::addCoreAsHandlerToPromises(pCore, std::forward<Prs>(promises)...);
     return ek::promise::detail::make_promise<Values, Error>(pCore);
 }
 
 template <typename InputIt>
 auto whenAll(InputIt begin, InputIt end) {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
     using P = ek::promise::detail::value_type_of_t<InputIt>;
     using T = typename P::Value;
     using E = typename P::Error;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicWhenAllTransformationPromiseCore<T, E>>(pA, pA, std::distance(begin, end));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::DynamicWhenAllTransformationPromiseCore<T, E>>(std::distance(begin, end));
     size_t idx = 0;
     auto itr = begin;
     for (; itr != end; ++itr, ++idx) {
         const auto& promise = *itr;
-        promise.pipe(ek::promise::detail::make_function_observer<T, E>(pA, [pCore, idx](const auto& result){
+        promise.pipe(ek::promise::detail::make_function_observer<T, E>([pCore, idx](const auto& result){
             pCore->onResultAt(result, idx);
         }));
     }

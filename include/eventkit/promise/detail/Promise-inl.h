@@ -12,23 +12,20 @@
 #include <eventkit/promise/detail/BasicPromiseCore.h>
 #include <eventkit/promise/detail/ThenTransformationPromiseCore.h>
 #include <eventkit/promise/detail/RecoverTransformationPromiseCore.h>
-#include <eventkit/common/AllocatorStack.h>
 
 namespace ek {
 namespace promise {
 
 template <typename T, typename E>
 promise::Promise<T, E>::Promise() {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
-    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>(pA, pA);
+    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>();
     m_pCore = pCore;
 }
 
 template<typename T, typename E>
 template<typename StartHandler>
 Promise<T, E>::Promise(const StartHandler& startHandler) {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
-    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>(pA, pA);
+    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>();
     Resolver<T, E> resolver(pCore);
     startHandler(resolver);
     m_pCore = pCore;
@@ -37,8 +34,7 @@ Promise<T, E>::Promise(const StartHandler& startHandler) {
 template<typename T, typename E>
 template<typename... Args>
 Promise<T, E> Promise<T, E>::value(Args&& ... args) {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
-    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>(pA, pA);
+    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>();
     pCore->resolve(Result<T, E>::succeeded(std::forward<Args>(args)...));
     return Promise(with_core, pCore);
 }
@@ -46,8 +42,7 @@ Promise<T, E> Promise<T, E>::value(Args&& ... args) {
 template<typename T, typename E>
 template<typename... Args>
 Promise<T, E> Promise<T, E>::error(Args&& ... args) {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
-    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>(pA, pA);
+    auto pCore = ek::common::make_intrusive<detail::BasicPromiseCore<T, E>>();
     pCore->resolve(Result<T, E>::failed(std::forward<Args>(args)...));
     return Promise(with_core, pCore);
 }
@@ -55,9 +50,8 @@ Promise<T, E> Promise<T, E>::error(Args&& ... args) {
 template<typename T, typename E>
 template<typename Handler>
 auto Promise<T, E>::then(Handler&& handler) const -> Promise<typename std::result_of_t<Handler(T)>::Value, E> {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
     using U = typename std::result_of_t<Handler(T)>::Value;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::ThenTransformationPromiseCore<T, E, U, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::ThenTransformationPromiseCore<T, E, U, std::decay_t<Handler>>>(std::forward<std::decay_t<Handler>>(handler));
     pipe(pCore->asSrcResultHandler());
     return ek::promise::detail::make_promise(ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<U, E>>(pCore));
 }
@@ -65,9 +59,8 @@ auto Promise<T, E>::then(Handler&& handler) const -> Promise<typename std::resul
 template<typename T, typename E>
 template<typename Handler>
 auto Promise<T, E>::recover(Handler&& handler) const -> Promise<T, typename std::result_of_t<Handler(E)>::Error> {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
     using F = typename std::result_of_t<Handler(E)>::Error;
-    auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationPromiseCore<T, E, F, std::decay_t<Handler>>>(pA, pA, std::forward<std::decay_t<Handler>>(handler));
+    auto pCore = ek::common::make_intrusive<ek::promise::detail::RecoverTransformationPromiseCore<T, E, F, std::decay_t<Handler>>>(std::forward<std::decay_t<Handler>>(handler));
     pipe(pCore->asSrcResultHandler());
     return ek::promise::detail::make_promise(ek::common::IntrusivePtr<ek::promise::detail::PromiseCore<T, F>>(pCore));
 }
@@ -75,8 +68,7 @@ auto Promise<T, E>::recover(Handler&& handler) const -> Promise<T, typename std:
 template<typename T, typename E>
 template<typename Handler>
 Promise<T, E> Promise<T, E>::done(Handler&& handler) const {
-    ek::common::Allocator* pA = ek::common::getCurrentAllocator();
-    pipe(ek::promise::detail::make_function_observer<T, E>(pA, std::forward<Handler>(handler)));
+    pipe(ek::promise::detail::make_function_observer<T, E>(std::forward<Handler>(handler)));
     return *this;
 }
 

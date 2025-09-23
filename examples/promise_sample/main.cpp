@@ -6,13 +6,11 @@
 #include <thread>
 #include <atomic>
 #include <sstream>
-#include <eventkit/common/SystemAllocator.h>
 #include <eventkit/promise/Promise.h>
 #include <eventkit/promise/Resolver.h>
 #include <eventkit/promise/global_functions/whenAll.h>
 #include "../sample_utils/logging.h"
 #include <eventkit/dispatch/EventLoop.h>
-#include <eventkit/common/AllocatorScope.h>
 
 using namespace std::chrono_literals;
 
@@ -24,13 +22,11 @@ void innerMain();
 
 int main(int argc, const char* argv[]) {
     ek::dispatch::EventLoop mainLoop;
-    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
-                                                                              ek::common::getDefaultAllocator());
+    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
     mainLoop.addSource(pMainQueue);
 
     ek::dispatch::EventLoop bgLoop;
-    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
-                                                                            ek::common::getDefaultAllocator());
+    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
     bgLoop.addSource(pBgQueue);
 
     ek::dispatch::setCurrentDispatchQueue(pMainQueue.get());
@@ -40,7 +36,7 @@ int main(int argc, const char* argv[]) {
         bgLoop.run();
     });
 
-    pMainQueue->dispatchAsync(ek::common::getDefaultAllocator(), []{
+    pMainQueue->dispatchAsync([]{
         innerMain();
     });
 
@@ -54,7 +50,6 @@ int main(int argc, const char* argv[]) {
 void innerMain() {
     using Promise = ek::promise::Promise<std::string, int>;
     using namespace ek::promise::global_functions;
-    EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
 
     auto getHello = []{
         return Promise([](const ek::promise::Resolver<std::string, int>& resolver) {

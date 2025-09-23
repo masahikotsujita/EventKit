@@ -9,15 +9,11 @@ find_package(Threads REQUIRED)
 
 # ライブラリ
 add_library(eventkit
-    include/eventkit/common/Allocator.h
     include/eventkit/common/detail/Allocator-inl.h
-    include/eventkit/common/SystemAllocator.h
     include/eventkit/common/IntrusivePtr.h
     include/eventkit/common/detail/IntrusivePtr-inl.h
     include/eventkit/common/IntrusiveObject.h
     include/eventkit/common/IntrusiveObjectMixin.h
-    src/common/Allocator.cpp
-    src/common/SystemAllocator.cpp
     src/common/IntrusiveObjectMixin.cpp
     include/eventkit/common/Condition.h
     include/eventkit/dispatch/DispatchQueue.h
@@ -49,9 +45,6 @@ add_library(eventkit
     include/eventkit/promise/detail/WhenAllTransformationPromiseCore.h
     include/eventkit/promise/global_functions/detail/whenAll-inl.h
     include/eventkit/promise/global_functions/whenAll.h
-    include/eventkit/common/AllocatorStack.h
-    include/eventkit/common/AllocatorScope.h
-    src/common/AllocatorStack.cpp
 )
 target_include_directories(eventkit PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

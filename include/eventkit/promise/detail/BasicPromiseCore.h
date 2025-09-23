@@ -16,9 +16,8 @@ class BasicPromiseCore final : public PromiseCore<T, E> {
 public:
     using Handler = ResultHandler<T, E>;
 
-    explicit BasicPromiseCore(ek::common::Allocator* pA)
-        : PromiseCore<T, E>(pA)
-        , m_pA(pA)
+    explicit BasicPromiseCore()
+        : PromiseCore<T, E>()
         , m_intrusiveObjectMixin(deleteCallback, this) {
     }
 
@@ -36,11 +35,10 @@ private:
 
     static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
         auto* pThis = static_cast<BasicPromiseCore<T, E>*>(pContext);
-        pThis->m_pA->destroy(pThis);
+        delete pThis;
     }
 
 private:
-    ek::common::Allocator* m_pA;
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };

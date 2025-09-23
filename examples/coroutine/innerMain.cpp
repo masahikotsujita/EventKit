@@ -44,7 +44,6 @@ ek::promise::Promise<std::string, std::exception_ptr> getHelloWorld() {
 }
 
 void innerMain() {
-    EK_USING_ALLOCATOR(ek::common::getDefaultAllocator());
     getHelloWorld().then([=](const std::string& helloWorld){
         LOG_WITH_THREAD_ID(helloWorld.c_str());
         return ek::promise::Promise<Unit, std::exception_ptr>::value();

@@ -26,10 +26,9 @@ public:
     using Super = PromiseCore<Values, Error>;
     using Result = ek::promise::Result<Values, Error>;
 
-    explicit WhenAllTransformationPromiseCore(ek::common::Allocator* pA)
+    explicit WhenAllTransformationPromiseCore()
         : m_values()
         , m_fulfilledPromiseFlags()
-        , m_pA(pA)
         , m_intrusiveObjectMixin(deleteCallback, this)  {
     }
     
@@ -58,13 +57,12 @@ private:
 
     static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
         auto* pThis = static_cast<WhenAllTransformationPromiseCore<Values, Error>*>(pContext);
-        pThis->m_pA->destroy(pThis);
+        delete pThis;
     }
 
 private:
     Values m_values;
     std::bitset<std::tuple_size<Values>::value> m_fulfilledPromiseFlags;
-    ek::common::Allocator* m_pA;
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };
@@ -77,11 +75,10 @@ public:
     using Super = PromiseCore<Values, Error>;
     using Results = Result<std::vector<T>, E>;
 
-    explicit DynamicWhenAllTransformationPromiseCore(ek::common::Allocator* pA, size_t size)
-        : PromiseCore<std::vector<T>, E>(pA)
+    explicit DynamicWhenAllTransformationPromiseCore(size_t size)
+        : PromiseCore<std::vector<T>, E>()
         , m_values(size)
         , m_fulfilledFlags(size, false)
-        , m_pA(pA)
         , m_intrusiveObjectMixin(deleteCallback, this) {
     }
 
@@ -114,14 +111,13 @@ private:
 
     static void deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
         auto* pThis = static_cast<DynamicWhenAllTransformationPromiseCore<T, E>*>(pContext);
-        pThis->m_pA->destroy(pThis);
+        delete pThis;
     }
 
 private:
     std::mutex m_mutex;
     Values m_values;
     std::vector<bool> m_fulfilledFlags;
-    ek::common::Allocator* m_pA;
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };
