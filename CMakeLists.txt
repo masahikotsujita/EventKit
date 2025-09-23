@@ -9,7 +9,6 @@ find_package(Threads REQUIRED)
 
 # ライブラリ
 add_library(eventkit
-    include/eventkit/common/detail/Allocator-inl.h
     include/eventkit/common/IntrusivePtr.h
     include/eventkit/common/detail/IntrusivePtr-inl.h
     include/eventkit/common/IntrusiveObject.h
