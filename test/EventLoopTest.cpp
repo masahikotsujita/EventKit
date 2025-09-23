@@ -3,7 +3,7 @@
 //
 
 #include <thread>
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include "TestUtils.h"
 #include <eventkit/common/SystemAllocator.h>
 #include <eventkit/dispatch/EventLoop.h>

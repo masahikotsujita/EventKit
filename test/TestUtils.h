@@ -9,7 +9,7 @@
 #include <mutex>
 #include <atomic>
 #include <condition_variable>
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 template <typename Clock, typename Duration, typename Predicate>
 bool waitUntil(const Predicate& predicate, const std::chrono::time_point<Clock, Duration>& timeout) {
