@@ -1,32 +1,32 @@
-name: C/C++ CI
+name: Run Tests
 
 on: [push]
 
 jobs:
-  test:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: build
+    - name: build tests
       run: |
-        mkdir cmake-build-debug
-        cd cmake-build-debug
+        mkdir cmake-build-test
+        cd cmake-build-test
         cmake .. -DEVENTKIT_BUILD_TESTS=true
         make
-    - name: test
+    - name: run tests
       run: |
-        cd cmake-build-debug
+        cd cmake-build-test
         ./tests/eventkittest -s
       timeout-minutes: 5
 
-    - name: build-coroutine
+    - name: build tests with coroutines
       run: |
-        mkdir cmake-build-debug-coroutine
-        cd cmake-build-debug-coroutine
+        mkdir cmake-build-test-with-coroutines
+        cd cmake-build-test-with-coroutines
         cmake .. -DEVENTKIT_BUILD_TESTS=true -DEVENTKIT_ENABLE_COROUTINE=true
         make
-    - name: test-coroutine
+    - name: run tests with coroutine
       run: |
-        cd cmake-build-debug-coroutine
+        cd cmake-build-test-with-coroutines
         ./tests/eventkittest -s
       timeout-minutes: 5
