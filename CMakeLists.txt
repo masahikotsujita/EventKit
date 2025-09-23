@@ -1,25 +1,14 @@
 cmake_minimum_required(VERSION 3.12)
-project(eventkit)
+project(eventkit LANGUAGES CXX)
 
-Include(FetchContent)
-FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v3.10.0
-)
-FetchContent_MakeAvailable(Catch2)
+option(EVENTKIT_ENABLE_COROUTINE "Enable coroutine support" ON)
+option(EVENTKIT_BUILD_TESTS "Build tests" ON)
+option(EVENTKIT_BUILD_EXAMPLES "Build examples" OFF)
 
-if(ENABLE_COROUTINE)
-    add_compile_definitions(EVENTKIT_ENABLE_COROUTINE)
-    add_compile_options(-std=c++20)
-else()
-    add_compile_options(-std=c++14)
-endif()
+find_package(Threads REQUIRED)
 
-find_package(Threads)
-include_directories(include)
-
-set(LIBRARY_SOURCE_FILES
+# ライブラリ
+add_library(eventkit
     include/eventkit/common/Allocator.h
     include/eventkit/common/detail/Allocator-inl.h
     include/eventkit/common/SystemAllocator.h
@@ -64,28 +53,23 @@ set(LIBRARY_SOURCE_FILES
     include/eventkit/common/AllocatorScope.h
     source/common/AllocatorStack.cpp
 )
-
-add_library(eventkit ${LIBRARY_SOURCE_FILES})
-
-add_executable(eventkitexample sample/dispatch_sample/main.cpp)
-target_link_libraries(eventkitexample eventkit ${CMAKE_THREAD_LIBS_INIT})
-
-add_executable(promiseexample sample/promise_sample/main.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp)
-target_link_libraries(promiseexample eventkit ${CMAKE_THREAD_LIBS_INIT})
-
-if(ENABLE_COROUTINE)
-    add_executable(coroutinesample sample/coroutine/innerMain.cpp sample/sample_utils/logging.h sample/sample_utils/logging.cpp sample/coroutine/main.h sample/coroutine/main.cpp)
-    target_link_libraries(coroutinesample eventkit ${CMAKE_THREAD_LIBS_INIT})
+target_include_directories(eventkit PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+if(EVENTKIT_ENABLE_COROUTINE)
+    add_compile_definitions(EVENTKIT_ENABLE_COROUTINE)
+    target_compile_features(eventkit PUBLIC cxx_std_20)
+    target_compile_definitions(eventkit PUBLIC EVENTKIT_ENABLE_COROUTINE)
+else()
+    target_compile_features(eventkit PUBLIC cxx_std_14)
 endif()
 
-if(BUILD_TEST)
-    include_directories(/usr/local/include)
-    link_directories(/usr/local/lib)
-    set(TEST_SOURCE_FILES
-        test/testMain.cpp
-        test/TestUtils.h
-        test/EventLoopTest.cpp
-    )
-    add_executable(eventkittest ${TEST_SOURCE_FILES})
-    target_link_libraries(eventkittest eventkit ${CMAKE_THREAD_LIBS_INIT} Catch2::Catch2WithMain)
+if(EVENTKIT_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
+
+if(EVENTKIT_BUILD_EXAMPLES)
+    add_subdirectory(sample)
 endif()
