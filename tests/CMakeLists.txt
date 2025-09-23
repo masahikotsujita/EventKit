@@ -11,7 +11,6 @@ FetchContent_MakeAvailable(Catch2)
 
 # テスト
 add_executable(eventkittest
-    testMain.cpp
     TestUtils.h
     EventLoopTest.cpp
 )
