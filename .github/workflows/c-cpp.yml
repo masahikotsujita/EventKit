@@ -11,7 +11,7 @@ jobs:
       run: |
         mkdir cmake-build-debug
         cd cmake-build-debug
-        cmake .. -DBUILD_TEST=true
+        cmake .. -DEVENTKIT_BUILD_TESTS=true
         make
     - name: test
       run: |
@@ -23,7 +23,7 @@ jobs:
       run: |
         mkdir cmake-build-debug-coroutine
         cd cmake-build-debug-coroutine
-        cmake .. -DBUILD_TEST=true -DENABLE_COROUTINE=true
+        cmake .. -DEVENTKIT_BUILD_TESTS=true -DEVENTKIT_ENABLE_COROUTINE=true
         make
     - name: test-coroutine
       run: |
