@@ -16,7 +16,7 @@ jobs:
     - name: test
       run: |
         cd cmake-build-debug
-        ./eventkittest -s
+        ./test/eventkittest -s
       timeout-minutes: 5
 
     - name: build-coroutine
@@ -28,5 +28,5 @@ jobs:
     - name: test-coroutine
       run: |
         cd cmake-build-debug-coroutine
-        ./eventkittest -s
+        ./test/eventkittest -s
       timeout-minutes: 5
