@@ -16,7 +16,7 @@ class FunctionDispatchItem : public DispatchItem {
 public:
 
     template <typename F>
-    explicit FunctionDispatchItem(ek::common::Allocator* pA, F&& function);
+    explicit FunctionDispatchItem(F&& function);
 
     ~FunctionDispatchItem() override = default;
 

@@ -17,7 +17,7 @@ template <typename T, typename E, typename U, typename Handler>
 class ThenTransformationPromiseCore final : public PromiseCore<U, E> {
 public:
     template <typename Tr>
-    explicit ThenTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation);
+    explicit ThenTransformationPromiseCore(Tr&& transformation);
 
     ~ThenTransformationPromiseCore() override = default;
 
@@ -43,7 +43,6 @@ private:
 
 private:
     Handler m_transformation;
-    ek::common::Allocator* m_pA;
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
     ek::promise::detail::ResultHandlerMixin<T, E> m_srcResultHandlerMixin;
     ek::promise::detail::ResultHandlerMixin<U, E> m_dstResultHandlerMixin;
@@ -52,10 +51,9 @@ private:
 
 template <typename T, typename E, typename U, typename Handler>
 template <typename Tr>
-ThenTransformationPromiseCore<T, E, U, Handler>::ThenTransformationPromiseCore(ek::common::Allocator* pA, Tr&& transformation)
-    : PromiseCore<U, E>(pA)
+ThenTransformationPromiseCore<T, E, U, Handler>::ThenTransformationPromiseCore(Tr&& transformation)
+    : PromiseCore<U, E>()
     , m_transformation(std::forward<Tr>(transformation))
-    , m_pA(pA)
     , m_intrusiveObjectMixin(deleteCallback, this)
     , m_srcResultHandlerMixin(onSrcResultCallback, refCallback, unrefCallback, this)
     , m_dstResultHandlerMixin(onDstResultCallback, refCallback, unrefCallback, this)
@@ -85,7 +83,7 @@ void ThenTransformationPromiseCore<T, E, U, Handler>::unref() {
 template <typename T, typename E, typename U, typename Handler>
 void ThenTransformationPromiseCore<T, E, U, Handler>::deleteCallback(ek::common::IntrusiveObjectMixin*, void* pContext) {
     auto* pThis = static_cast<ThenTransformationPromiseCore*>(pContext);
-    pThis->m_pA->destroy(pThis);
+    delete pThis;
 }
 
 template <typename T, typename E, typename U, typename Handler>

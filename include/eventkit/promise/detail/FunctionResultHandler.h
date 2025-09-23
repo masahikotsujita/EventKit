@@ -5,7 +5,6 @@
 #ifndef EVENTKIT_FUNCTIONRESULTHANDLER_H
 #define EVENTKIT_FUNCTIONRESULTHANDLER_H
 
-#include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusiveObject.h>
 #include <eventkit/promise/ResultHandler.h>
 
@@ -17,7 +16,7 @@ template <typename T, typename E, typename Function>
 class FunctionResultHandler : public ResultHandler<T, E> {
 public:
     template <typename F>
-    explicit FunctionResultHandler(ek::common::Allocator* pA, F&& function);
+    explicit FunctionResultHandler(F&& function);
 
     virtual ~FunctionResultHandler() override = default;
 
@@ -29,7 +28,6 @@ public:
 
 private:
     Function m_function;
-    ek::common::Allocator* m_pA;
     ek::common::IntrusiveObjectMixin m_intrusiveObjectMixin;
 
 };

@@ -21,29 +21,24 @@ int main(int argc, const char* argv[]) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
-    ek::common::pushAllocator(ek::common::getDefaultAllocator());
-
     ek::dispatch::EventLoop mainLoop;
-    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
-                                                                              ek::common::getDefaultAllocator());
+    auto pMainQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
     mainLoop.addSource(pMainQueue);
     g_pMainQueue = pMainQueue.get();
 
     ek::dispatch::EventLoop bgLoop;
-    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(ek::common::getDefaultAllocator(),
-                                                                            ek::common::getDefaultAllocator());
+    auto pBgQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
     bgLoop.addSource(pBgQueue);
     g_pBackgroundQueue = pBgQueue.get();
 
     ek::dispatch::setCurrentDispatchQueue(pMainQueue.get());
 
     std::thread bgThread([&]{
-        ek::common::pushAllocator(ek::common::getDefaultAllocator());
         ek::dispatch::setCurrentDispatchQueue(pBgQueue.get());
         bgLoop.run();
     });
 
-    pMainQueue->dispatchAsync(ek::common::getDefaultAllocator(), []{
+    pMainQueue->dispatchAsync([]{
         innerMain();
     });
 

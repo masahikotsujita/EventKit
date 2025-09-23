@@ -5,7 +5,6 @@
 #include <thread>
 #include <catch2/catch_all.hpp>
 #include "TestUtils.h"
-#include <eventkit/common/SystemAllocator.h>
 #include <eventkit/dispatch/EventLoop.h>
 #include <eventkit/dispatch/DispatchQueue.h>
 
@@ -30,9 +29,7 @@ SCENARIO("a event loop", "[event_loop]") {
         }
 
         WHEN("a event source added to the event loop") {
-            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>(
-                    ek::common::getDefaultAllocator(),
-                                                                                          ek::common::getDefaultAllocator());
+            auto pDispatchQueue = ek::common::make_intrusive<ek::dispatch::DispatchQueue>();
             pEventLoop->addSource(pDispatchQueue);
 
             WHEN("the event loop starts running on a thread") {

@@ -6,16 +6,14 @@
 #define EVENTKIT_INTRUSIVEOBJECT_H
 
 #include <atomic>
-#include <eventkit/common/Allocator.h>
 
 namespace ek {
 namespace common {
 
 class IntrusiveObject {
 public:
-    explicit IntrusiveObject(Allocator* pA)
-        : m_pA(pA)
-        , m_refCount(1) {
+    explicit IntrusiveObject()
+        : m_refCount(1) {
     }
     
     virtual ~IntrusiveObject() = default;
@@ -27,12 +25,11 @@ public:
     void unref() {
         if (std::atomic_fetch_sub_explicit(&m_refCount, 1u, std::memory_order_release) == 1) {
             std::atomic_thread_fence(std::memory_order_acquire);
-            m_pA->destroy(this);
+            delete this;
         }
     }
 
 private:
-    mutable Allocator* m_pA;
     mutable std::atomic_uint m_refCount;
     
 };

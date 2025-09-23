@@ -12,8 +12,8 @@ namespace dispatch {
 
 class DispatchItem : public ek::common::IntrusiveObject {
 public:
-    explicit DispatchItem(ek::common::Allocator* pA)
-        : ek::common::IntrusiveObject(pA) {}
+    explicit DispatchItem()
+        : ek::common::IntrusiveObject() {}
 
     virtual ~DispatchItem() = default;
 

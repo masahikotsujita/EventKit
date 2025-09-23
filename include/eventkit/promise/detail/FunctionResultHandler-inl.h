@@ -13,12 +13,11 @@ namespace detail{
 
 template <typename T, typename E, typename Function>
 template <typename F>
-FunctionResultHandler<T, E, Function>::FunctionResultHandler(ek::common::Allocator* pA, F&& function)
+FunctionResultHandler<T, E, Function>::FunctionResultHandler(F&& function)
     : m_function(std::forward<F>(function))
-    , m_pA(pA)
     , m_intrusiveObjectMixin([](ek::common::IntrusiveObjectMixin*, void* pContext){
         auto* pThis = static_cast<FunctionResultHandler*>(pContext);
-        pThis->m_pA->destroy(pThis);
+        delete pThis;
     }, this) {
 }
 
@@ -38,8 +37,8 @@ void FunctionResultHandler<T, E, Function>::unref() {
 }
 
 template <typename T, typename E, typename Function>
-auto make_function_observer(ek::common::Allocator* pA, Function&& function) -> ek::common::IntrusivePtr<ResultHandler<T, E>> {
-    return ek::common::make_intrusive<FunctionResultHandler<T, E, std::decay_t<Function>>>(pA, pA, std::forward<Function>(function));
+auto make_function_observer(Function&& function) -> ek::common::IntrusivePtr<ResultHandler<T, E>> {
+    return ek::common::make_intrusive<FunctionResultHandler<T, E, std::decay_t<Function>>>(std::forward<Function>(function));
 }
 
 }

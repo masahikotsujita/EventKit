@@ -8,7 +8,6 @@
 #if defined(EVENTKIT_ENABLE_COROUTINE)
 #include <coroutine>
 #endif
-#include <eventkit/common/Allocator.h>
 #include <eventkit/common/IntrusivePtr.h>
 #include <eventkit/promise/Resolver.h>
 

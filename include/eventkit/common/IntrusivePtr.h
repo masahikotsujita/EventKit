@@ -104,7 +104,7 @@ IntrusivePtr<T> dynamic_pointer_cast(const IntrusivePtr<U>& p);
 #endif
 
 template <typename T, typename ...Args>
-IntrusivePtr<T> make_intrusive(Allocator* pA, Args&& ...args);
+IntrusivePtr<T> make_intrusive(Args&& ...args);
 
 }
 }

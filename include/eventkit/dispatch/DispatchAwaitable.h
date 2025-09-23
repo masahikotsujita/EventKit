@@ -27,7 +27,7 @@ struct DispatchAwaitable {
             }
 
             void await_suspend(std::coroutine_handle<> handle) {
-                m_pDispatchQueue->dispatchAsync(ek::common::getDefaultAllocator(), [handle]() -> void{
+                m_pDispatchQueue->dispatchAsync([handle]() -> void{
                     handle.resume();
                 });
             }
